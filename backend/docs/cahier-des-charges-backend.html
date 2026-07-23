@@ -1,0 +1,3904 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Cahier des Charges Technique - GlobalMarket Backend</title>
+<style>
+  @page {
+    size: A4;
+    margin: 2cm 2.5cm;
+    @top-center {
+      content: "GlobalMarket — Cahier des Charges Backend";
+      font-size: 9px;
+      color: #888;
+    }
+    @bottom-center {
+      content: counter(page) " / " counter(pages);
+      font-size: 9px;
+      color: #888;
+    }
+  }
+  @page :first {
+    @top-center { content: none; }
+    @bottom-center { content: none; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 11pt;
+    line-height: 1.6;
+    color: #1a1a1a;
+    max-width: 100%;
+  }
+  h1 {
+    font-size: 24pt;
+    color: #0d6efd;
+    border-bottom: 3px solid #0d6efd;
+    padding-bottom: 8px;
+    margin-top: 40px;
+    page-break-after: avoid;
+  }
+  h2 {
+    font-size: 18pt;
+    color: #0d6efd;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 6px;
+    margin-top: 30px;
+    page-break-after: avoid;
+  }
+  h3 {
+    font-size: 14pt;
+    color: #333;
+    margin-top: 24px;
+    page-break-after: avoid;
+  }
+  h4 {
+    font-size: 12pt;
+    color: #555;
+    margin-top: 20px;
+    page-break-after: avoid;
+  }
+  h5, h6 {
+    font-size: 11pt;
+    color: #666;
+    margin-top: 16px;
+    page-break-after: avoid;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 10pt;
+    page-break-inside: auto;
+  }
+  thead { background-color: #0d6efd; color: white; }
+  th { padding: 8px 10px; text-align: left; font-weight: 600; }
+  td { padding: 6px 10px; border: 1px solid #dee2e6; }
+  tr:nth-child(even) { background-color: #f8f9fa; }
+  tr { page-break-inside: avoid; }
+  code {
+    background-color: #f1f3f5;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 10pt;
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+  }
+  pre {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    padding: 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 9pt;
+    line-height: 1.5;
+    page-break-inside: avoid;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+  }
+  blockquote {
+    border-left: 4px solid #0d6efd;
+    margin: 16px 0;
+    padding: 10px 20px;
+    background-color: #f0f7ff;
+    color: #333;
+  }
+  hr {
+    border: none;
+    border-top: 2px solid #dee2e6;
+    margin: 30px 0;
+  }
+  ul, ol { padding-left: 24px; }
+  li { margin-bottom: 4px; }
+  a { color: #0d6efd; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  strong { color: #111; }
+</style>
+</head>
+<body>
+<h1>CAHIER DES CHARGES TECHNIQUE</h1>
+<h1>BACKEND — GlobalMarket</h1>
+<h2>Plateforme E-Commerce Mondiale Multi-Vendeurs</h2>
+<hr>
+<p><strong>Nom du projet :</strong> GlobalMarket — Backend API<br><strong>Version :</strong> 1.0<br><strong>Date :</strong> Juillet 2026<br><strong>Auteur :</strong> Équipe Développement GlobalMarket<br><strong>Statut :</strong> Document de référence  </p>
+<hr>
+<h2>Périmètre du document</h2>
+<p>Ce cahier des charges technique couvre <strong>l&#39;intégralité du backend</strong> de la plateforme GlobalMarket, incluant :</p>
+<ul>
+<li>Architecture serveur (Node.js / Express)</li>
+<li>Base de données PostgreSQL</li>
+<li>API REST complète (74 endpoints)</li>
+<li>Authentification &amp; autorisation (JWT, RBAC)</li>
+<li>Intégrations paiement (Stripe, PayPal, Mobile Money)</li>
+<li>Système de livraison &amp; suivi</li>
+<li>Notifications (email, push, SMS)</li>
+<li>Sécurité &amp; conformité RGPD</li>
+<li>Déploiement &amp; observabilité</li>
+</ul>
+<hr>
+<h2>Stack technique</h2>
+<table>
+<thead>
+<tr>
+<th>Composant</th>
+<th>Technologie</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Runtime</td>
+<td>Node.js</td>
+<td>20 LTS</td>
+</tr>
+<tr>
+<td>Framework</td>
+<td>Express.js</td>
+<td>4.x</td>
+</tr>
+<tr>
+<td>Base de données</td>
+<td>PostgreSQL</td>
+<td>16</td>
+</tr>
+<tr>
+<td>ORM</td>
+<td>Prisma</td>
+<td>5.x</td>
+</tr>
+<tr>
+<td>Cache</td>
+<td>Redis</td>
+<td>7.x</td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>JWT (jsonwebtoken)</td>
+<td>9.x</td>
+</tr>
+<tr>
+<td>Validation</td>
+<td>Zod</td>
+<td>3.x</td>
+</tr>
+<tr>
+<td>Upload</td>
+<td>Multer + Sharp</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Email</td>
+<td>Nodemailer</td>
+<td>6.x</td>
+</tr>
+<tr>
+<td>PDF</td>
+<td>PDFKit</td>
+<td>4.x</td>
+</tr>
+<tr>
+<td>Tests</td>
+<td>Vitest + Supertest</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Conteneurs</td>
+<td>Docker + Docker Compose</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Documents associés</h2>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Chemin</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cahier des charges Frontend</td>
+<td><code>frontend/docs/CAHIER_DE_CHARGES_COMPLET.md</code></td>
+</tr>
+<tr>
+<td>PDF Frontend</td>
+<td><code>frontend/docs/CAHIER_DE_CHARGES_COMPLET.pdf</code></td>
+</tr>
+<tr>
+<td>Ce document (Backend)</td>
+<td><code>backend/docs/CAHIER_DE_CHARGES_BACKEND.md</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h1>Chapitre 1 — Introduction &amp; Contexte</h1>
+<h2>1.1 Objectif du projet</h2>
+<p>GlobalMarket est une plateforme e-commerce mondiale multi-vendeurs visant à connecter acheteurs et vendeurs à l&#39;échelle internationale. Le backend constitue le cœur système de la plateforme, responsable de la logique métier, de la gestion des données, de l&#39;authentification et de l&#39;intégration avec les services tiers.</p>
+<h2>1.2 Positionnement</h2>
+<p>Le backend doit :</p>
+<ul>
+<li>Servir une API RESTful consommée par le frontend React</li>
+<li>Gérer la logique métier complexe (multi-vendeurs, paiements escrow, livraison)</li>
+<li>Assurer la sécurité et la conformité RGPD</li>
+<li>Être scalable, résilient et observable</li>
+<li>Supporter le déploiement conteneurisé (Docker)</li>
+</ul>
+<h2>1.3 Principes directeurs</h2>
+<table>
+<thead>
+<tr>
+<th>Principe</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Séparation des responsabilités</strong></td>
+<td>Controllers ↔ Services ↔ Repositories</td>
+</tr>
+<tr>
+<td><strong>API-First</strong></td>
+<td>Le frontend définit le contrat ; le backend l&#39;implémente</td>
+</tr>
+<tr>
+<td><strong>Sécurité par conception</strong></td>
+<td>Validation de toutes les entrées, authentification systématique</td>
+</tr>
+<tr>
+<td><strong>Idempotence</strong></td>
+<td>Les opérations critiques (paiement, commande) sont idempotentes</td>
+</tr>
+<tr>
+<td><strong>Audit trail</strong></td>
+<td>Toutes les mutations importantes sont tracées</td>
+</tr>
+<tr>
+<td><strong>Fail-safe</strong></td>
+<td>Les erreurs retournent toujours <code>{ message: string }</code></td>
+</tr>
+</tbody></table>
+<h2>1.4 Contract frontend → backend</h2>
+<h3>1.4.1 Format de réponse</h3>
+<pre><code class="language-json">// Succès (2xx)
+{
+  &quot;data&quot;: { ... },
+  &quot;meta&quot;: {
+    &quot;page&quot;: 1,
+    &quot;limit&quot;: 20,
+    &quot;total&quot;: 150,
+    &quot;totalPages&quot;: 8
+  }
+}
+
+// Erreur (4xx / 5xx)
+{
+  &quot;message&quot;: &quot;Description de l&#39;erreur en français&quot;
+}
+</code></pre>
+<h3>1.4.2 Authentification</h3>
+<pre><code>Authorization: Bearer &lt;jwt_token&gt;
+</code></pre>
+<h3>1.4.3 Content-Type</h3>
+<ul>
+<li>Requêtes : <code>application/json</code> (sauf uploads : <code>multipart/form-data</code>)</li>
+<li>Réponses : <code>application/json</code> (sauf factures : <code>application/pdf</code>)</li>
+</ul>
+<h3>1.4.4 Pagination</h3>
+<p>Toutes les listes supportent :</p>
+<pre><code>GET /api/resource?page=1&amp;limit=20&amp;sort=created_at&amp;order=desc&amp;search=terme
+</code></pre>
+<h3>1.4.5 Proxys</h3>
+<p>Le frontend Vite proxy <code>/api</code> → <code>http://localhost:5000</code></p>
+<p>Toutes les routes backend commencent par <code>/api/</code>.</p>
+<h2>1.5 Portées fonctionnelles</h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Endpoints</th>
+<th>Priorité</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Authentification</td>
+<td>10</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Produits</td>
+<td>14</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Catégories</td>
+<td>4</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Panier</td>
+<td>7</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Commandes</td>
+<td>6</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Paiements</td>
+<td>5</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Vendeur</td>
+<td>14</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Administration</td>
+<td>13</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Support</td>
+<td>7</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Uploads</td>
+<td>4</td>
+<td>P0</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>84</strong></td>
+<td>—</td>
+</tr>
+</tbody></table>
+<hr>
+<h1>Chapitre 2 — Architecture Technique</h1>
+<h2>2.1 Architecture générale</h2>
+<pre><code>┌─────────────┐     ┌──────────────┐     ┌─────────────┐
+│   Frontend   │────▶│  API Gateway  │────▶│   Backend   │
+│   (React)    │     │  (Express)    │     │  (Node.js)  │
+└─────────────┘     └──────────────┘     └──────┬──────┘
+                                                │
+                    ┌───────────────────────────┼──────────────────┐
+                    │                           │                  │
+              ┌─────▼─────┐              ┌──────▼──────┐    ┌──────▼──────┐
+              │ PostgreSQL │              │    Redis     │    │  File System │
+              │  (données) │              │   (cache)    │    │  (uploads)   │
+              └────────────┘              └─────────────┘    └─────────────┘
+</code></pre>
+<h2>2.2 Structure du projet</h2>
+<pre><code>backend/
+├── src/
+│   ├── config/           # Configuration (DB, Redis, JWT, mail, etc.)
+│   │   ├── database.js
+│   │   ├── redis.js
+│   │   ├── jwt.js
+│   │   ├── mail.js
+│   │   └── upload.js
+│   ├── middleware/        # Middlewares Express
+│   │   ├── auth.js        # Vérification JWT
+│   │   ├── role.js        # RBAC (admin, seller, buyer, delivery)
+│   │   ├── validate.js    # Validation Zod
+│   │   ├── upload.js      # Gestion multer
+│   │   ├── rateLimiter.js # Limitation de débit
+│   │   └── errorHandler.js
+│   ├── routes/            # Routeurs Express (un par module)
+│   │   ├── auth.routes.js
+│   │   ├── product.routes.js
+│   │   ├── category.routes.js
+│   │   ├── cart.routes.js
+│   │   ├── order.routes.js
+│   │   ├── payment.routes.js
+│   │   ├── seller.routes.js
+│   │   ├── admin.routes.js
+│   │   ├── support.routes.js
+│   │   └── upload.routes.js
+│   ├── controllers/       # Controllers (requete → réponse)
+│   │   ├── auth.controller.js
+│   │   ├── product.controller.js
+│   │   ├── category.controller.js
+│   │   ├── cart.controller.js
+│   │   ├── order.controller.js
+│   │   ├── payment.controller.js
+│   │   ├── seller.controller.js
+│   │   ├── admin.controller.js
+│   │   ├── support.controller.js
+│   │   └── upload.controller.js
+│   ├── services/          # Logique métier
+│   │   ├── auth.service.js
+│   │   ├── product.service.js
+│   │   ├── category.service.js
+│   │   ├── cart.service.js
+│   │   ├── order.service.js
+│   │   ├── payment.service.js
+│   │   ├── seller.service.js
+│   │   ├── admin.service.js
+│   │   ├── support.service.js
+│   │   ├── upload.service.js
+│   │   ├── email.service.js
+│   │   ├── notification.service.js
+│   │   └── invoice.service.js
+│   ├── repositories/      # Accès données (Prisma)
+│   │   ├── user.repository.js
+│   │   ├── product.repository.js
+│   │   ├── category.repository.js
+│   │   ├── cart.repository.js
+│   │   ├── order.repository.js
+│   │   ├── payment.repository.js
+│   │   ├── seller.repository.js
+│   │   ├── coupon.repository.js
+│   │   ├── support.repository.js
+│   │   └── settings.repository.js
+│   ├── validators/        # Schémas Zod
+│   │   ├── auth.validator.js
+│   │   ├── product.validator.js
+│   │   ├── order.validator.js
+│   │   ├── payment.validator.js
+│   │   └── seller.validator.js
+│   ├── utils/             # Utilitaires
+│   │   ├── slugify.js
+│   │   ├── pagination.js
+│   │   ├── hash.js
+│   │   ├── token.js
+│   │   └── logger.js
+│   ├── prisma/
+│   │   └── schema.prisma  # Schéma Prisma (source de vérité DB)
+│   └── app.js             # Point d&#39;entrée Express
+├── prisma/
+│   └── migrations/
+├── uploads/               # Fichiers uploadés (gitignored)
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── fixtures/
+├── docker/
+│   ├── Dockerfile
+│   └── docker-compose.yml
+├── .env.example
+├── package.json
+└── vitest.config.js
+</code></pre>
+<h2>2.3 Pattern architectural : Controller → Service → Repository</h2>
+<pre><code>Request → Controller → Service → Repository → Prisma → PostgreSQL
+              ↓
+         Validation (Zod)
+              ↓
+         Auth middleware (JWT)
+              ↓
+         Role middleware (RBAC)
+</code></pre>
+<h3>Exemple flux complet</h3>
+<pre><code>POST /api/seller/products
+  │
+  ├── authMiddleware    → vérifie JWT, injecte req.user
+  ├── sellerMiddleware  → vérifie req.user.role === &#39;seller&#39;
+  ├── validate(productSchema) → valide le body avec Zod
+  │
+  └── sellerController.createProduct
+        │
+        └── sellerService.createProduct
+              │
+              ├── productRepository.create(data)
+              │     └── prisma.product.create({ ... })
+              │
+              └── Retourne { data: product }
+</code></pre>
+<h2>2.4 Configuration</h2>
+<h3>Variables d&#39;environnement (.env)</h3>
+<pre><code class="language-env"># Serveur
+PORT=5000
+NODE_ENV=development
+
+# PostgreSQL
+DATABASE_URL=postgresql://globalmarket:secret@localhost:5432/globalmarket_db
+
+# Redis
+REDIS_URL=redis://localhost:6379
+
+# JWT
+JWT_SECRET=votre-secret-jwt-tres-long
+JWT_EXPIRES_IN=7d
+JWT_REFRESH_SECRET=votre-refresh-secret-jwt
+JWT_REFRESH_EXPIRES_IN=30d
+
+# Stripe
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+
+# PayPal
+PAYPAL_CLIENT_ID=...
+PAYPAL_CLIENT_SECRET=...
+
+# Email (SMTP)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=noreply@globalmarket.com
+SMTP_PASS=...
+EMAIL_FROM=GlobalMarket &lt;noreply@globalmarket.com&gt;
+
+# Upload
+UPLOAD_DIR=./uploads
+MAX_FILE_SIZE=10485760
+
+# Frontend URL (pour emails)
+FRONTEND_URL=http://localhost:5173
+</code></pre>
+<h2>2.5 Base de données : PostgreSQL 16</h2>
+<h3>Pourquoi PostgreSQL</h3>
+<table>
+<thead>
+<tr>
+<th>Critère</th>
+<th>PostgreSQL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ACID</td>
+<td>Transactionnel, fiable</td>
+</tr>
+<tr>
+<td>JSON</td>
+<td>Colonnes JSONB pour données flexibles</td>
+</tr>
+<tr>
+<td>Full-text search</td>
+<td>Recherche texte intégrée</td>
+</tr>
+<tr>
+<td>Extensions</td>
+<td>pg_trgm (fuzzy search), uuid-ossp</td>
+</tr>
+<tr>
+<td>Performance</td>
+<td>Index B-tree, GIN, GiST</td>
+</tr>
+<tr>
+<td>Écosystème</td>
+<td>Prisma ORM, mature et documenté</td>
+</tr>
+</tbody></table>
+<h3>Configuration PostgreSQL</h3>
+<pre><code class="language-sql">-- Extension pour recherche fuzzy
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+-- Extension pour UUID
+CREATE EXTENSION IF NOT EXISTS &quot;uuid-ossp&quot;;
+
+-- Locale français
+SET lc_messages = &#39;fr_FR.UTF-8&#39;;
+</code></pre>
+<h2>2.6 Cache Redis</h2>
+<table>
+<thead>
+<tr>
+<th>Usage</th>
+<th>TTL</th>
+<th>Clé</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Session utilisateur</td>
+<td>7d</td>
+<td><code>user:{id}</code></td>
+</tr>
+<tr>
+<td>Produit en vedette</td>
+<td>1h</td>
+<td><code>product:featured</code></td>
+</tr>
+<tr>
+<td>Catégories (arbre)</td>
+<td>24h</td>
+<td><code>categories:tree</code></td>
+</tr>
+<tr>
+<td>Recherche populaire</td>
+<td>6h</td>
+<td><code>search:popular</code></td>
+</tr>
+<tr>
+<td>Rate limiting</td>
+<td>1min</td>
+<td><code>ratelimit:{ip}:{route}</code></td>
+</tr>
+<tr>
+<td>Panier utilisateur</td>
+<td>30d</td>
+<td><code>cart:{userId}</code></td>
+</tr>
+</tbody></table>
+<h2>2.7 Logging &amp; Monitoring</h2>
+<table>
+<thead>
+<tr>
+<th>Outil</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Winston</td>
+<td>Structured logging (JSON)</td>
+</tr>
+<tr>
+<td>Morgan</td>
+<td>HTTP request logging</td>
+</tr>
+<tr>
+<td>Prometheus (optionnel)</td>
+<td>Métriques</td>
+</tr>
+<tr>
+<td>Sentry (optionnel)</td>
+<td>Error tracking</td>
+</tr>
+</tbody></table>
+<h3>Niveaux de log</h3>
+<table>
+<thead>
+<tr>
+<th>Niveau</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>error</td>
+<td>Erreurs serveur, exceptions</td>
+</tr>
+<tr>
+<td>warn</td>
+<td>Rate limiting, dépréciations</td>
+</tr>
+<tr>
+<td>info</td>
+<td>Requêtes réussies, événements métier</td>
+</tr>
+<tr>
+<td>debug</td>
+<td>SQL queries, payloads (dev uniquement)</td>
+</tr>
+</tbody></table>
+<hr>
+<h1>Chapitre 3 — Base de Données PostgreSQL</h1>
+<h2>3.1 Schéma Prisma (source de vérité)</h2>
+<p>Le schéma Prisma définit l&#39;intégralité des tables, relations, index et contraintes.</p>
+<pre><code class="language-prisma">// prisma/schema.prisma
+
+generator client {
+  provider        = &quot;prisma-client-js&quot;
+  previewFeatures = [&quot;fullTextSearch&quot;]
+}
+
+datasource db {
+  provider = &quot;postgresql&quot;
+  url      = env(&quot;DATABASE_URL&quot;)
+}
+</code></pre>
+<h2>3.2 Enumérations</h2>
+<pre><code class="language-prisma">enum UserRole {
+  buyer
+  seller
+  admin
+  delivery
+}
+
+enum UserStatus {
+  active
+  inactive
+  suspended
+  banned
+}
+
+enum OrderStatus {
+  pending
+  confirmed
+  processing
+  shipped
+  delivered
+  cancelled
+  refunded
+}
+
+enum PaymentStatus {
+  pending
+  processing
+  completed
+  failed
+  refunded
+  partially_refunded
+}
+
+enum PaymentMethod {
+  credit_card
+  debit_card
+  paypal
+  apple_pay
+  google_pay
+  stripe
+  mobile_money
+  bank_transfer
+  cash_on_delivery
+}
+
+enum ProductStatus {
+  draft
+  active
+  inactive
+  archived
+  suspended
+}
+
+enum SellerPlan {
+  basic
+  pro
+  enterprise
+}
+
+enum TicketStatus {
+  open
+  in_progress
+  waiting
+  resolved
+  closed
+}
+
+enum TicketPriority {
+  low
+  medium
+  high
+  urgent
+}
+
+enum NotificationType {
+  order
+  payment
+  shipping
+  promotion
+  system
+  support
+}
+</code></pre>
+<h2>3.3 Tables</h2>
+<h3>3.3.1 Utilisateurs</h3>
+<pre><code class="language-prisma">model User {
+  id            String      @id @default(uuid()) @db.Uuid
+  email         String      @unique @db.VarChar(255)
+  name          String      @db.VarChar(255)
+  passwordHash  String      @map(&quot;password_hash&quot;) @db.VarChar(255)
+  phone         String?     @db.VarChar(20)
+  avatar        String?     @db.VarChar(500)
+  role          UserRole    @default(buyer)
+  status        UserStatus  @default(active)
+  emailVerified Boolean     @default(false) @map(&quot;email_verified&quot;)
+  lastLoginAt   DateTime?   @map(&quot;last_login_at&quot;)
+  createdAt     DateTime    @default(now()) @map(&quot;created_at&quot;)
+  updatedAt     DateTime    @updatedAt @map(&quot;updated_at&quot;)
+
+  // Relations
+  addresses     Address[]
+  seller        Seller?
+  orders        Order[]       @relation(&quot;BuyerOrders&quot;)
+  cart          Cart?
+  wishlist      WishlistItem[]
+  reviews       Review[]
+  supportTickets SupportTicket[]
+  notifications  Notification[]
+  refreshTokens  RefreshToken[]
+
+  @@map(&quot;users&quot;)
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid()) @db.Uuid
+  token     String   @unique @db.Text
+  userId    String   @map(&quot;user_id&quot;) @db.Uuid
+  expiresAt DateTime @map(&quot;expires_at&quot;)
+  createdAt DateTime @default(now()) @map(&quot;created_at&quot;)
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map(&quot;refresh_tokens&quot;)
+}
+</code></pre>
+<h3>3.3.2 Adresses</h3>
+<pre><code class="language-prisma">model Address {
+  id          String  @id @default(uuid()) @db.Uuid
+  userId      String  @map(&quot;user_id&quot;) @db.Uuid
+  label       String  @db.VarChar(100)   // &quot;Domicile&quot;, &quot;Bureau&quot;, etc.
+  firstName   String  @map(&quot;first_name&quot;) @db.VarChar(100)
+  lastName    String  @map(&quot;last_name&quot;) @db.VarChar(100)
+  address1    String  @db.VarChar(255)
+  address2    String? @db.VarChar(255)
+  city        String  @db.VarChar(100)
+  state       String? @db.VarChar(100)
+  postalCode  String  @map(&quot;postal_code&quot;) @db.VarChar(20)
+  country     String  @db.VarChar(100)
+  phone       String? @db.VarChar(20)
+  isDefault   Boolean @default(false) @map(&quot;is_default&quot;)
+  createdAt   DateTime @default(now()) @map(&quot;created_at&quot;)
+  updatedAt   DateTime @updatedAt @map(&quot;updated_at&quot;)
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders      Order[]
+
+  @@index([userId])
+  @@map(&quot;addresses&quot;)
+}
+</code></pre>
+<h3>3.3.3 Vendeurs (Seller Profile)</h3>
+<pre><code class="language-prisma">model Seller {
+  id              String      @id @default(uuid()) @db.Uuid
+  userId          String      @unique @map(&quot;user_id&quot;) @db.Uuid
+  shopName        String      @map(&quot;shop_name&quot;) @db.VarChar(255)
+  slug            String      @unique @db.VarChar(255)
+  description     String?     @db.Text
+  logo            String?     @db.VarChar(500)
+  banner          String?     @db.VarChar(500)
+  category        String      @db.VarChar(100)
+  country         String      @db.VarChar(100)
+  businessType    String      @default(&quot;individual&quot;) @map(&quot;business_type&quot;) @db.VarChar(50)
+  plan            SellerPlan  @default(basic)
+  commissionRate  Decimal     @default(0.12) @map(&quot;commission_rate&quot;) @db.Decimal(5, 4)
+  rating          Decimal     @default(0) @db.Decimal(3, 2)
+  totalSales      Int         @default(0) @map(&quot;total_sales&quot;)
+  totalRevenue    Decimal     @default(0) @map(&quot;total_revenue&quot;) @db.Decimal(12, 2)
+  verified        Boolean     @default(false)
+  active          Boolean     @default(true)
+  bankAccountJson Json?       @map(&quot;bank_account&quot;) // { iban, bic, holderName }
+  createdAt       DateTime    @default(now()) @map(&quot;created_at&quot;)
+  updatedAt       DateTime    @updatedAt @map(&quot;updated_at&quot;)
+
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products        Product[]
+  orders          OrderItem[] @relation(&quot;SellerOrders&quot;)
+  payouts         Payout[]
+
+  @@index([userId])
+  @@index([slug])
+  @@index([category])
+  @@map(&quot;sellers&quot;)
+}
+</code></pre>
+<h3>3.3.4 Catégories</h3>
+<pre><code class="language-prisma">model Category {
+  id          String     @id @default(uuid()) @db.Uuid
+  name        String     @db.VarChar(100)
+  slug        String     @unique @db.VarChar(100)
+  description String?    @db.Text
+  icon        String?    @db.VarChar(50)
+  image       String?    @db.VarChar(500)
+  parentId    String?    @map(&quot;parent_id&quot;) @db.Uuid
+  sortOrder   Int        @default(0) @map(&quot;sort_order&quot;)
+  active      Boolean    @default(true)
+  createdAt   DateTime   @default(now()) @map(&quot;created_at&quot;)
+  updatedAt   DateTime   @updatedAt @map(&quot;updated_at&quot;)
+
+  parent      Category?  @relation(&quot;CategoryTree&quot;, fields: [parentId], references: [id])
+  children    Category[] @relation(&quot;CategoryTree&quot;)
+  products    Product[]
+
+  @@index([parentId])
+  @@index([slug])
+  @@map(&quot;categories&quot;)
+}
+</code></pre>
+<h3>3.3.5 Produits</h3>
+<pre><code class="language-prisma">model Product {
+  id              String        @id @default(uuid()) @db.Uuid
+  sellerId        String        @map(&quot;seller_id&quot;) @db.Uuid
+  categoryId      String        @map(&quot;category_id&quot;) @db.Uuid
+  name            String        @db.VarChar(255)
+  slug            String        @unique @db.VarChar(255)
+  description     String        @db.Text
+  shortDescription String?      @map(&quot;short_description&quot;) @db.VarChar(500)
+  price           Decimal       @db.Decimal(10, 2)
+  compareAtPrice  Decimal?      @map(&quot;compare_at_price&quot;) @db.Decimal(10, 2)
+  costPrice       Decimal?      @map(&quot;cost_price&quot;) @db.Decimal(10, 2)
+  sku             String?       @unique @db.VarChar(100)
+  barcode         String?       @db.VarChar(100)
+  stock           Int           @default(0)
+  lowStockThreshold Int         @default(5) @map(&quot;low_stock_threshold&quot;)
+  weight          Decimal?      @db.Decimal(8, 2) // en grammes
+  dimensions      Json?         // { length, width, height }
+  status          ProductStatus @default(draft)
+  featured        Boolean       @default(false)
+  trending        Boolean       @default(false)
+  averageRating   Decimal       @default(0) @map(&quot;average_rating&quot;) @db.Decimal(3, 2)
+  reviewCount     Int           @default(0) @map(&quot;review_count&quot;)
+  salesCount      Int           @default(0) @map(&quot;sales_count&quot;)
+  viewCount       Int           @default(0) @map(&quot;view_count&quot;)
+  tags            String[]      @db.VarChar(50)
+  metaTitle       String?       @map(&quot;meta_title&quot;) @db.VarChar(255)
+  metaDescription String?       @map(&quot;meta_description&quot;) @db.VarChar(500)
+  publishedAt     DateTime?     @map(&quot;published_at&quot;)
+  createdAt       DateTime      @default(now()) @map(&quot;created_at&quot;)
+  updatedAt       DateTime      @updatedAt @map(&quot;updated_at&quot;)
+
+  seller          Seller        @relation(fields: [sellerId], references: [id])
+  category        Category      @relation(fields: [categoryId], references: [id])
+  images          ProductImage[]
+  variants        ProductVariant[]
+  orderItems      OrderItem[]
+  reviews         Review[]
+  wishlistItems   WishlistItem[]
+  cartItems       CartItem[]
+
+  @@index([sellerId])
+  @@index([categoryId])
+  @@index([status])
+  @@index([featured])
+  @@index([createdAt])
+  @@index([price])
+  @@index([name])
+  @@map(&quot;products&quot;)
+}
+
+model ProductImage {
+  id        String  @id @default(uuid()) @db.Uuid
+  productId String  @map(&quot;product_id&quot;) @db.Uuid
+  url       String  @db.VarChar(500)
+  alt       String? @db.VarChar(255)
+  sortOrder Int     @default(0) @map(&quot;sort_order&quot;)
+  isPrimary Boolean @default(false) @map(&quot;is_primary&quot;)
+  createdAt DateTime @default(now()) @map(&quot;created_at&quot;)
+
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map(&quot;product_images&quot;)
+}
+
+model ProductVariant {
+  id        String  @id @default(uuid()) @db.Uuid
+  productId String  @map(&quot;product_id&quot;) @db.Uuid
+  name      String  @db.VarChar(100)    // &quot;Rouge / XL&quot;
+  sku       String? @unique @db.VarChar(100)
+  price     Decimal @db.Decimal(10, 2)
+  stock     Int     @default(0)
+  attributes Json?  // { color: &quot;rouge&quot;, size: &quot;XL&quot; }
+  createdAt DateTime @default(now()) @map(&quot;created_at&quot;)
+
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  cartItems CartItem[]
+  orderItems OrderItem[]
+
+  @@index([productId])
+  @@map(&quot;product_variants&quot;)
+}
+</code></pre>
+<h3>3.3.6 Panier</h3>
+<pre><code class="language-prisma">model Cart {
+  id        String     @id @default(uuid()) @db.Uuid
+  userId    String     @unique @map(&quot;user_id&quot;) @db.Uuid
+  couponId  String?    @map(&quot;coupon_id&quot;) @db.Uuid
+  createdAt DateTime   @default(now()) @map(&quot;created_at&quot;)
+  updatedAt DateTime   @updatedAt @map(&quot;updated_at&quot;)
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  coupon    Coupon?    @relation(fields: [couponId], references: [id])
+  items     CartItem[]
+
+  @@map(&quot;carts&quot;)
+}
+
+model CartItem {
+  id        String          @id @default(uuid()) @db.Uuid
+  cartId    String          @map(&quot;cart_id&quot;) @db.Uuid
+  productId String          @map(&quot;product_id&quot;) @db.Uuid
+  variantId String?         @map(&quot;variant_id&quot;) @db.Uuid
+  quantity  Int             @default(1)
+  createdAt DateTime        @default(now()) @map(&quot;created_at&quot;)
+  updatedAt DateTime        @updatedAt @map(&quot;updated_at&quot;)
+
+  cart      Cart            @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product   Product         @relation(fields: [productId], references: [id])
+  variant   ProductVariant? @relation(fields: [variantId], references: [id])
+
+  @@unique([cartId, productId, variantId])
+  @@map(&quot;cart_items&quot;)
+}
+</code></pre>
+<h3>3.3.7 Coupons</h3>
+<pre><code class="language-prisma">model Coupon {
+  id            String   @id @default(uuid()) @db.Uuid
+  code          String   @unique @db.VarChar(50)
+  description   String?  @db.VarChar(255)
+  discountType  String   @map(&quot;discount_type&quot;) @db.VarChar(20) // &quot;percentage&quot; | &quot;fixed&quot;
+  discountValue Decimal  @map(&quot;discount_value&quot;) @db.Decimal(10, 2)
+  minAmount     Decimal? @map(&quot;min_amount&quot;) @db.Decimal(10, 2)
+  maxDiscount   Decimal? @map(&quot;max_discount&quot;) @db.Decimal(10, 2)
+  usageLimit    Int?     @map(&quot;usage_limit&quot;)
+  usedCount     Int      @default(0) @map(&quot;used_count&quot;)
+  startDate     DateTime @map(&quot;start_date&quot;)
+  endDate       DateTime @map(&quot;end_date&quot;)
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now()) @map(&quot;created_at&quot;)
+
+  carts         Cart[]
+  orders        Order[]
+
+  @@index([code])
+  @@map(&quot;coupons&quot;)
+}
+</code></pre>
+<h3>3.3.8 Commandes</h3>
+<pre><code class="language-prisma">model Order {
+  id                String      @id @default(uuid()) @db.Uuid
+  orderNumber       String      @unique @map(&quot;order_number&quot;) @db.VarChar(50)
+  buyerId           String      @map(&quot;buyer_id&quot;) @db.Uuid
+  addressId         String      @map(&quot;address_id&quot;) @db.Uuid
+  couponId          String?     @map(&quot;coupon_id&quot;) @db.Uuid
+  status            OrderStatus @default(pending)
+  subtotal          Decimal     @db.Decimal(10, 2)
+  shippingCost      Decimal     @default(0) @map(&quot;shipping_cost&quot;) @db.Decimal(10, 2)
+  taxAmount         Decimal     @default(0) @map(&quot;tax_amount&quot;) @db.Decimal(10, 2)
+  discountAmount    Decimal     @default(0) @map(&quot;discount_amount&quot;) @db.Decimal(10, 2)
+  totalAmount       Decimal     @map(&quot;total_amount&quot;) @db.Decimal(10, 2)
+  currency          String      @default(&quot;EUR&quot;) @db.VarChar(3)
+  notes             String?     @db.Text
+  shippingMethod    String?     @map(&quot;shipping_method&quot;) @db.VarChar(50)
+  trackingNumber    String?     @map(&quot;tracking_number&quot;) @db.VarChar(100)
+  shippedAt         DateTime?   @map(&quot;shipped_at&quot;)
+  deliveredAt       DateTime?   @map(&quot;delivered_at&quot;)
+  cancelledAt       DateTime?   @map(&quot;cancelled_at&quot;)
+  cancelReason      String?     @map(&quot;cancel_reason&quot;) @db.Text
+  createdAt         DateTime    @default(now()) @map(&quot;created_at&quot;)
+  updatedAt         DateTime    @updatedAt @map(&quot;updated_at&quot;)
+
+  buyer             User        @relation(&quot;BuyerOrders&quot;, fields: [buyerId], references: [id])
+  address           Address     @relation(fields: [addressId], references: [id])
+  coupon            Coupon?     @relation(fields: [couponId], references: [id])
+  items             OrderItem[]
+  payments          Payment[]
+  shipments         Shipment[]
+
+  @@index([buyerId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([orderNumber])
+  @@map(&quot;orders&quot;)
+}
+
+model OrderItem {
+  id          String          @id @default(uuid()) @db.Uuid
+  orderId     String          @map(&quot;order_id&quot;) @db.Uuid
+  productId   String          @map(&quot;product_id&quot;) @db.Uuid
+  variantId   String?         @map(&quot;variant_id&quot;) @db.Uuid
+  sellerId    String          @map(&quot;seller_id&quot;) @db.Uuid
+  productName String          @map(&quot;product_name&quot;) @db.VarChar(255)
+  productImage String?        @map(&quot;product_image&quot;) @db.VarChar(500)
+  quantity    Int
+  unitPrice   Decimal         @map(&quot;unit_price&quot;) @db.Decimal(10, 2)
+  totalPrice  Decimal         @map(&quot;total_price&quot;) @db.Decimal(10, 2)
+  commission  Decimal         @default(0) @db.Decimal(10, 2)
+  status      OrderStatus     @default(pending)
+  createdAt   DateTime        @default(now()) @map(&quot;created_at&quot;)
+
+  order       Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product         @relation(fields: [productId], references: [id])
+  variant     ProductVariant? @relation(fields: [variantId], references: [id])
+  seller      Seller          @relation(&quot;SellerOrders&quot;, fields: [sellerId], references: [id])
+
+  @@index([orderId])
+  @@index([sellerId])
+  @@index([productId])
+  @@map(&quot;order_items&quot;)
+}
+</code></pre>
+<h3>3.3.9 Paiements</h3>
+<pre><code class="language-prisma">model Payment {
+  id                String        @id @default(uuid()) @db.Uuid
+  orderId           String        @map(&quot;order_id&quot;) @db.Uuid
+  amount            Decimal       @db.Decimal(10, 2)
+  currency          String        @default(&quot;EUR&quot;) @db.VarChar(3)
+  method            PaymentMethod
+  status            PaymentStatus @default(pending)
+  stripePaymentId   String?       @map(&quot;stripe_payment_id&quot;) @db.VarChar(255)
+  paypalOrderId     String?       @map(&quot;paypal_order_id&quot;) @db.VarChar(255)
+  mobileMoneyRef    String?       @map(&quot;mobile_money_ref&quot;) @db.VarChar(255)
+  refundAmount      Decimal       @default(0) @map(&quot;refund_amount&quot;) @db.Decimal(10, 2)
+  refundReason      String?       @map(&quot;refund_reason&quot;) @db.Text
+  metadata          Json?
+  paidAt            DateTime?     @map(&quot;paid_at&quot;)
+  createdAt         DateTime      @default(now()) @map(&quot;created_at&quot;)
+  updatedAt         DateTime      @updatedAt @map(&quot;updated_at&quot;)
+
+  order             Order         @relation(fields: [orderId], references: [id])
+
+  @@index([orderId])
+  @@index([stripePaymentId])
+  @@index([status])
+  @@map(&quot;payments&quot;)
+}
+</code></pre>
+<h3>3.3.10 Expéditions</h3>
+<pre><code class="language-prisma">model Shipment {
+  id              String    @id @default(uuid()) @db.Uuid
+  orderId         String    @map(&quot;order_id&quot;) @db.Uuid
+  carrier         String    @db.VarChar(100)    // &quot;DHL&quot;, &quot;FedEx&quot;, &quot;La Poste&quot;, etc.
+  trackingNumber  String?   @map(&quot;tracking_number&quot;) @db.VarChar(255)
+  trackingUrl     String?   @map(&quot;tracking_url&quot;) @db.VarChar(500)
+  status          String    @default(&quot;preparing&quot;) @db.VarChar(50)
+  estimatedDelivery DateTime? @map(&quot;estimated_delivery&quot;)
+  shippedAt       DateTime? @map(&quot;shipped_at&quot;)
+  deliveredAt     DateTime? @map(&quot;delivered_at&quot;)
+  weight          Decimal?  @db.Decimal(8, 2)
+  cost            Decimal?  @db.Decimal(10, 2)
+  createdAt       DateTime  @default(now()) @map(&quot;created_at&quot;)
+  updatedAt       DateTime  @updatedAt @map(&quot;updated_at&quot;)
+
+  order           Order     @relation(fields: [orderId], references: [id])
+
+  @@index([orderId])
+  @@index([trackingNumber])
+  @@map(&quot;shipments&quot;)
+}
+</code></pre>
+<h3>3.3.11 Virements vendeurs (Payouts)</h3>
+<pre><code class="language-prisma">model Payout {
+  id          String   @id @default(uuid()) @db.Uuid
+  sellerId    String   @map(&quot;seller_id&quot;) @db.Uuid
+  amount      Decimal  @db.Decimal(10, 2)
+  currency    String   @default(&quot;EUR&quot;) @db.VarChar(3)
+  status      String   @default(&quot;pending&quot;) @db.VarChar(20) // pending, processing, completed, failed
+  method      String   @db.VarChar(50)   // bank_transfer, paypal
+  reference   String?  @db.VarChar(255)
+  notes       String?  @db.Text
+  paidAt      DateTime? @map(&quot;paid_at&quot;)
+  createdAt   DateTime @default(now()) @map(&quot;created_at&quot;)
+
+  seller      Seller   @relation(fields: [sellerId], references: [id])
+
+  @@index([sellerId])
+  @@index([status])
+  @@map(&quot;payouts&quot;)
+}
+</code></pre>
+<h3>3.3.12 Avis (Reviews)</h3>
+<pre><code class="language-prisma">model Review {
+  id         String  @id @default(uuid()) @db.Uuid
+  productId  String  @map(&quot;product_id&quot;) @db.Uuid
+  userId     String  @map(&quot;user_id&quot;) @db.Uuid
+  rating     Int     @db.Int // 1-5
+  title      String? @db.VarChar(255)
+  comment    String? @db.Text
+  images     String[] @db.VarChar(500)
+  helpful    Int     @default(0)
+  createdAt  DateTime @default(now()) @map(&quot;created_at&quot;)
+  updatedAt  DateTime @updatedAt @map(&quot;updated_at&quot;)
+
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user       User    @relation(fields: [userId], references: [id])
+
+  @@unique([productId, userId])
+  @@index([productId])
+  @@index([userId])
+  @@map(&quot;reviews&quot;)
+}
+</code></pre>
+<h3>3.3.13 Wishlist</h3>
+<pre><code class="language-prisma">model WishlistItem {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map(&quot;user_id&quot;) @db.Uuid
+  productId String   @map(&quot;product_id&quot;) @db.Uuid
+  createdAt DateTime @default(now()) @map(&quot;created_at&quot;)
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@map(&quot;wishlist_items&quot;)
+}
+</code></pre>
+<h3>3.3.14 Support (Tickets)</h3>
+<pre><code class="language-prisma">model SupportTicket {
+  id          String       @id @default(uuid()) @db.Uuid
+  userId      String       @map(&quot;user_id&quot;) @db.Uuid
+  subject     String       @db.VarChar(255)
+  category    String       @db.VarChar(50) // &quot;order&quot;, &quot;product&quot;, &quot;account&quot;, &quot;technical&quot;, &quot;other&quot;
+  priority    TicketPriority @default(medium)
+  status      TicketStatus @default(open)
+  orderId     String?      @map(&quot;order_id&quot;) @db.Uuid
+  createdAt   DateTime     @default(now()) @map(&quot;created_at&quot;)
+  updatedAt   DateTime     @updatedAt @map(&quot;updated_at&quot;)
+
+  user        User         @relation(fields: [userId], references: [id])
+  messages    TicketMessage[]
+
+  @@index([userId])
+  @@index([status])
+  @@map(&quot;support_tickets&quot;)
+}
+
+model TicketMessage {
+  id        String   @id @default(uuid()) @db.Uuid
+  ticketId  String   @map(&quot;ticket_id&quot;) @db.Uuid
+  senderId  String   @map(&quot;sender_id&quot;) @db.Uuid
+  message   String   @db.Text
+  attachments String[] @db.VarChar(500)
+  isInternal Boolean @default(false) @map(&quot;is_internal&quot;)
+  createdAt DateTime @default(now()) @map(&quot;created_at&quot;)
+
+  ticket    SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  sender    User          @relation(fields: [senderId], references: [id])
+
+  @@index([ticketId])
+  @@map(&quot;ticket_messages&quot;)
+}
+</code></pre>
+<h3>3.3.15 Notifications</h3>
+<pre><code class="language-prisma">model Notification {
+  id        String           @id @default(uuid()) @db.Uuid
+  userId    String           @map(&quot;user_id&quot;) @db.Uuid
+  type      NotificationType
+  title     String           @db.VarChar(255)
+  message   String           @db.Text
+  data      Json?            // données contextuelles (orderId, etc.)
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now()) @map(&quot;created_at&quot;)
+
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+  @@index([createdAt])
+  @@map(&quot;notifications&quot;)
+}
+</code></pre>
+<h3>3.3.16 Paramètres système</h3>
+<pre><code class="language-prisma">model SystemSetting {
+  id        String   @id @default(uuid()) @db.Uuid
+  key       String   @unique @db.VarChar(100)
+  value     Json
+  updatedAt DateTime @updatedAt @map(&quot;updated_at&quot;)
+
+  @@map(&quot;system_settings&quot;)
+}
+</code></pre>
+<h3>3.3.17 Fichiers uploadés</h3>
+<pre><code class="language-prisma">model UploadedFile {
+  id          String   @id @default(uuid()) @db.Uuid
+  filename    String   @db.VarChar(255)
+  originalName String  @map(&quot;original_name&quot;) @db.VarChar(255)
+  mimetype    String   @db.VarChar(100)
+  size        Int      // en octets
+  path        String   @db.VarChar(500)
+  uploaderId  String?  @map(&quot;uploader_id&quot;) @db.Uuid
+  createdAt   DateTime @default(now()) @map(&quot;created_at&quot;)
+
+  @@index([uploaderId])
+  @@map(&quot;uploaded_files&quot;)
+}
+</code></pre>
+<h2>3.4 Index de performance</h2>
+<pre><code class="language-sql">-- Recherche produits par texte (GIN index)
+CREATE INDEX idx_products_search ON products
+  USING GIN (to_tsvector(&#39;french&#39;, name || &#39; &#39; || COALESCE(description, &#39;&#39;)));
+
+-- Recherche fuzzy sur les noms de produits
+CREATE INDEX idx_products_name_trgm ON products
+  USING GIN (name gin_trgm_ops);
+
+-- Recherche par fourchette de prix
+CREATE INDEX idx_products_price ON products (price) WHERE status = &#39;active&#39;;
+
+-- Commandes par statut et date (dashboard admin)
+CREATE INDEX idx_orders_status_date ON orders (status, created_at DESC);
+
+-- Notifications non lues par utilisateur
+CREATE INDEX idx_notifications_unread ON notifications (user_id, created_at DESC)
+  WHERE read = false;
+</code></pre>
+<h2>3.5 Données de seed</h2>
+<h3>Catégories par défaut</h3>
+<pre><code class="language-json">[
+  { &quot;name&quot;: &quot;Électronique&quot;, &quot;slug&quot;: &quot;electronique&quot;, &quot;icon&quot;: &quot;📱&quot; },
+  { &quot;name&quot;: &quot;Mode &amp; Vêtements&quot;, &quot;slug&quot;: &quot;mode-vetements&quot;, &quot;icon&quot;: &quot;👕&quot; },
+  { &quot;name&quot;: &quot;Maison &amp; Jardin&quot;, &quot;slug&quot;: &quot;maison-jardin&quot;, &quot;icon&quot;: &quot;🏠&quot; },
+  { &quot;name&quot;: &quot;Sports &amp; Loisirs&quot;, &quot;slug&quot;: &quot;sports-loisirs&quot;, &quot;icon&quot;: &quot;⚽&quot; },
+  { &quot;name&quot;: &quot;Beauté &amp; Santé&quot;, &quot;slug&quot;: &quot;beaute-sante&quot;, &quot;icon&quot;: &quot;💄&quot; },
+  { &quot;name&quot;: &quot;Jouets &amp; Enfants&quot;, &quot;slug&quot;: &quot;jouets-enfants&quot;, &quot;icon&quot;: &quot;🧸&quot; },
+  { &quot;name&quot;: &quot;Automobile&quot;, &quot;slug&quot;: &quot;automobile&quot;, &quot;icon&quot;: &quot;🚗&quot; },
+  { &quot;name&quot;: &quot;Livres &amp; Médias&quot;, &quot;slug&quot;: &quot;livres-medias&quot;, &quot;icon&quot;: &quot;📚&quot; },
+  { &quot;name&quot;: &quot;Alimentation&quot;, &quot;slug&quot;: &quot;alimentation&quot;, &quot;icon&quot;: &quot;🍎&quot; },
+  { &quot;name&quot;: &quot;Art &amp; Artisanat&quot;, &quot;slug&quot;: &quot;art-artisanat&quot;, &quot;icon&quot;: &quot;🎨&quot; }
+]
+</code></pre>
+<h3>Admin par défaut</h3>
+<pre><code class="language-json">{
+  &quot;email&quot;: &quot;admin@globalmarket.com&quot;,
+  &quot;name&quot;: &quot;Administrateur&quot;,
+  &quot;password&quot;: &quot;Admin@GlobalMarket2026!&quot;,
+  &quot;role&quot;: &quot;admin&quot;
+}
+</code></pre>
+<hr>
+<h1>Chapitre 4 — API REST : Authentification</h1>
+<p>Base URL : <code>/api/auth</code></p>
+<h2>4.1 POST /api/auth/login</h2>
+<p><strong>Description :</strong> Connexion utilisateur<br><strong>Auth :</strong> Non<br><strong>Body :</strong></p>
+<pre><code class="language-json">{
+  &quot;email&quot;: &quot;string (email valide)&quot;,
+  &quot;password&quot;: &quot;string (min 8 caractères)&quot;
+}
+</code></pre>
+<p><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;user&quot;: {
+      &quot;id&quot;: &quot;uuid&quot;,
+      &quot;email&quot;: &quot;string&quot;,
+      &quot;name&quot;: &quot;string&quot;,
+      &quot;role&quot;: &quot;buyer | seller | admin | delivery&quot;,
+      &quot;avatar&quot;: &quot;string | null&quot;,
+      &quot;emailVerified&quot;: false
+    },
+    &quot;token&quot;: &quot;jwt_token&quot;,
+    &quot;refreshToken&quot;: &quot;jwt_refresh_token&quot;
+  }
+}
+</code></pre>
+<p><strong>Erreurs :</strong></p>
+<ul>
+<li>400 : <code>&quot;Email et mot de passe requis&quot;</code></li>
+<li>401 : <code>&quot;Email ou mot de passe incorrect&quot;</code></li>
+<li>403 : <code>&quot;Compte suspendu&quot;</code></li>
+</ul>
+<hr>
+<h2>4.2 POST /api/auth/register</h2>
+<p><strong>Description :</strong> Inscription nouvel utilisateur<br><strong>Auth :</strong> Non<br><strong>Body :</strong></p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;string (2-255 caractères)&quot;,
+  &quot;email&quot;: &quot;string (email valide)&quot;,
+  &quot;password&quot;: &quot;string (min 8, 1 majuscule, 1 chiffre)&quot;
+}
+</code></pre>
+<p><strong>Réponse 201 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;user&quot;: { &quot;id&quot;: &quot;...&quot;, &quot;email&quot;: &quot;...&quot;, &quot;name&quot;: &quot;...&quot;, &quot;role&quot;: &quot;buyer&quot; },
+    &quot;token&quot;: &quot;jwt_token&quot;,
+    &quot;refreshToken&quot;: &quot;jwt_refresh_token&quot;
+  }
+}
+</code></pre>
+<p><strong>Effets secondaires :</strong></p>
+<ul>
+<li>Envoie un email de vérification</li>
+<li>Crée un panier vide pour l&#39;utilisateur</li>
+</ul>
+<p><strong>Erreurs :</strong></p>
+<ul>
+<li>400 : <code>&quot;Un compte existe déjà avec cet email&quot;</code></li>
+</ul>
+<hr>
+<h2>4.3 POST /api/auth/logout</h2>
+<p><strong>Description :</strong> Déconnexion (invalidation refresh token)<br><strong>Auth :</strong> Oui (Bearer token)<br><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{ &quot;message&quot;: &quot;Déconnexion réussie&quot; }
+</code></pre>
+<p><strong>Effet :</strong> Supprime le refresh token de la BDD.</p>
+<hr>
+<h2>4.4 GET /api/auth/me</h2>
+<p><strong>Description :</strong> Profil utilisateur courant<br><strong>Auth :</strong> Oui<br><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;uuid&quot;,
+    &quot;email&quot;: &quot;string&quot;,
+    &quot;name&quot;: &quot;string&quot;,
+    &quot;phone&quot;: &quot;string | null&quot;,
+    &quot;avatar&quot;: &quot;string | null&quot;,
+    &quot;role&quot;: &quot;buyer | seller | admin&quot;,
+    &quot;emailVerified&quot;: true,
+    &quot;createdAt&quot;: &quot;2026-01-15T10:00:00.000Z&quot;
+  }
+}
+</code></pre>
+<hr>
+<h2>4.5 POST /api/auth/forgot-password</h2>
+<p><strong>Description :</strong> Demande de réinitialisation de mot de passe<br><strong>Auth :</strong> Non<br><strong>Body :</strong></p>
+<pre><code class="language-json">{ &quot;email&quot;: &quot;string&quot; }
+</code></pre>
+<p><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{ &quot;message&quot;: &quot;Si cet email existe, un lien de réinitialisation vous a été envoyé&quot; }
+</code></pre>
+<p><strong>Note :</strong> Retourne toujours 200 pour éviter l&#39;énumération d&#39;emails.<br><strong>Effet :</strong> Génère un token de reset (expiration : 1h), envoie un email.</p>
+<hr>
+<h2>4.6 POST /api/auth/reset-password</h2>
+<p><strong>Description :</strong> Réinitialisation du mot de passe<br><strong>Auth :</strong> Non<br><strong>Body :</strong></p>
+<pre><code class="language-json">{
+  &quot;token&quot;: &quot;string (token reçu par email)&quot;,
+  &quot;password&quot;: &quot;string (nouveau mot de passe)&quot;
+}
+</code></pre>
+<p><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{ &quot;message&quot;: &quot;Mot de passe réinitialisé avec succès&quot; }
+</code></pre>
+<p><strong>Erreurs :</strong></p>
+<ul>
+<li>400 : <code>&quot;Token invalide ou expiré&quot;</code></li>
+</ul>
+<hr>
+<h2>4.7 POST /api/auth/verify-email</h2>
+<p><strong>Description :</strong> Vérification de l&#39;email<br><strong>Auth :</strong> Non<br><strong>Body :</strong></p>
+<pre><code class="language-json">{ &quot;code&quot;: &quot;string (code à 6 chiffres)&quot; }
+</code></pre>
+<p><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{ &quot;message&quot;: &quot;Email vérifié avec succès&quot; }
+</code></pre>
+<p><strong>Erreurs :</strong></p>
+<ul>
+<li>400 : <code>&quot;Code invalide ou expiré&quot;</code></li>
+</ul>
+<hr>
+<h2>4.8 POST /api/auth/refresh-token</h2>
+<p><strong>Description :</strong> Renouvellement du token d&#39;accès<br><strong>Auth :</strong> Non<br><strong>Body :</strong></p>
+<pre><code class="language-json">{ &quot;refreshToken&quot;: &quot;string&quot; }
+</code></pre>
+<p><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;token&quot;: &quot;nouveau_jwt_token&quot;,
+    &quot;refreshToken&quot;: &quot;nouveau_refresh_token&quot;
+  }
+}
+</code></pre>
+<hr>
+<h2>4.9 PUT /api/auth/profile</h2>
+<p><strong>Description :</strong> Mise à jour du profil<br><strong>Auth :</strong> Oui<br><strong>Body :</strong></p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;string (optionnel)&quot;,
+  &quot;phone&quot;: &quot;string (optionnel)&quot;,
+  &quot;avatar&quot;: &quot;string (optionnel, URL)&quot;
+}
+</code></pre>
+<p><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{ &quot;data&quot;: { &quot;id&quot;: &quot;...&quot;, &quot;name&quot;: &quot;...&quot;, &quot;phone&quot;: &quot;...&quot;, &quot;avatar&quot;: &quot;...&quot; } }
+</code></pre>
+<hr>
+<h2>4.10 PUT /api/auth/change-password</h2>
+<p><strong>Description :</strong> Changement de mot de passe<br><strong>Auth :</strong> Oui<br><strong>Body :</strong></p>
+<pre><code class="language-json">{
+  &quot;currentPassword&quot;: &quot;string&quot;,
+  &quot;newPassword&quot;: &quot;string (min 8, 1 majuscule, 1 chiffre)&quot;
+}
+</code></pre>
+<p><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{ &quot;message&quot;: &quot;Mot de passe modifié avec succès&quot; }
+</code></pre>
+<p><strong>Erreurs :</strong></p>
+<ul>
+<li>400 : <code>&quot;Le mot de passe actuel est incorrect&quot;</code></li>
+</ul>
+<hr>
+<h1>Chapitre 5 — API REST : Produits &amp; Catégories</h1>
+<h2>5.1 Produits</h2>
+<p>Base URL : <code>/api/products</code></p>
+<h3>5.1.1 GET /api/products</h3>
+<p><strong>Description :</strong> Liste paginée des produits<br><strong>Auth :</strong> Non<br><strong>Query params :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Défaut</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>page</td>
+<td>number</td>
+<td>1</td>
+<td>Numéro de page</td>
+</tr>
+<tr>
+<td>limit</td>
+<td>number</td>
+<td>20</td>
+<td>Éléments par page</td>
+</tr>
+<tr>
+<td>sort</td>
+<td>string</td>
+<td>created_at</td>
+<td>Champ de tri</td>
+</tr>
+<tr>
+<td>order</td>
+<td>string</td>
+<td>desc</td>
+<td>asc / desc</td>
+</tr>
+<tr>
+<td>category</td>
+<td>string</td>
+<td>—</td>
+<td>Slug de catégorie</td>
+</tr>
+<tr>
+<td>minPrice</td>
+<td>number</td>
+<td>—</td>
+<td>Prix minimum</td>
+</tr>
+<tr>
+<td>maxPrice</td>
+<td>number</td>
+<td>—</td>
+<td>Prix maximum</td>
+</tr>
+<tr>
+<td>search</td>
+<td>string</td>
+<td>—</td>
+<td>Recherche texte</td>
+</tr>
+<tr>
+<td>status</td>
+<td>string</td>
+<td>active</td>
+<td>Statut produit</td>
+</tr>
+<tr>
+<td>seller</td>
+<td>uuid</td>
+<td>—</td>
+<td>ID vendeur</td>
+</tr>
+</tbody></table>
+<p><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: &quot;uuid&quot;,
+      &quot;name&quot;: &quot;string&quot;,
+      &quot;slug&quot;: &quot;string&quot;,
+      &quot;price&quot;: 29.99,
+      &quot;compareAtPrice&quot;: 39.99,
+      &quot;images&quot;: [{ &quot;url&quot;: &quot;string&quot;, &quot;alt&quot;: &quot;string&quot;, &quot;isPrimary&quot;: true }],
+      &quot;averageRating&quot;: 4.5,
+      &quot;reviewCount&quot;: 12,
+      &quot;stock&quot;: 50,
+      &quot;seller&quot;: { &quot;id&quot;: &quot;uuid&quot;, &quot;shopName&quot;: &quot;string&quot;, &quot;rating&quot;: 4.8 },
+      &quot;category&quot;: { &quot;id&quot;: &quot;uuid&quot;, &quot;name&quot;: &quot;string&quot;, &quot;slug&quot;: &quot;string&quot; },
+      &quot;status&quot;: &quot;active&quot;,
+      &quot;createdAt&quot;: &quot;2026-01-15T10:00:00.000Z&quot;
+    }
+  ],
+  &quot;meta&quot;: { &quot;page&quot;: 1, &quot;limit&quot;: 20, &quot;total&quot;: 150, &quot;totalPages&quot;: 8 }
+}
+</code></pre>
+<hr>
+<h3>5.1.2 GET /api/products/:id</h3>
+<p><strong>Description :</strong> Détail d&#39;un produit<br><strong>Auth :</strong> Non<br><strong>Effet secondaire :</strong> Incrémente <code>viewCount</code></p>
+<p><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;uuid&quot;,
+    &quot;name&quot;: &quot;string&quot;,
+    &quot;slug&quot;: &quot;string&quot;,
+    &quot;description&quot;: &quot;string (markdown)&quot;,
+    &quot;shortDescription&quot;: &quot;string&quot;,
+    &quot;price&quot;: 29.99,
+    &quot;compareAtPrice&quot;: 39.99,
+    &quot;sku&quot;: &quot;string&quot;,
+    &quot;stock&quot;: 50,
+    &quot;weight&quot;: 500,
+    &quot;dimensions&quot;: { &quot;length&quot;: 20, &quot;width&quot;: 15, &quot;height&quot;: 10 },
+    &quot;images&quot;: [
+      { &quot;id&quot;: &quot;uuid&quot;, &quot;url&quot;: &quot;string&quot;, &quot;alt&quot;: &quot;string&quot;, &quot;isPrimary&quot;: true, &quot;sortOrder&quot;: 0 }
+    ],
+    &quot;variants&quot;: [
+      { &quot;id&quot;: &quot;uuid&quot;, &quot;name&quot;: &quot;Rouge / XL&quot;, &quot;price&quot;: 29.99, &quot;stock&quot;: 15, &quot;attributes&quot;: { &quot;color&quot;: &quot;rouge&quot;, &quot;size&quot;: &quot;XL&quot; } }
+    ],
+    &quot;averageRating&quot;: 4.5,
+    &quot;reviewCount&quot;: 12,
+    &quot;salesCount&quot;: 150,
+    &quot;tags&quot;: [&quot;smartphone&quot;, &quot;apple&quot;],
+    &quot;seller&quot;: {
+      &quot;id&quot;: &quot;uuid&quot;,
+      &quot;shopName&quot;: &quot;string&quot;,
+      &quot;slug&quot;: &quot;string&quot;,
+      &quot;rating&quot;: 4.8,
+      &quot;totalSales&quot;: 500,
+      &quot;verified&quot;: true
+    },
+    &quot;category&quot;: { &quot;id&quot;: &quot;uuid&quot;, &quot;name&quot;: &quot;Électronique&quot;, &quot;slug&quot;: &quot;electronique&quot; },
+    &quot;status&quot;: &quot;active&quot;,
+    &quot;publishedAt&quot;: &quot;2026-01-15T10:00:00.000Z&quot;,
+    &quot;createdAt&quot;: &quot;2026-01-15T10:00:00.000Z&quot;
+  }
+}
+</code></pre>
+<hr>
+<h3>5.1.3 GET /api/products/slug/:slug</h3>
+<p><strong>Description :</strong> Produit par slug (SEO-friendly)<br><strong>Auth :</strong> Non<br><strong>Réponse :</strong> Identique à 5.1.2</p>
+<hr>
+<h3>5.1.4 GET /api/products/category/:categorySlug</h3>
+<p><strong>Description :</strong> Produits d&#39;une catégorie<br><strong>Auth :</strong> Non<br><strong>Query :</strong> Mêmes params que 5.1.1<br><strong>Réponse :</strong> Identique à 5.1.1</p>
+<hr>
+<h3>5.1.5 GET /api/products/search?q=...</h3>
+<p><strong>Description :</strong> Recherche plein texte<br><strong>Auth :</strong> Non<br><strong>Query :</strong> <code>q</code> (requis) + params de pagination</p>
+<p><strong>Réponse :</strong> Identique à 5.1.1, avec results triés par pertinence (ts_rank)</p>
+<hr>
+<h3>5.1.6 GET /api/products/featured</h3>
+<p><strong>Description :</strong> Produits en vedette<br><strong>Auth :</strong> Non<br><strong>Réponse :</strong> Tableau de produits (max 12)</p>
+<hr>
+<h3>5.1.7 GET /api/products/trending</h3>
+<p><strong>Description :</strong> Produits tendance<br><strong>Auth :</strong> Non<br><strong>Réponse :</strong> Tableau de produits (max 12)</p>
+<hr>
+<h3>5.1.8 GET /api/products/new</h3>
+<p><strong>Description :</strong> Nouveaux produits<br><strong>Auth :</strong> Non<br><strong>Réponse :</strong> Tableau de produits (max 12), triés par <code>publishedAt DESC</code></p>
+<hr>
+<h3>5.1.9 GET /api/products/:id/related</h3>
+<p><strong>Description :</strong> Produits similaires<br><strong>Auth :</strong> Non<br><strong>Réponse :</strong> Tableau de 4-8 produits de même catégorie</p>
+<hr>
+<h3>5.1.10 POST /api/products</h3>
+<p><strong>Description :</strong> Créer un produit<br><strong>Auth :</strong> Oui (seller)<br><strong>Body :</strong></p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;string&quot;,
+  &quot;categoryId&quot;: &quot;uuid&quot;,
+  &quot;description&quot;: &quot;string&quot;,
+  &quot;shortDescription&quot;: &quot;string (optionnel)&quot;,
+  &quot;price&quot;: 29.99,
+  &quot;compareAtPrice&quot;: 39.99,
+  &quot;costPrice&quot;: 15.00,
+  &quot;sku&quot;: &quot;string (optionnel)&quot;,
+  &quot;stock&quot;: 50,
+  &quot;lowStockThreshold&quot;: 5,
+  &quot;weight&quot;: 500,
+  &quot;dimensions&quot;: { &quot;length&quot;: 20, &quot;width&quot;: 15, &quot;height&quot;: 10 },
+  &quot;tags&quot;: [&quot;tag1&quot;, &quot;tag2&quot;],
+  &quot;variants&quot;: [
+    { &quot;name&quot;: &quot;Rouge / XL&quot;, &quot;price&quot;: 29.99, &quot;stock&quot;: 15, &quot;attributes&quot;: { &quot;color&quot;: &quot;rouge&quot;, &quot;size&quot;: &quot;XL&quot; } }
+  ]
+}
+</code></pre>
+<p><strong>Réponse 201 :</strong> Produit créé<br><strong>Effets :</strong> Génère le slug automatiquement</p>
+<hr>
+<h3>5.1.11 PUT /api/products/:id</h3>
+<p><strong>Description :</strong> Modifier un produit<br><strong>Auth :</strong> Oui (propriétaire du produit)<br><strong>Body :</strong> Champs à modifier<br><strong>Réponse 200 :</strong> Produit modifié</p>
+<hr>
+<h3>5.1.12 DELETE /api/products/:id</h3>
+<p><strong>Description :</strong> Supprimer un produit<br><strong>Auth :</strong> Oui (propriétaire)<br><strong>Réponse 200 :</strong> <code>{ &quot;message&quot;: &quot;Produit supprimé&quot; }</code><br><strong>Effet :</strong> Supprime les images associées (physiquement et en BDD)</p>
+<hr>
+<h3>5.1.13 POST /api/products/:id/images</h3>
+<p><strong>Description :</strong> Upload d&#39;images<br><strong>Auth :</strong> Oui (propriétaire)<br><strong>Content-Type :</strong> <code>multipart/form-data</code><br><strong>Champ :</strong> <code>images</code> (multi-files, max 10)</p>
+<p><strong>Contraintes :</strong></p>
+<ul>
+<li>Formats : jpg, jpeg, png, webp</li>
+<li>Taille max : 5 Mo par fichier</li>
+<li>Redimensionnement automatique : 800x800 (max)</li>
+</ul>
+<p><strong>Réponse 201 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: [
+    { &quot;id&quot;: &quot;uuid&quot;, &quot;url&quot;: &quot;/uploads/products/abc123.webp&quot;, &quot;alt&quot;: &quot;&quot;, &quot;isPrimary&quot;: true }
+  ]
+}
+</code></pre>
+<hr>
+<h3>5.1.14 DELETE /api/products/:id/images/:imageId</h3>
+<p><strong>Description :</strong> Supprimer une image<br><strong>Auth :</strong> Oui (propriétaire)<br><strong>Réponse 200 :</strong> <code>{ &quot;message&quot;: &quot;Image supprimée&quot; }</code><br><strong>Effet :</strong> Supprime le fichier physique</p>
+<hr>
+<h2>5.2 Catégories</h2>
+<p>Base URL : <code>/api/categories</code></p>
+<h3>5.2.1 GET /api/categories</h3>
+<p><strong>Description :</strong> Liste plate des catégories<br><strong>Auth :</strong> Non<br><strong>Réponse 200 :</strong> Tableau de catégories</p>
+<pre><code class="language-json">{
+  &quot;data&quot;: [
+    { &quot;id&quot;: &quot;uuid&quot;, &quot;name&quot;: &quot;Électronique&quot;, &quot;slug&quot;: &quot;electronique&quot;, &quot;icon&quot;: &quot;📱&quot;, &quot;productCount&quot;: 1250 }
+  ]
+}
+</code></pre>
+<hr>
+<h3>5.2.2 GET /api/categories/tree</h3>
+<p><strong>Description :</strong> Arbre hiérarchique des catégories<br><strong>Auth :</strong> Non<br><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: &quot;uuid&quot;,
+      &quot;name&quot;: &quot;Électronique&quot;,
+      &quot;slug&quot;: &quot;electronique&quot;,
+      &quot;icon&quot;: &quot;📱&quot;,
+      &quot;children&quot;: [
+        { &quot;id&quot;: &quot;uuid&quot;, &quot;name&quot;: &quot;Smartphones&quot;, &quot;slug&quot;: &quot;smartphones&quot;, &quot;icon&quot;: &quot;📱&quot;, &quot;children&quot;: [] }
+      ]
+    }
+  ]
+}
+</code></pre>
+<hr>
+<h3>5.2.3 GET /api/categories/:id</h3>
+<p><strong>Description :</strong> Détail d&#39;une catégorie<br><strong>Auth :</strong> Non<br><strong>Réponse 200 :</strong> Catégorie + infos produitCount</p>
+<hr>
+<h3>5.2.4 GET /api/categories/slug/:slug</h3>
+<p><strong>Description :</strong> Catégorie par slug<br><strong>Auth :</strong> Non<br><strong>Réponse :</strong> Identique à 5.2.3</p>
+<hr>
+<h1>Chapitre 6 — API REST : Panier &amp; Commandes</h1>
+<h2>6.1 Panier</h2>
+<p>Base URL : <code>/api/cart</code></p>
+<h3>6.1.1 GET /api/cart</h3>
+<p><strong>Description :</strong> Récupérer le panier de l&#39;utilisateur<br><strong>Auth :</strong> Oui<br><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;uuid&quot;,
+    &quot;items&quot;: [
+      {
+        &quot;id&quot;: &quot;uuid&quot;,
+        &quot;product&quot;: {
+          &quot;id&quot;: &quot;uuid&quot;,
+          &quot;name&quot;: &quot;string&quot;,
+          &quot;price&quot;: 29.99,
+          &quot;image&quot;: &quot;string&quot;,
+          &quot;stock&quot;: 50,
+          &quot;seller&quot;: { &quot;id&quot;: &quot;uuid&quot;, &quot;shopName&quot;: &quot;string&quot; }
+        },
+        &quot;variant&quot;: { &quot;id&quot;: &quot;uuid&quot;, &quot;name&quot;: &quot;Rouge / XL&quot; },
+        &quot;quantity&quot;: 2
+      }
+    ],
+    &quot;coupon&quot;: null,
+    &quot;subtotal&quot;: 59.98,
+    &quot;total&quot;: 59.98,
+    &quot;totalItems&quot;: 2
+  }
+}
+</code></pre>
+<hr>
+<h3>6.1.2 POST /api/cart/items</h3>
+<p><strong>Description :</strong> Ajouter un produit au panier<br><strong>Auth :</strong> Oui<br><strong>Body :</strong></p>
+<pre><code class="language-json">{
+  &quot;productId&quot;: &quot;uuid&quot;,
+  &quot;variantId&quot;: &quot;uuid (optionnel)&quot;,
+  &quot;quantity&quot;: 1
+}
+</code></pre>
+<p><strong>Logique :</strong></p>
+<ul>
+<li>Si le produit est déjà dans le panier → incrémente la quantité</li>
+<li>Vérifie le stock disponible</li>
+<li>Retourne le panier mis à jour</li>
+</ul>
+<hr>
+<h3>6.1.3 PUT /api/cart/items/:itemId</h3>
+<p><strong>Description :</strong> Modifier la quantité<br><strong>Auth :</strong> Oui<br><strong>Body :</strong></p>
+<pre><code class="language-json">{ &quot;quantity&quot;: 3 }
+</code></pre>
+<p><strong>Logique :</strong></p>
+<ul>
+<li>Si quantity = 0 → supprime l&#39;élément</li>
+<li>Vérifie le stock</li>
+</ul>
+<hr>
+<h3>6.1.4 DELETE /api/cart/items/:itemId</h3>
+<p><strong>Description :</strong> Supprimer un élément du panier<br><strong>Auth :</strong> Oui<br><strong>Réponse 200 :</strong> Panier mis à jour</p>
+<hr>
+<h3>6.1.5 DELETE /api/cart</h3>
+<p><strong>Description :</strong> Vider le panier<br><strong>Auth :</strong> Oui<br><strong>Réponse 200 :</strong> <code>{ &quot;message&quot;: &quot;Panier vidé&quot; }</code></p>
+<hr>
+<h3>6.1.6 POST /api/cart/coupon</h3>
+<p><strong>Description :</strong> Appliquer un coupon<br><strong>Auth :</strong> Oui<br><strong>Body :</strong></p>
+<pre><code class="language-json">{ &quot;code&quot;: &quot;string&quot; }
+</code></pre>
+<p><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;coupon&quot;: { &quot;code&quot;: &quot;ETE2026&quot;, &quot;type&quot;: &quot;percentage&quot;, &quot;value&quot;: 20 },
+    &quot;discount&quot;: 12.00,
+    &quot;total&quot;: 47.98
+  }
+}
+</code></pre>
+<p><strong>Erreurs :</strong></p>
+<ul>
+<li>400 : <code>&quot;Coupon invalide ou expiré&quot;</code></li>
+<li>400 : <code>&quot;Montant minimum non atteint&quot;</code></li>
+</ul>
+<hr>
+<h3>6.1.7 DELETE /api/cart/coupon</h3>
+<p><strong>Description :</strong> Retirer le coupon<br><strong>Auth :</strong> Oui<br><strong>Réponse 200 :</strong> Panier mis à jour sans réduction</p>
+<hr>
+<h2>6.2 Commandes</h2>
+<p>Base URL : <code>/api/orders</code></p>
+<h3>6.2.1 GET /api/orders</h3>
+<p><strong>Description :</strong> Historique des commandes de l&#39;utilisateur<br><strong>Auth :</strong> Oui<br><strong>Query :</strong> <code>page</code>, <code>limit</code>, <code>status</code><br><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: &quot;uuid&quot;,
+      &quot;orderNumber&quot;: &quot;GM-2026-000001&quot;,
+      &quot;status&quot;: &quot;delivered&quot;,
+      &quot;totalAmount&quot;: 89.97,
+      &quot;currency&quot;: &quot;EUR&quot;,
+      &quot;itemsCount&quot;: 3,
+      &quot;createdAt&quot;: &quot;2026-06-15T10:00:00.000Z&quot;
+    }
+  ],
+  &quot;meta&quot;: { ... }
+}
+</code></pre>
+<hr>
+<h3>6.2.2 GET /api/orders/:id</h3>
+<p><strong>Description :</strong> Détail d&#39;une commande<br><strong>Auth :</strong> Oui (propriétaire ou admin)<br><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;uuid&quot;,
+    &quot;orderNumber&quot;: &quot;GM-2026-000001&quot;,
+    &quot;status&quot;: &quot;shipped&quot;,
+    &quot;subtotal&quot;: 79.98,
+    &quot;shippingCost&quot;: 5.99,
+    &quot;taxAmount&quot;: 0.00,
+    &quot;discountAmount&quot;: 10.00,
+    &quot;totalAmount&quot;: 75.97,
+    &quot;currency&quot;: &quot;EUR&quot;,
+    &quot;notes&quot;: &quot;Livrer avant 18h&quot;,
+    &quot;shippingMethod&quot;: &quot;standard&quot;,
+    &quot;trackingNumber&quot;: &quot;DHL123456789&quot;,
+    &quot;items&quot;: [
+      {
+        &quot;id&quot;: &quot;uuid&quot;,
+        &quot;productName&quot;: &quot;iPhone 15 Pro&quot;,
+        &quot;productImage&quot;: &quot;string&quot;,
+        &quot;quantity&quot;: 1,
+        &quot;unitPrice&quot;: 79.98,
+        &quot;totalPrice&quot;: 79.98,
+        &quot;seller&quot;: { &quot;id&quot;: &quot;uuid&quot;, &quot;shopName&quot;: &quot;TechStore&quot; }
+      }
+    ],
+    &quot;address&quot;: {
+      &quot;firstName&quot;: &quot;Jean&quot;,
+      &quot;lastName&quot;: &quot;Dupont&quot;,
+      &quot;address1&quot;: &quot;123 Rue de Paris&quot;,
+      &quot;city&quot;: &quot;Paris&quot;,
+      &quot;postalCode&quot;: &quot;75001&quot;,
+      &quot;country&quot;: &quot;France&quot;
+    },
+    &quot;payments&quot;: [
+      { &quot;id&quot;: &quot;uuid&quot;, &quot;method&quot;: &quot;credit_card&quot;, &quot;amount&quot;: 75.97, &quot;status&quot;: &quot;completed&quot;, &quot;paidAt&quot;: &quot;...&quot; }
+    ],
+    &quot;shipments&quot;: [
+      { &quot;id&quot;: &quot;uuid&quot;, &quot;carrier&quot;: &quot;DHL&quot;, &quot;trackingNumber&quot;: &quot;DHL123...&quot;, &quot;status&quot;: &quot;in_transit&quot; }
+    ],
+    &quot;createdAt&quot;: &quot;2026-06-15T10:00:00.000Z&quot;
+  }
+}
+</code></pre>
+<hr>
+<h3>6.2.3 POST /api/orders</h3>
+<p><strong>Description :</strong> Créer une commande (checkout)<br><strong>Auth :</strong> Oui<br><strong>Body :</strong></p>
+<pre><code class="language-json">{
+  &quot;addressId&quot;: &quot;uuid&quot;,
+  &quot;shippingMethod&quot;: &quot;standard | express&quot;,
+  &quot;paymentMethod&quot;: &quot;credit_card | paypal | mobile_money&quot;,
+  &quot;notes&quot;: &quot;string (optionnel)&quot;,
+  &quot;couponCode&quot;: &quot;string (optionnel)&quot;
+}
+</code></pre>
+<p><strong>Logique de création :</strong></p>
+<ol>
+<li>Valider le panier (produits en stock, prix à jour)</li>
+<li>Calculer les totaux (subtotal, shipping, tax, discount)</li>
+<li>Générer <code>orderNumber</code> : <code>GM-YYYY-XXXXXX</code></li>
+<li>Créer la commande + orderItems</li>
+<li>Décrémenter le stock des produits</li>
+<li>Appliquer le commission vendeur</li>
+<li>Vider le panier</li>
+<li>Retourner la commande créée</li>
+</ol>
+<p><strong>Réponse 201 :</strong> Commande créée</p>
+<hr>
+<h3>6.2.4 POST /api/orders/:id/cancel</h3>
+<p><strong>Description :</strong> Annuler une commande<br><strong>Auth :</strong> Oui (propriétaire)<br><strong>Condition :</strong> Seulement si status = <code>pending</code> ou <code>confirmed</code></p>
+<p><strong>Logique :</strong></p>
+<ul>
+<li>Remettre le stock</li>
+<li>Marquer comme <code>cancelled</code></li>
+<li>Si déjà payée → déclencher un remboursement</li>
+</ul>
+<hr>
+<h3>6.2.5 GET /api/orders/:id/tracking</h3>
+<p><strong>Description :</strong> Suivi de livraison<br><strong>Auth :</strong> Oui (propriétaire)<br><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;carrier&quot;: &quot;DHL&quot;,
+    &quot;trackingNumber&quot;: &quot;DHL123456789&quot;,
+    &quot;trackingUrl&quot;: &quot;https://track.dhl.com/DHL123...&quot;,
+    &quot;status&quot;: &quot;in_transit&quot;,
+    &quot;estimatedDelivery&quot;: &quot;2026-06-20T18:00:00.000Z&quot;,
+    &quot;events&quot;: [
+      { &quot;status&quot;: &quot;picked_up&quot;, &quot;location&quot;: &quot;Paris&quot;, &quot;timestamp&quot;: &quot;2026-06-16T09:00:00Z&quot; },
+      { &quot;status&quot;: &quot;in_transit&quot;, &quot;location&quot;: &quot;Lyon&quot;, &quot;timestamp&quot;: &quot;2026-06-17T14:00:00Z&quot; }
+    ]
+  }
+}
+</code></pre>
+<hr>
+<h3>6.2.6 GET /api/orders/:id/invoice</h3>
+<p><strong>Description :</strong> Télécharger la facture PDF<br><strong>Auth :</strong> Oui (propriétaire)<br><strong>Content-Type :</strong> <code>application/pdf</code><br><strong>Content-Disposition :</strong> <code>attachment; filename=&quot;facture-GM-2026-000001.pdf&quot;</code></p>
+<p><strong>Contenu du PDF :</strong></p>
+<ul>
+<li>En-tête GlobalMarket</li>
+<li>Numéro de commande</li>
+<li>Détail des articles</li>
+<li>Sous-total, frais, taxes, total</li>
+<li>Adresse de livraison</li>
+<li>Infos de paiement</li>
+</ul>
+<hr>
+<h1>Chapitre 7 — API REST : Paiements</h1>
+<p>Base URL : <code>/api/payments</code></p>
+<h2>7.1 POST /api/payments/intent</h2>
+<p><strong>Description :</strong> Créer une intention de paiement<br><strong>Auth :</strong> Oui<br><strong>Body :</strong></p>
+<pre><code class="language-json">{
+  &quot;orderId&quot;: &quot;uuid&quot;,
+  &quot;amount&quot;: 75.97,
+  &quot;currency&quot;: &quot;EUR&quot;,
+  &quot;method&quot;: &quot;credit_card | paypal | mobile_money&quot;
+}
+</code></pre>
+<p><strong>Logique selon la méthode :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Méthode</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>credit_card</td>
+<td>Créer un PaymentIntent Stripe → retourner <code>clientSecret</code></td>
+</tr>
+<tr>
+<td>paypal</td>
+<td>Créer une commande PayPal → retourner <code>paypalOrderId</code> + <code>approvalUrl</code></td>
+</tr>
+<tr>
+<td>mobile_money</td>
+<td>Initier le paiement → retourner <code>reference</code> + instructions</td>
+</tr>
+</tbody></table>
+<p><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;paymentId&quot;: &quot;uuid&quot;,
+    &quot;clientSecret&quot;: &quot;pi_xxx_secret_xxx&quot;,  // Stripe
+    &quot;paypalOrderId&quot;: &quot;PAY-xxx&quot;,           // PayPal
+    &quot;reference&quot;: &quot;MOB-xxx&quot;               // Mobile Money
+  }
+}
+</code></pre>
+<hr>
+<h2>7.2 POST /api/payments/:intentId/confirm</h2>
+<p><strong>Description :</strong> Confirmer un paiement<br><strong>Auth :</strong> Oui<br><strong>Body (Stripe) :</strong></p>
+<pre><code class="language-json">{
+  &quot;paymentMethodId&quot;: &quot;pm_xxx&quot;
+}
+</code></pre>
+<p><strong>Body (PayPal) :</strong></p>
+<pre><code class="language-json">{
+  &quot;payerId&quot;: &quot;xxx&quot;,
+  &quot;token&quot;: &quot;EC-xxx&quot;
+}
+</code></pre>
+<p><strong>Logique :</strong></p>
+<ol>
+<li>Confirmer avec le provider (Stripe/PayPal)</li>
+<li>Mettre à jour le statut Payment → <code>completed</code></li>
+<li>Mettre à jour la commande → <code>confirmed</code></li>
+<li>Envoyer email de confirmation</li>
+</ol>
+<p><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;status&quot;: &quot;completed&quot;,
+    &quot;transactionId&quot;: &quot;pi_xxx&quot;
+  }
+}
+</code></pre>
+<hr>
+<h2>7.3 GET /api/payments/methods</h2>
+<p><strong>Description :</strong> Méthodes de paiement disponibles<br><strong>Auth :</strong> Non<br><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: [
+    { &quot;id&quot;: &quot;credit_card&quot;, &quot;name&quot;: &quot;Carte bancaire&quot;, &quot;icon&quot;: &quot;credit-card&quot;, &quot;enabled&quot;: true },
+    { &quot;id&quot;: &quot;paypal&quot;, &quot;name&quot;: &quot;PayPal&quot;, &quot;icon&quot;: &quot;paypal&quot;, &quot;enabled&quot;: true },
+    { &quot;id&quot;: &quot;apple_pay&quot;, &quot;name&quot;: &quot;Apple Pay&quot;, &quot;icon&quot;: &quot;apple&quot;, &quot;enabled&quot;: true },
+    { &quot;id&quot;: &quot;google_pay&quot;, &quot;name&quot;: &quot;Google Pay&quot;, &quot;icon&quot;: &quot;google&quot;, &quot;enabled&quot;: true },
+    { &quot;id&quot;: &quot;mobile_money&quot;, &quot;name&quot;: &quot;Mobile Money&quot;, &quot;icon&quot;: &quot;smartphone&quot;, &quot;enabled&quot;: true }
+  ]
+}
+</code></pre>
+<hr>
+<h2>7.4 POST /api/payments/:paymentId/refund</h2>
+<p><strong>Description :</strong> Rembourser un paiement<br><strong>Auth :</strong> Oui (admin)<br><strong>Body :</strong></p>
+<pre><code class="language-json">{
+  &quot;amount&quot;: 75.97,
+  &quot;reason&quot;: &quot;Produit défectueux&quot;
+}
+</code></pre>
+<p><strong>Logique :</strong></p>
+<ol>
+<li>Créer le remboursement Stripe/PayPal</li>
+<li>Mettre à jour Payment → <code>refunded</code> ou <code>partially_refunded</code></li>
+<li>Mettre à jour Order → <code>refunded</code></li>
+<li>Remettre le stock</li>
+<li>Envoyer email de notification</li>
+</ol>
+<hr>
+<h2>7.5 GET /api/payments/history</h2>
+<p><strong>Description :</strong> Historique des paiements (admin)<br><strong>Auth :</strong> Oui (admin)<br><strong>Query :</strong> <code>page</code>, <code>limit</code>, <code>status</code>, <code>method</code>, <code>dateFrom</code>, <code>dateTo</code><br><strong>Réponse 200 :</strong> Liste paginée de paiements</p>
+<hr>
+<h2>7.6 Webhooks Stripe</h2>
+<p><strong>Route :</strong> <code>POST /api/webhooks/stripe</code><br><strong>Auth :</strong> Signature Stripe (pas JWT)<br><strong>Événements gérés :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Événement</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>payment_intent.succeeded</code></td>
+<td>Confirmer le paiement</td>
+</tr>
+<tr>
+<td><code>payment_intent.payment_failed</code></td>
+<td>Marquer comme échoué</td>
+</tr>
+<tr>
+<td><code>charge.refunded</code></td>
+<td>Traiter le remboursement</td>
+</tr>
+<tr>
+<td><code>charge.dispute.created</code></td>
+<td>Notifier l&#39;admin</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>7.7 Webhooks PayPal</h2>
+<p><strong>Route :</strong> <code>POST /api/webhooks/paypal</code><br><strong>Auth :</strong> Signature PayPal<br><strong>Événements gérés :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Événement</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>PAYMENT.CAPTURE.COMPLETED</code></td>
+<td>Confirmer le paiement</td>
+</tr>
+<tr>
+<td><code>PAYMENT.CAPTURE.DENIED</code></td>
+<td>Marquer comme échoué</td>
+</tr>
+<tr>
+<td><code>PAYMENT.CAPTURE.REFUNDED</code></td>
+<td>Traiter le remboursement</td>
+</tr>
+</tbody></table>
+<hr>
+<h1>Chapitre 8 — API REST : Vendeur</h1>
+<p>Base URL : <code>/api/seller</code><br><strong>Auth requise :</strong> Oui (rôle <code>seller</code>) sauf <code>/register</code></p>
+<h2>8.1 POST /api/seller/register</h2>
+<p><strong>Description :</strong> Inscription vendeur (un buyer peut devenir seller)<br><strong>Auth :</strong> Oui (buyer)<br><strong>Body :</strong></p>
+<pre><code class="language-json">{
+  &quot;shopName&quot;: &quot;Ma Boutique&quot;,
+  &quot;description&quot;: &quot;Description de ma boutique&quot;,
+  &quot;category&quot;: &quot;Électronique&quot;,
+  &quot;country&quot;: &quot;France&quot;,
+  &quot;businessType&quot;: &quot;individual | company&quot;
+}
+</code></pre>
+<p><strong>Logique :</strong></p>
+<ol>
+<li>Valider l&#39;unicité du shopName</li>
+<li>Créer le profil Seller</li>
+<li>Générer le slug à partir du shopName</li>
+<li>Mettre à jour le rôle User → <code>seller</code></li>
+</ol>
+<p><strong>Réponse 201 :</strong> Profil vendeur créé</p>
+<hr>
+<h2>8.2 GET /api/seller/dashboard</h2>
+<p><strong>Description :</strong> Tableau de bord vendeur<br><strong>Auth :</strong> Oui (seller)<br><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;stats&quot;: {
+      &quot;totalSales&quot;: 1250,
+      &quot;totalRevenue&quot;: 45678.50,
+      &quot;pendingOrders&quot;: 8,
+      &quot;activeProducts&quot;: 45,
+      &quot;averageRating&quot;: 4.7,
+      &quot;conversionRate&quot;: 3.2
+    },
+    &quot;recentOrders&quot;: [
+      { &quot;id&quot;: &quot;uuid&quot;, &quot;orderNumber&quot;: &quot;GM-2026-000123&quot;, &quot;totalAmount&quot;: 89.97, &quot;status&quot;: &quot;pending&quot;, &quot;createdAt&quot;: &quot;...&quot; }
+    ],
+    &quot;salesChart&quot;: [
+      { &quot;date&quot;: &quot;2026-07-01&quot;, &quot;sales&quot;: 1200, &quot;orders&quot;: 15 },
+      { &quot;date&quot;: &quot;2026-07-02&quot;, &quot;sales&quot;: 980, &quot;orders&quot;: 12 }
+    ],
+    &quot;topProducts&quot;: [
+      { &quot;id&quot;: &quot;uuid&quot;, &quot;name&quot;: &quot;iPhone 15&quot;, &quot;salesCount&quot;: 45, &quot;revenue&quot;: 53995.55 }
+    ]
+  }
+}
+</code></pre>
+<hr>
+<h2>8.3 GET /api/seller/shop</h2>
+<p><strong>Description :</strong> Profil de la boutique<br><strong>Auth :</strong> Oui (seller)<br><strong>Réponse 200 :</strong> Détail du profil seller + paramètres</p>
+<hr>
+<h2>8.4 PUT /api/seller/shop</h2>
+<p><strong>Description :</strong> Modifier la boutique<br><strong>Auth :</strong> Oui (seller)<br><strong>Body :</strong> Champs modifiables (shopName, description, logo, banner, etc.)<br><strong>Réponse 200 :</strong> Profil mis à jour</p>
+<hr>
+<h2>8.5 GET /api/seller/products</h2>
+<p><strong>Description :</strong> Produits du vendeur<br><strong>Auth :</strong> Oui (seller)<br><strong>Query :</strong> <code>page</code>, <code>limit</code>, <code>status</code>, <code>search</code>, <code>sort</code><br><strong>Réponse 200 :</strong> Liste paginée des produits du vendeur (tous statuts)</p>
+<hr>
+<h2>8.6 POST /api/seller/products</h2>
+<p><strong>Description :</strong> Créer un produit<br><strong>Auth :</strong> Oui (seller)<br><strong>Body :</strong> Identique à 5.1.10 (POST /api/products)<br><strong>Effet :</strong> <code>sellerId</code> est automatiquement <code>req.user.sellerId</code></p>
+<hr>
+<h2>8.7 PUT /api/seller/products/:id</h2>
+<p><strong>Description :</strong> Modifier un produit du vendeur<br><strong>Auth :</strong> Oui (propriétaire)<br><strong>Vérification :</strong> Le produit appartient au vendeur courant</p>
+<hr>
+<h2>8.8 DELETE /api/seller/products/:id</h2>
+<p><strong>Description :</strong> Supprimer un produit<br><strong>Auth :</strong> Oui (propriétaire)<br><strong>Condition :</strong> Pas de commandes en cours pour ce produit</p>
+<hr>
+<h2>8.9 GET /api/seller/orders</h2>
+<p><strong>Description :</strong> Commandes contenant des produits du vendeur<br><strong>Auth :</strong> Oui (seller)<br><strong>Query :</strong> <code>page</code>, <code>limit</code>, <code>status</code>, <code>dateFrom</code>, <code>dateTo</code><br><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: &quot;uuid&quot;,
+      &quot;orderNumber&quot;: &quot;GM-2026-000123&quot;,
+      &quot;buyer&quot;: { &quot;name&quot;: &quot;Jean Dupont&quot; },
+      &quot;items&quot;: [
+        { &quot;productName&quot;: &quot;iPhone 15&quot;, &quot;quantity&quot;: 1, &quot;unitPrice&quot;: 79.98 }
+      ],
+      &quot;totalAmount&quot;: 79.98,
+      &quot;status&quot;: &quot;confirmed&quot;,
+      &quot;createdAt&quot;: &quot;...&quot;
+    }
+  ],
+  &quot;meta&quot;: { ... }
+}
+</code></pre>
+<hr>
+<h2>8.10 GET /api/seller/orders/:id</h2>
+<p><strong>Description :</strong> Détail d&#39;une commande vendeur<br><strong>Auth :</strong> Oui (seller)<br><strong>Vérification :</strong> Le vendeur a au moins un item dans cette commande</p>
+<hr>
+<h2>8.11 PATCH /api/seller/orders/:id/status</h2>
+<p><strong>Description :</strong> Mettre à jour le statut d&#39;un item de commande<br><strong>Auth :</strong> Oui (seller)<br><strong>Body :</strong></p>
+<pre><code class="language-json">{ &quot;status&quot;: &quot;processing | shipped | delivered&quot; }
+</code></pre>
+<p><strong>Logique :</strong></p>
+<ul>
+<li>Si shipped → enregistrer le numéro de suivi</li>
+<li>Si tous les items d&#39;une commande sont livrés → commande = livrée</li>
+</ul>
+<hr>
+<h2>8.12 GET /api/seller/analytics</h2>
+<p><strong>Description :</strong> Statistiques avancées du vendeur<br><strong>Auth :</strong> Oui (seller)<br><strong>Query :</strong> <code>period</code> (7d | 30d | 90d | 1y)<br><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;revenue&quot;: { &quot;total&quot;: 45678.50, &quot;change&quot;: 12.5 },
+    &quot;orders&quot;: { &quot;total&quot;: 350, &quot;change&quot;: 8.2 },
+    &quot;averageOrderValue&quot;: 130.51,
+    &quot;conversionRate&quot;: 3.2,
+    &quot;topProducts&quot;: [...],
+    &quot;salesByDay&quot;: [...],
+    &quot;salesByCategory&quot;: [...],
+    &quot;customerRetention&quot;: 45.2
+  }
+}
+</code></pre>
+<hr>
+<h2>8.13 GET /api/seller/payouts</h2>
+<p><strong>Description :</strong> Historique des virements<br><strong>Auth :</strong> Oui (seller)<br><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: &quot;uuid&quot;,
+      &quot;amount&quot;: 1250.00,
+      &quot;currency&quot;: &quot;EUR&quot;,
+      &quot;status&quot;: &quot;completed&quot;,
+      &quot;method&quot;: &quot;bank_transfer&quot;,
+      &quot;paidAt&quot;: &quot;2026-07-01T10:00:00Z&quot;
+    }
+  ]
+}
+</code></pre>
+<hr>
+<h2>8.14 PUT /api/seller/bank-account</h2>
+<p><strong>Description :</strong> Mettre à jour les infos bancaires<br><strong>Auth :</strong> Oui (seller)<br><strong>Body :</strong></p>
+<pre><code class="language-json">{
+  &quot;iban&quot;: &quot;FR76...&quot;,
+  &quot;bic&quot;: &quot;BNPAFRPP&quot;,
+  &quot;holderName&quot;: &quot;Jean Dupont&quot;
+}
+</code></pre>
+<hr>
+<h1>Chapitre 9 — API REST : Administration</h1>
+<p>Base URL : <code>/api/admin</code><br><strong>Auth requise :</strong> Oui (rôle <code>admin</code>)</p>
+<h2>9.1 GET /api/admin/dashboard</h2>
+<p><strong>Description :</strong> Tableau de bord administrateur<br><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;stats&quot;: {
+      &quot;totalUsers&quot;: 125000,
+      &quot;totalSellers&quot;: 8500,
+      &quot;totalProducts&quot;: 450000,
+      &quot;totalOrders&quot;: 89000,
+      &quot;totalRevenue&quot;: 2500000,
+      &quot;monthlyRevenue&quot;: 450000,
+      &quot;pendingOrders&quot;: 120,
+      &quot;pendingPayouts&quot;: 45,
+      &quot;openTickets&quot;: 28
+    },
+    &quot;recentOrders&quot;: [...],
+    &quot;newUsers&quot;: [...],
+    &quot;revenueChart&quot;: [...],
+    &quot;topSellers&quot;: [...],
+    &quot;alerts&quot;: [
+      { &quot;type&quot;: &quot;warning&quot;, &quot;message&quot;: &quot;15 produits en rupture de stock&quot; },
+      { &quot;type&quot;: &quot;info&quot;, &quot;message&quot;: &quot;12 nouvelles demandes vendeur&quot; }
+    ]
+  }
+}
+</code></pre>
+<hr>
+<h2>9.2 GET /api/admin/users</h2>
+<p><strong>Description :</strong> Liste des utilisateurs<br><strong>Query :</strong> <code>page</code>, <code>limit</code>, <code>role</code>, <code>status</code>, <code>search</code>, <code>sort</code><br><strong>Réponse 200 :</strong> Liste paginée</p>
+<pre><code class="language-json">{
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: &quot;uuid&quot;,
+      &quot;name&quot;: &quot;Jean Dupont&quot;,
+      &quot;email&quot;: &quot;jean@email.com&quot;,
+      &quot;role&quot;: &quot;buyer&quot;,
+      &quot;status&quot;: &quot;active&quot;,
+      &quot;ordersCount&quot;: 15,
+      &quot;totalSpent&quot;: 1250.00,
+      &quot;createdAt&quot;: &quot;...&quot;
+    }
+  ]
+}
+</code></pre>
+<hr>
+<h2>9.3 GET /api/admin/users/:id</h2>
+<p><strong>Description :</strong> Détail d&#39;un utilisateur<br><strong>Réponse 200 :</strong> Profil complet + adresses + dernières commandes</p>
+<hr>
+<h2>9.4 PATCH /api/admin/users/:id/status</h2>
+<p><strong>Description :</strong> Changer le statut d&#39;un utilisateur<br><strong>Body :</strong></p>
+<pre><code class="language-json">{ &quot;status&quot;: &quot;active | inactive | suspended | banned&quot; }
+</code></pre>
+<p><strong>Effet :</strong> Si banned → supprime tous les refresh tokens</p>
+<hr>
+<h2>9.5 PATCH /api/admin/users/:id/role</h2>
+<p><strong>Description :</strong> Changer le rôle d&#39;un utilisateur<br><strong>Body :</strong></p>
+<pre><code class="language-json">{ &quot;role&quot;: &quot;buyer | seller | admin | delivery&quot; }
+</code></pre>
+<hr>
+<h2>9.6 GET /api/admin/products</h2>
+<p><strong>Description :</strong> Tous les produits (modération)<br><strong>Query :</strong> <code>page</code>, <code>limit</code>, <code>status</code>, <code>category</code>, <code>search</code>, <code>sort</code><br><strong>Réponse 200 :</strong> Liste paginée avec infos vendeur</p>
+<hr>
+<h2>9.7 PATCH /api/admin/products/:id/moderate</h2>
+<p><strong>Description :</strong> Modérer un produit<br><strong>Body :</strong></p>
+<pre><code class="language-json">{ &quot;action&quot;: &quot;approve | reject | suspend&quot; }
+</code></pre>
+<p><strong>Effets :</strong></p>
+<ul>
+<li>approve → status = <code>active</code></li>
+<li>reject → status = <code>inactive</code> + notification au vendeur</li>
+<li>suspend → status = <code>suspended</code> + notification</li>
+</ul>
+<hr>
+<h2>9.8 GET /api/admin/orders</h2>
+<p><strong>Description :</strong> Toutes les commandes<br><strong>Query :</strong> <code>page</code>, <code>limit</code>, <code>status</code>, <code>dateFrom</code>, <code>dateTo</code>, <code>seller</code>, <code>search</code><br><strong>Réponse 200 :</strong> Liste paginée</p>
+<hr>
+<h2>9.9 PATCH /api/admin/orders/:id/status</h2>
+<p><strong>Description :</strong> Modifier le statut d&#39;une commande (admin override)<br><strong>Body :</strong></p>
+<pre><code class="language-json">{ &quot;status&quot;: &quot;processing | shipped | delivered | cancelled | refunded&quot; }
+</code></pre>
+<hr>
+<h2>9.10 POST /api/admin/orders/:id/refund</h2>
+<p><strong>Description :</strong> Rembourser une commande (admin)<br><strong>Body :</strong></p>
+<pre><code class="language-json">{
+  &quot;amount&quot;: 75.97,
+  &quot;reason&quot;: &quot;Litige résolu en faveur de l&#39;acheteur&quot;
+}
+</code></pre>
+<p><strong>Effets :</strong></p>
+<ol>
+<li>Créer le remboursement (Stripe/PayPal)</li>
+<li>Mettre à jour paiement + commande</li>
+<li>Remettre le stock</li>
+<li>Notifier l&#39;acheteur et le vendeur</li>
+</ol>
+<hr>
+<h2>9.11 GET /api/admin/reports/:type</h2>
+<p><strong>Description :</strong> Rapports et statistiques<br><strong>Types disponibles :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>sales</td>
+<td>Ventes par période</td>
+</tr>
+<tr>
+<td>revenue</td>
+<td>Revenus par catégorie/vendeur</td>
+</tr>
+<tr>
+<td>users</td>
+<td>Inscriptions, activité</td>
+</tr>
+<tr>
+<td>products</td>
+<td>Produits populaires, catégories</td>
+</tr>
+<tr>
+<td>sellers</td>
+<td>Performance vendeurs</td>
+</tr>
+<tr>
+<td>payouts</td>
+<td>Virements effectués</td>
+</tr>
+</tbody></table>
+<p><strong>Query :</strong> <code>period</code> (7d | 30d | 90d | 1y), <code>groupBy</code> (day | week | month)</p>
+<hr>
+<h2>9.12 GET /api/admin/settings</h2>
+<p><strong>Description :</strong> Paramètres système<br><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;siteName&quot;: &quot;GlobalMarket&quot;,
+    &quot;siteDescription&quot;: &quot;Marketplace mondiale&quot;,
+    &quot;commissionRate&quot;: 0.12,
+    &quot;paymentMethods&quot;: [&quot;credit_card&quot;, &quot;paypal&quot;, &quot;mobile_money&quot;],
+    &quot;defaultShippingRate&quot;: 5.99,
+    &quot;shippingFreeThreshold&quot;: 50,
+    &quot;emailOrderConfirmation&quot;: true,
+    &quot;emailOrderShipped&quot;: true,
+    &quot;emailNewSeller&quot;: true,
+    &quot;emailLowStock&quot;: true
+  }
+}
+</code></pre>
+<hr>
+<h2>9.13 PUT /api/admin/settings</h2>
+<p><strong>Description :</strong> Modifier les paramètres système<br><strong>Body :</strong> Champs modifiables<br><strong>Effet :</strong> Invalider le cache Redis</p>
+<hr>
+<h1>Chapitre 10 — API REST : Support &amp; Uploads</h1>
+<h2>10.1 Support</h2>
+<p>Base URL : <code>/api/support</code></p>
+<h3>10.1.1 GET /api/support/tickets</h3>
+<p><strong>Description :</strong> Liste des tickets de support<br><strong>Auth :</strong> Oui<br><strong>Règle :</strong></p>
+<ul>
+<li>Buyer/Admin voient tous les tickets</li>
+<li>Seller voit les siens + tickets liés à ses produits</li>
+<li>Query : <code>page</code>, <code>limit</code>, <code>status</code>, <code>priority</code>, <code>category</code></li>
+</ul>
+<p><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: &quot;uuid&quot;,
+      &quot;subject&quot;: &quot;Commande non reçue&quot;,
+      &quot;category&quot;: &quot;order&quot;,
+      &quot;priority&quot;: &quot;high&quot;,
+      &quot;status&quot;: &quot;open&quot;,
+      &quot;messagesCount&quot;: 3,
+      &quot;lastMessage&quot;: { &quot;message&quot;: &quot;...&quot;, &quot;createdAt&quot;: &quot;...&quot; },
+      &quot;createdAt&quot;: &quot;...&quot;
+    }
+  ]
+}
+</code></pre>
+<hr>
+<h3>10.1.2 POST /api/support/tickets</h3>
+<p><strong>Description :</strong> Créer un ticket<br><strong>Auth :</strong> Oui<br><strong>Body :</strong></p>
+<pre><code class="language-json">{
+  &quot;subject&quot;: &quot;Commande non reçue&quot;,
+  &quot;category&quot;: &quot;order | product | account | technical | other&quot;,
+  &quot;priority&quot;: &quot;low | medium | high | urgent&quot;,
+  &quot;orderId&quot;: &quot;uuid (optionnel)&quot;,
+  &quot;message&quot;: &quot;Description du problème&quot;
+}
+</code></pre>
+<p><strong>Réponse 201 :</strong> Ticket créé</p>
+<hr>
+<h3>10.1.3 GET /api/support/tickets/:id</h3>
+<p><strong>Description :</strong> Détail d&#39;un ticket + messages<br><strong>Auth :</strong> Oui (propriétaire ou admin)<br><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;uuid&quot;,
+    &quot;subject&quot;: &quot;Commande non reçue&quot;,
+    &quot;category&quot;: &quot;order&quot;,
+    &quot;priority&quot;: &quot;high&quot;,
+    &quot;status&quot;: &quot;in_progress&quot;,
+    &quot;order&quot;: { &quot;id&quot;: &quot;uuid&quot;, &quot;orderNumber&quot;: &quot;GM-2026-000123&quot; },
+    &quot;messages&quot;: [
+      {
+        &quot;id&quot;: &quot;uuid&quot;,
+        &quot;sender&quot;: { &quot;id&quot;: &quot;uuid&quot;, &quot;name&quot;: &quot;Jean&quot;, &quot;role&quot;: &quot;buyer&quot; },
+        &quot;message&quot;: &quot;Ma commande du 15 juin n&#39;est pas arrivée&quot;,
+        &quot;isInternal&quot;: false,
+        &quot;createdAt&quot;: &quot;...&quot;
+      }
+    ],
+    &quot;createdAt&quot;: &quot;...&quot;
+  }
+}
+</code></pre>
+<hr>
+<h3>10.1.4 POST /api/support/tickets/:ticketId/messages</h3>
+<p><strong>Description :</strong> Ajouter un message<br><strong>Auth :</strong> Oui (propriétaire ou admin)<br><strong>Body :</strong></p>
+<pre><code class="language-json">{
+  &quot;message&quot;: &quot;Nous avons contacté le transporteur&quot;,
+  &quot;attachments&quot;: [&quot;url1&quot;, &quot;url2&quot;]
+}
+</code></pre>
+<p><strong>Effets :</strong></p>
+<ul>
+<li>Incrémente le compteur de messages</li>
+<li>Met à jour <code>updatedAt</code></li>
+<li>Si admin → notifie l&#39;utilisateur</li>
+<li>Si utilisateur → notifie l&#39;admin</li>
+</ul>
+<hr>
+<h3>10.1.5 POST /api/support/tickets/:id/close</h3>
+<p><strong>Description :</strong> Fermer un ticket<br><strong>Auth :</strong> Oui (propriétaire ou admin)<br><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{ &quot;message&quot;: &quot;Ticket fermé&quot; }
+</code></pre>
+<hr>
+<h3>10.1.6 GET /api/support/kb</h3>
+<p><strong>Description :</strong> Base de connaissances<br><strong>Auth :</strong> Non<br><strong>Query :</strong> <code>search</code>, <code>category</code><br><strong>Réponse 200 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: &quot;uuid&quot;,
+      &quot;title&quot;: &quot;Comment suivre ma commande&quot;,
+      &quot;category&quot;: &quot;Commandes&quot;,
+      &quot;excerpt&quot;: &quot;...&quot;,
+      &quot;slug&quot;: &quot;suivre-commande&quot;
+    }
+  ]
+}
+</code></pre>
+<hr>
+<h3>10.1.7 GET /api/support/kb/:id</h3>
+<p><strong>Description :</strong> Article de la base de connaissances<br><strong>Auth :</strong> Non<br><strong>Réponse 200 :</strong> Article complet (markdown)</p>
+<hr>
+<h2>10.2 Uploads</h2>
+<p>Base URL : <code>/api/uploads</code></p>
+<h3>10.2.1 POST /api/uploads/image</h3>
+<p><strong>Description :</strong> Upload d&#39;une image<br><strong>Auth :</strong> Oui<br><strong>Content-Type :</strong> <code>multipart/form-data</code><br><strong>Champ :</strong> <code>file</code></p>
+<p><strong>Contraintes :</strong></p>
+<ul>
+<li>Formats : jpg, jpeg, png, webp, gif</li>
+<li>Taille max : 5 Mo</li>
+</ul>
+<p><strong>Réponse 201 :</strong></p>
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;uuid&quot;,
+    &quot;url&quot;: &quot;/uploads/images/abc123.webp&quot;,
+    &quot;filename&quot;: &quot;abc123.webp&quot;,
+    &quot;mimetype&quot;: &quot;image/webp&quot;,
+    &quot;size&quot;: 245000
+  }
+}
+</code></pre>
+<hr>
+<h3>10.2.2 POST /api/uploads/images</h3>
+<p><strong>Description :</strong> Upload multiple<br><strong>Auth :</strong> Oui<br><strong>Champ :</strong> <code>files</code> (max 10)<br><strong>Réponse 201 :</strong> Tableau d&#39;images uploadées</p>
+<hr>
+<h3>10.2.3 POST /api/uploads/document</h3>
+<p><strong>Description :</strong> Upload de document<br><strong>Auth :</strong> Oui<br><strong>Champ :</strong> <code>file</code><br><strong>Formats autorisés :</strong> pdf, doc, docx<br><strong>Taille max :</strong> 10 Mo</p>
+<hr>
+<h3>10.2.4 DELETE /api/uploads/:fileId</h3>
+<p><strong>Description :</strong> Supprimer un fichier<br><strong>Auth :</strong> Oui (propriétaire)<br><strong>Effet :</strong> Supprime le fichier physique + l&#39;enregistrement BDD</p>
+<hr>
+<h1>Chapitre 11 — Sécurité &amp; Authentification</h1>
+<h2>11.1 Authentification JWT</h2>
+<h3>11.1.1 Tokens</h3>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Durée</th>
+<th>Stockage</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Access Token</td>
+<td>7 jours</td>
+<td>Header <code>Authorization</code></td>
+<td>Authentifier chaque requête</td>
+</tr>
+<tr>
+<td>Refresh Token</td>
+<td>30 jours</td>
+<td>HTTP-only cookie + BDD</td>
+<td>Renouveler l&#39;access token</td>
+</tr>
+</tbody></table>
+<h3>11.1.2 Structure du JWT</h3>
+<pre><code class="language-json">{
+  &quot;sub&quot;: &quot;uuid utilisateur&quot;,
+  &quot;email&quot;: &quot;string&quot;,
+  &quot;role&quot;: &quot;buyer | seller | admin | delivery&quot;,
+  &quot;iat&quot;: 1753000000,
+  &quot;exp&quot;: 1753604800
+}
+</code></pre>
+<h3>11.1.3 Flux d&#39;authentification</h3>
+<pre><code>1. Login → credentials validés → JWT signé → retourné au client
+2. Client stocke le token (localStorage)
+3. Chaque requête : Authorization: Bearer &lt;token&gt;
+4. Middleware auth.js : vérifie la signature, injecte req.user
+5. Token expiré → 401 → client appelle /refresh-token
+6. Refresh token invalide → 401 → reconnexion requise
+</code></pre>
+<h2>11.2 Hachage des mots de passe</h2>
+<p><strong>Algorithme :</strong> bcrypt (12 rounds)</p>
+<pre><code class="language-js">// Hachage
+const hash = await bcrypt.hash(password, 12)
+
+// Vérification
+const valid = await bcrypt.compare(inputPassword, hash)
+</code></pre>
+<h2>11.3 RBAC (Role-Based Access Control)</h2>
+<pre><code class="language-js">// Middleware de rôle
+function requireRole(...roles) {
+  return (req, res, next) =&gt; {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({ message: &#39;Accès interdit&#39; })
+    }
+    next()
+  }
+}
+
+// Utilisation
+router.get(&#39;/admin/users&#39;, auth, requireRole(&#39;admin&#39;), adminController.getUsers)
+router.post(&#39;/seller/products&#39;, auth, requireRole(&#39;seller&#39;), sellerController.createProduct)
+</code></pre>
+<h3>Matrice d&#39;accès</h3>
+<table>
+<thead>
+<tr>
+<th>Ressource</th>
+<th>Buyer</th>
+<th>Seller</th>
+<th>Admin</th>
+<th>Delivery</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Lire produits</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Créer produit</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Modifier produit</td>
+<td>❌</td>
+<td>Propriétaire</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Lire commandes</td>
+<td>Propriétaire</td>
+<td>Liées</td>
+<td>✅</td>
+<td>Livraisons</td>
+</tr>
+<tr>
+<td>Créer commande</td>
+<td>✅</td>
+<td>❌</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Gérer paiements</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Gérer utilisateurs</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Stats vendeur</td>
+<td>❌</td>
+<td>Propriétaire</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Tickets support</td>
+<td>Propriétaire</td>
+<td>Propriétaire</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+</tbody></table>
+<h2>11.4 Validation des entrées</h2>
+<p><strong>Outil :</strong> Zod</p>
+<pre><code class="language-js">const loginSchema = z.object({
+  email: z.string().email(&#39;Email invalide&#39;),
+  password: z.string().min(8, &#39;Le mot de passe doit contenir au moins 8 caractères&#39;)
+})
+
+// Middleware
+function validate(schema) {
+  return (req, res, next) =&gt; {
+    const result = schema.safeParse(req.body)
+    if (!result.success) {
+      return res.status(400).json({ message: result.error.issues[0].message })
+    }
+    req.body = result.data
+    next()
+  }
+}
+</code></pre>
+<h2>11.5 Protection contre les attaques</h2>
+<table>
+<thead>
+<tr>
+<th>Attaque</th>
+<th>Protection</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Brute force</td>
+<td>Rate limiting (100 req/min par IP)</td>
+</tr>
+<tr>
+<td>SQL injection</td>
+<td>Prisma ORM (pas de SQL brut)</td>
+</tr>
+<tr>
+<td>XSS</td>
+<td>Sanitization des entrées, Content-Security-Policy</td>
+</tr>
+<tr>
+<td>CSRF</td>
+<td>Token SameSite cookie + Origin header</td>
+</tr>
+<tr>
+<td>Man-in-the-middle</td>
+<td>HTTPS obligatoire en production</td>
+</tr>
+<tr>
+<td>Enumeration d&#39;emails</td>
+<td>Réponses uniformisées (toujours 200 pour forgot-password)</td>
+</tr>
+<tr>
+<td>Fichier volumineux</td>
+<td>Limitation taille upload (5 Mo image, 10 Mo document)</td>
+</tr>
+<tr>
+<td>Injections NoSQL</td>
+<td>Validation Zod sur tous les inputs</td>
+</tr>
+</tbody></table>
+<h2>11.6 Rate Limiting</h2>
+<pre><code class="language-js">// Par IP et par route
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000,     // 1 minute
+  max: 100,                 // 100 requêtes par minute
+  message: { message: &#39;Trop de requêtes, veuillez réessayer&#39; }
+})
+
+// Routes sensibles (login, register)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,  // 15 minutes
+  max: 10,                    // 10 tentatives
+  message: { message: &#39;Trop de tentatives, veuillez réessayer plus tard&#39; }
+})
+</code></pre>
+<h2>11.7 Headers de sécurité (Helmet)</h2>
+<pre><code class="language-js">const helmet = require(&#39;helmet&#39;)
+
+app.use(helmet({
+  contentSecurityPolicy: true,
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: &quot;cross-origin&quot; },
+  crossOriginOpenerPolicy: false
+}))
+</code></pre>
+<h2>11.8 Conformité RGPD</h2>
+<table>
+<thead>
+<tr>
+<th>Exigence</th>
+<th>Implémentation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Droit d&#39;accès</td>
+<td>GET /api/auth/me + export données</td>
+</tr>
+<tr>
+<td>Droit de rectification</td>
+<td>PUT /api/auth/profile</td>
+</tr>
+<tr>
+<td>Droit à l&#39;effacement</td>
+<td>DELETE /api/auth/account (soft delete)</td>
+</tr>
+<tr>
+<td>Droit à la portabilité</td>
+<td>Export JSON des données utilisateur</td>
+</tr>
+<tr>
+<td>Consentement cookies</td>
+<td>Bannière de consentement frontend</td>
+</tr>
+<tr>
+<td>Minimisation données</td>
+<td>Seules les données nécessaires sont collectées</td>
+</tr>
+<tr>
+<td>Chiffrement</td>
+<td>Bcrypt (MDP), HTTPS (transport), AES-256 (données sensibles)</td>
+</tr>
+</tbody></table>
+<hr>
+<h1>Chapitre 12 — Intégrations Paiement</h1>
+<h2>12.1 Architecture des paiements</h2>
+<pre><code>┌──────────┐     ┌──────────────┐     ┌─────────────┐
+│  Frontend │────▶│    Backend    │────▶│   Stripe     │
+│           │     │  /payments    │     │   PayPal     │
+│           │◀────│  /webhooks    │◀────│  MobileMoney │
+└──────────┘     └──────────────┘     └─────────────┘
+</code></pre>
+<h2>12.2 Stripe</h2>
+<h3>12.2.1 Configuration</h3>
+<pre><code class="language-js">const stripe = require(&#39;stripe&#39;)(process.env.STRIPE_SECRET_KEY)
+</code></pre>
+<h3>12.2.2 Flux carte bancaire</h3>
+<pre><code>1. Frontend → POST /payments/intent { amount, currency, orderId }
+2. Backend → stripe.paymentIntents.create({ amount: 7597, currency: &#39;eur&#39;, metadata: { orderId } })
+3. Backend → retourne { clientSecret: &#39;pi_xxx_secret_xxx&#39; }
+4. Frontend → stripe.confirmCardPayment(clientSecret, { payment_method: { card: ... } })
+5. Stripe → webhook payment_intent.succeeded
+6. Backend → met à jour Payment + Order
+</code></pre>
+<h3>12.2.3 Signature webhook</h3>
+<pre><code class="language-js">app.post(&#39;/api/webhooks/stripe&#39;, express.raw({ type: &#39;application/json&#39; }), (req, res) =&gt; {
+  const sig = req.headers[&#39;stripe-signature&#39;]
+  const event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET)
+  // ... traiter l&#39;événement
+  res.json({ received: true })
+})
+</code></pre>
+<h2>12.3 PayPal</h2>
+<h3>12.3.1 Configuration</h3>
+<pre><code class="language-js">const paypal = require(&#39;@paypal/checkout-server-sdk&#39;)
+const client = new paypal.core.PayPalHttpClient(
+  new paypal.core.SandboxEnvironment(process.env.PAYPAL_CLIENT_ID, process.env.PAYPAL_CLIENT_SECRET)
+)
+</code></pre>
+<h3>12.3.2 Flux PayPal</h3>
+<pre><code>1. Frontend → POST /payments/intent { amount, currency, orderId, method: &#39;paypal&#39; }
+2. Backend → créer l&#39;ordre PayPal
+3. Backend → retourne { paypalOrderId, approvalUrl }
+4. Frontend → redirige vers approvalUrl
+5. User approuve → retourne vers frontend avec token
+6. Frontend → POST /payments/:id/confirm { payerId, token }
+7. Backend → capture le paiement
+8. PayPal → webhook PAYMENT.CAPTURE.COMPLETED
+</code></pre>
+<h2>12.4 Mobile Money (Orange Money, M-Pesa, Wave)</h2>
+<h3>12.4.1 Architecture</h3>
+<pre><code>1. Frontend → POST /payments/intent { amount, currency, orderId, method: &#39;mobile_money&#39;, phoneNumber }
+2. Backend → initie le paiement via l&#39;API du provider
+3. Backend → envoie une demande de paiement au téléphone
+4. User confirme sur son téléphone
+5. Provider → webhook de confirmation
+6. Backend → met à jour le statut
+</code></pre>
+<h3>12.4.2 Providers supportés</h3>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Pays</th>
+<th>API</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Orange Money</td>
+<td>Sénégal, Côte d&#39;Ivoire, Mali</td>
+<td>REST API</td>
+</tr>
+<tr>
+<td>M-Pesa</td>
+<td>Kenya, Tanzanie</td>
+<td>Daraja API</td>
+</tr>
+<tr>
+<td>Wave</td>
+<td>Sénégal, Côte d&#39;Ivoire</td>
+<td>REST API</td>
+</tr>
+<tr>
+<td>MTN Mobile Money</td>
+<td>Cameroun, Burkina Faso</td>
+<td>REST API</td>
+</tr>
+</tbody></table>
+<h2>12.5 Système d&#39;escrow</h2>
+<p>Le paiement n&#39;est pas transféré directement au vendeur. Le flux :</p>
+<pre><code>1. Acheteur paie → fonds détenus par GlobalMarket (escrow)
+2. Produit livré + confirmation → délai de réclamation (48h)
+3. Pas de litige → fonds transférés au vendeur (moins commission)
+4. Litige → fonds gelés jusqu&#39;à résolution
+</code></pre>
+<h3>Calcul commission</h3>
+<pre><code>Montant vendeur = totalArticle × (1 - commissionRate)
+Commission = totalArticle × commissionRate
+
+Exemple :
+  Produit : 100 €
+  Commission Basic : 12% → Vendeur reçoit 88 €
+  Commission Pro : 8% → Vendeur reçoit 92 €
+  Commission Enterprise : 5% → Vendeur reçoit 95 €
+</code></pre>
+<h2>12.6 Payouts (Virements vendeurs)</h2>
+<h3>Fréquence</h3>
+<table>
+<thead>
+<tr>
+<th>Plan</th>
+<th>Fréquence minimum</th>
+<th>Montant minimum</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Basic</td>
+<td>Mensuel</td>
+<td>50 €</td>
+</tr>
+<tr>
+<td>Pro</td>
+<td>Hebdomadaire</td>
+<td>25 €</td>
+</tr>
+<tr>
+<td>Enterprise</td>
+<td>Hebdomadaire</td>
+<td>10 €</td>
+</tr>
+</tbody></table>
+<h3>Processus</h3>
+<pre><code>1. Admin lance le batch de payouts (cron job)
+2. Pour chaque vendeur éligible :
+   a. Calculer le solde disponible (revenus - commissions - remboursements)
+   b. Créer un enregistrement Payout
+   c. Initier le virement bancaire / PayPal
+   d. Mettre à jour le statut
+3. Notifier le vendeur par email
+</code></pre>
+<hr>
+<h1>Chapitre 13 — Notifications &amp; Emails</h1>
+<h2>13.1 Système de notifications</h2>
+<h3>13.1.1 Types de notifications</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Canal</th>
+<th>Déclencheur</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Commande confirmée</td>
+<td>Email + DB</td>
+<td>Paiement réussi</td>
+</tr>
+<tr>
+<td>Commande expédiée</td>
+<td>Email + DB + Push</td>
+<td>Seller change statut → shipped</td>
+</tr>
+<tr>
+<td>Commande livrée</td>
+<td>Email + DB</td>
+<td>Confirmation livraison</td>
+</tr>
+<tr>
+<td>Commande annulée</td>
+<td>Email + DB</td>
+<td>Annulation par buyer ou seller</td>
+</tr>
+<tr>
+<td>Remboursement</td>
+<td>Email + DB</td>
+<td>Remboursement traité</td>
+</tr>
+<tr>
+<td>Nouveau produit vendeur</td>
+<td>DB</td>
+<td>Création produit</td>
+</tr>
+<tr>
+<td>Produit modéré</td>
+<td>Email + DB</td>
+<td>Approbation/rejet admin</td>
+</tr>
+<tr>
+<td>Nouveau ticket</td>
+<td>DB</td>
+<td>Création ticket support</td>
+</tr>
+<tr>
+<td>Réponse ticket</td>
+<td>Email + DB</td>
+<td>Nouveau message admin</td>
+</tr>
+<tr>
+<td>Compte vendeur approuvé</td>
+<td>Email + DB</td>
+<td>Verification admin</td>
+</tr>
+<tr>
+<td>Solde bas</td>
+<td>Email</td>
+<td>Stock &lt; lowStockThreshold</td>
+</tr>
+<tr>
+<td>Nouvel abonné newsletter</td>
+<td>Email</td>
+<td>Inscription newsletter</td>
+</tr>
+</tbody></table>
+<h3>13.1.2 Modèle de notification (DB)</h3>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;uuid&quot;,
+  &quot;userId&quot;: &quot;uuid&quot;,
+  &quot;type&quot;: &quot;order | payment | shipping | promotion | system | support&quot;,
+  &quot;title&quot;: &quot;Commande confirmée&quot;,
+  &quot;message&quot;: &quot;Votre commande GM-2026-000123 a été confirmée&quot;,
+  &quot;data&quot;: { &quot;orderId&quot;: &quot;uuid&quot;, &quot;orderNumber&quot;: &quot;GM-2026-000123&quot; },
+  &quot;read&quot;: false,
+  &quot;createdAt&quot;: &quot;2026-07-23T10:00:00Z&quot;
+}
+</code></pre>
+<h2>13.2 Emails transactionnels</h2>
+<h3>13.2.1 Templates</h3>
+<table>
+<thead>
+<tr>
+<th>Template</th>
+<th>Sujet</th>
+<th>Contenu</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>verify-email</td>
+<td>Vérifiez votre email</td>
+<td>Code à 6 chiffres</td>
+</tr>
+<tr>
+<td>reset-password</td>
+<td>Réinitialisez votre mot de passe</td>
+<td>Lien de réinitialisation</td>
+</tr>
+<tr>
+<td>order-confirmation</td>
+<td>Confirmation de commande #{number}</td>
+<td>Détails commande</td>
+</tr>
+<tr>
+<td>order-shipped</td>
+<td>Votre commande #{number} est en route</td>
+<td>Tracking</td>
+</tr>
+<tr>
+<td>order-delivered</td>
+<td>Votre commande #{number} a été livrée</td>
+<td>Récapitulatif</td>
+</tr>
+<tr>
+<td>order-cancelled</td>
+<td>Annulation de commande #{number}</td>
+<td>Raison</td>
+</tr>
+<tr>
+<td>refund-processed</td>
+<td>Remboursement traité</td>
+<td>Montant et délai</td>
+</tr>
+<tr>
+<td>seller-approved</td>
+<td>Votre boutique est approuvée</td>
+<td>Bienvenue</td>
+</tr>
+<tr>
+<td>seller-rejected</td>
+<td>Votre demande de boutique rejetée</td>
+<td>Raison</td>
+</tr>
+<tr>
+<td>new-ticket</td>
+<td>Nouveau ticket #{id}</td>
+<td>Résumé</td>
+</tr>
+<tr>
+<td>ticket-reply</td>
+<td>Réponse à votre ticket</td>
+<td>Message</td>
+</tr>
+<tr>
+<td>low-stock</td>
+<td>Alerte stock bas</td>
+<td>Produit concerné</td>
+</tr>
+<tr>
+<td>payout-completed</td>
+<td>Virement effectué</td>
+<td>Montant</td>
+</tr>
+</tbody></table>
+<h3>13.2.2 Service d&#39;envoi</h3>
+<pre><code class="language-js">// email.service.js
+const nodemailer = require(&#39;nodemailer&#39;)
+
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  secure: true,
+  auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+})
+
+async function sendEmail(to, subject, html) {
+  await transporter.sendMail({
+    from: process.env.EMAIL_FROM,
+    to,
+    subject,
+    html
+  })
+}
+</code></pre>
+<h3>13.2.3 Intégration transactionnelle</h3>
+<pre><code class="language-js">// Dans le service order
+async function createOrder(data) {
+  return await prisma.$transaction(async (tx) =&gt; {
+    // 1. Créer la commande
+    const order = await tx.order.create({ ... })
+
+    // 2. Décrémenter le stock
+    for (const item of items) {
+      await tx.product.update({
+        where: { id: item.productId },
+        data: { stock: { decrement: item.quantity } }
+      })
+    }
+
+    // 3. Créer la notification
+    await tx.notification.create({
+      data: { userId: buyerId, type: &#39;order&#39;, title: &#39;Commande confirmée&#39;, ... }
+    })
+
+    // 4. Envoyer l&#39;email (hors transaction)
+    await emailService.sendOrderConfirmation(order)
+
+    return order
+  })
+}
+</code></pre>
+<h2>13.3 Notifications push (futur)</h2>
+<pre><code class="language-js">// Service push via Firebase Cloud Messaging
+async function sendPushNotification(userId, title, body, data) {
+  const tokens = await getUserPushTokens(userId)
+  await admin.messaging().sendEachForMulticast({
+    tokens,
+    notification: { title, body },
+    data
+  })
+}
+</code></pre>
+<hr>
+<h1>Chapitre 14 — Déploiement &amp; DevOps</h1>
+<h2>14.1 Docker</h2>
+<h3>14.1.1 Dockerfile (Backend)</h3>
+<pre><code class="language-dockerfile">FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/package.json ./
+
+ENV NODE_ENV=production
+EXPOSE 5000
+
+CMD [&quot;sh&quot;, &quot;-c&quot;, &quot;npx prisma migrate deploy &amp;&amp; node dist/app.js&quot;]
+</code></pre>
+<h3>14.1.2 docker-compose.yml</h3>
+<pre><code class="language-yaml">version: &#39;3.8&#39;
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: globalmarket
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: globalmarket_db
+    ports:
+      - &quot;5432:5432&quot;
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [&quot;CMD-SHELL&quot;, &quot;pg_isready -U globalmarket&quot;]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - &quot;6379:6379&quot;
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: [&quot;CMD&quot;, &quot;redis-cli&quot;, &quot;ping&quot;]
+      interval: 5s
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - &quot;5000:5000&quot;
+    environment:
+      DATABASE_URL: postgresql://globalmarket:secret@postgres:5432/globalmarket_db
+      REDIS_URL: redis://redis:6379
+      NODE_ENV: production
+      JWT_SECRET: ${JWT_SECRET}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - uploads:/app/uploads
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - &quot;80:80&quot;
+      - &quot;443:443&quot;
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/certs:/etc/nginx/certs
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+  redisdata:
+  uploads:
+</code></pre>
+<h2>14.2 CI/CD</h2>
+<h3>14.2.1 Pipeline GitHub Actions</h3>
+<pre><code class="language-yaml">name: Backend CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test_db
+        ports: [&quot;5432:5432&quot;]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test_db
+      - run: npm run test
+      - run: npm run lint
+
+  deploy:
+    needs: test
+    if: github.ref == &#39;refs/heads/main&#39;
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to production
+        run: |
+          # Deploy via Docker Compose or cloud provider
+          docker compose -f docker-compose.prod.yml up -d --build
+</code></pre>
+<h2>14.3 Variables d&#39;environnement (production)</h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Sensibilité</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DATABASE_URL</td>
+<td>URL PostgreSQL</td>
+<td>🔒 Secret</td>
+</tr>
+<tr>
+<td>JWT_SECRET</td>
+<td>Clé de signature JWT</td>
+<td>🔒 Secret</td>
+</tr>
+<tr>
+<td>JWT_REFRESH_SECRET</td>
+<td>Clé refresh token</td>
+<td>🔒 Secret</td>
+</tr>
+<tr>
+<td>STRIPE_SECRET_KEY</td>
+<td>Clé API Stripe</td>
+<td>🔒 Secret</td>
+</tr>
+<tr>
+<td>STRIPE_WEBHOOK_SECRET</td>
+<td>Secret webhook Stripe</td>
+<td>🔒 Secret</td>
+</tr>
+<tr>
+<td>PAYPAL_CLIENT_ID</td>
+<td>ID client PayPal</td>
+<td>🔒 Secret</td>
+</tr>
+<tr>
+<td>PAYPAL_CLIENT_SECRET</td>
+<td>Secret PayPal</td>
+<td>🔒 Secret</td>
+</tr>
+<tr>
+<td>SMTP_PASS</td>
+<td>Mot de passe SMTP</td>
+<td>🔒 Secret</td>
+</tr>
+<tr>
+<td>REDIS_URL</td>
+<td>URL Redis</td>
+<td>⚠️ Interne</td>
+</tr>
+<tr>
+<td>NODE_ENV</td>
+<td>Environnement</td>
+<td>ℹ️ Public</td>
+</tr>
+<tr>
+<td>PORT</td>
+<td>Port serveur</td>
+<td>℘️ Config</td>
+</tr>
+</tbody></table>
+<h2>14.4 Monitoring &amp; Logs</h2>
+<h3>14.4.1 Health check</h3>
+<pre><code>GET /api/health
+</code></pre>
+<pre><code class="language-json">{
+  &quot;status&quot;: &quot;ok&quot;,
+  &quot;uptime&quot;: 86400,
+  &quot;database&quot;: &quot;connected&quot;,
+  &quot;redis&quot;: &quot;connected&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;
+}
+</code></pre>
+<h3>14.4.2 Logs structurés</h3>
+<pre><code class="language-json">{
+  &quot;timestamp&quot;: &quot;2026-07-23T10:30:00.000Z&quot;,
+  &quot;level&quot;: &quot;info&quot;,
+  &quot;message&quot;: &quot;Order created&quot;,
+  &quot;orderId&quot;: &quot;uuid&quot;,
+  &quot;userId&quot;: &quot;uuid&quot;,
+  &quot;amount&quot;: 89.97,
+  &quot;requestId&quot;: &quot;req_xxx&quot;,
+  &quot;ip&quot;: &quot;192.168.1.1&quot;
+}
+</code></pre>
+<h3>14.4.3 Métriques clés</h3>
+<table>
+<thead>
+<tr>
+<th>Métrique</th>
+<th>Seuil d&#39;alerte</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Temps de réponse API (p95)</td>
+<td>&gt; 500ms</td>
+</tr>
+<tr>
+<td>Taux d&#39;erreur 5xx</td>
+<td>&gt; 1%</td>
+</tr>
+<tr>
+<td>CPU utilisation</td>
+<td>&gt; 80%</td>
+</tr>
+<tr>
+<td>RAM utilisation</td>
+<td>&gt; 85%</td>
+</tr>
+<tr>
+<td>Connexions DB actives</td>
+<td>&gt; 80</td>
+</tr>
+<tr>
+<td>Queue Redis</td>
+<td>&gt; 1000</td>
+</tr>
+</tbody></table>
+<h2>14.5 Stratégie de backup</h2>
+<table>
+<thead>
+<tr>
+<th>Composant</th>
+<th>Fréquence</th>
+<th>Rétention</th>
+<th>Méthode</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PostgreSQL</td>
+<td>Quotidien</td>
+<td>30 jours</td>
+<td>pg_dump + S3</td>
+</tr>
+<tr>
+<td>PostgreSQL WAL</td>
+<td>Continue</td>
+<td>7 jours</td>
+<td>Streaming replication</td>
+</tr>
+<tr>
+<td>Redis</td>
+<td>Quotidien</td>
+<td>7 jours</td>
+<td>RDB snapshot</td>
+</tr>
+<tr>
+<td>Uploads</td>
+<td>Continu</td>
+<td>—</td>
+<td>S3 sync</td>
+</tr>
+</tbody></table>
+<h2>14.6 Scaling</h2>
+<h3>Phase 1 (0-10K users)</h3>
+<ul>
+<li>1 serveur backend (2 vCPU, 4 GB RAM)</li>
+<li>1 PostgreSQL (managed)</li>
+<li>1 Redis (managed)</li>
+</ul>
+<h3>Phase 2 (10K-100K users)</h3>
+<ul>
+<li>2+ serveurs backend (load balancer)</li>
+<li>PostgreSQL avec read replicas</li>
+<li>Redis Cluster</li>
+</ul>
+<h3>Phase 3 (100K+ users)</h3>
+<ul>
+<li>Kubernetes (EKS/GKE)</li>
+<li>PostgreSQL avec connection pooling (PgBouncer)</li>
+<li>CDN pour les uploads (CloudFront)</li>
+<li>Microservices (payment, notification)</li>
+</ul>
+<hr>
+<h1>Chapitre 15 — Tests &amp; Qualité</h1>
+<h2>15.1 Stratégie de tests</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Couverture cible</th>
+<th>Outils</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Unit tests</td>
+<td>Services, utils, validators</td>
+<td>Vitest</td>
+</tr>
+<tr>
+<td>Integration tests</td>
+<td>API endpoints</td>
+<td>Vitest + Supertest</td>
+</tr>
+<tr>
+<td>E2E tests</td>
+<td>Parcours critiques</td>
+<td>Playwright (futur)</td>
+</tr>
+</tbody></table>
+<h2>15.2 Exemples de tests</h2>
+<h3>Test unitaire (service)</h3>
+<pre><code class="language-js">// tests/unit/auth.service.test.js
+import { describe, it, expect, vi } from &#39;vitest&#39;
+import { hashPassword, verifyPassword } from &#39;../../src/utils/hash&#39;
+
+describe(&#39;hashPassword&#39;, () =&gt; {
+  it(&#39;should hash a password&#39;, async () =&gt; {
+    const hash = await hashPassword(&#39;MonMotDePasse123&#39;)
+    expect(hash).not.toBe(&#39;MonMotDePasse123&#39;)
+    expect(hash.length).toBeGreaterThan(50)
+  })
+})
+
+describe(&#39;verifyPassword&#39;, () =&gt; {
+  it(&#39;should verify correct password&#39;, async () =&gt; {
+    const hash = await hashPassword(&#39;test123&#39;)
+    expect(await verifyPassword(&#39;test123&#39;, hash)).toBe(true)
+    expect(await verifyPassword(&#39;wrong&#39;, hash)).toBe(false)
+  })
+})
+</code></pre>
+<h3>Test d&#39;intégration (API)</h3>
+<pre><code class="language-js">// tests/integration/auth.test.js
+import { describe, it, expect, beforeAll, afterAll } from &#39;vitest&#39;
+import request from &#39;supertest&#39;
+import { app } from &#39;../../src/app&#39;
+
+describe(&#39;POST /api/auth/register&#39;, () =&gt; {
+  it(&#39;should register a new user&#39;, async () =&gt; {
+    const res = await request(app)
+      .post(&#39;/api/auth/register&#39;)
+      .send({
+        name: &#39;Jean Test&#39;,
+        email: &#39;jean@test.com&#39;,
+        password: &#39;SecurePass123&#39;
+      })
+
+    expect(res.status).toBe(201)
+    expect(res.body.data.user.email).toBe(&#39;jean@test.com&#39;)
+    expect(res.body.data.token).toBeDefined()
+  })
+
+  it(&#39;should reject duplicate email&#39;, async () =&gt; {
+    const res = await request(app)
+      .post(&#39;/api/auth/register&#39;)
+      .send({
+        name: &#39;Jean Test&#39;,
+        email: &#39;jean@test.com&#39;,
+        password: &#39;SecurePass123&#39;
+      })
+
+    expect(res.status).toBe(400)
+    expect(res.body.message).toContain(&#39;existe déjà&#39;)
+  })
+})
+</code></pre>
+<h3>Test de commande (flux complet)</h3>
+<pre><code class="language-js">// tests/integration/order.test.js
+describe(&#39;POST /api/orders&#39;, () =&gt; {
+  it(&#39;should create an order from cart&#39;, async () =&gt; {
+    // 1. Ajouter au panier
+    await request(app)
+      .post(&#39;/api/cart/items&#39;)
+      .set(&#39;Authorization&#39;, `Bearer ${buyerToken}`)
+      .send({ productId: product.id, quantity: 2 })
+
+    // 2. Créer la commande
+    const res = await request(app)
+      .post(&#39;/api/orders&#39;)
+      .set(&#39;Authorization&#39;, `Bearer ${buyerToken}`)
+      .send({
+        addressId: address.id,
+        shippingMethod: &#39;standard&#39;,
+        paymentMethod: &#39;credit_card&#39;
+      })
+
+    expect(res.status).toBe(201)
+    expect(res.body.data.orderNumber).toMatch(/^GM-\d{4}-\d{6}$/)
+    expect(res.body.data.status).toBe(&#39;pending&#39;)
+
+    // 3. Vérifier que le stock a diminué
+    const productAfter = await prisma.product.findUnique({ where: { id: product.id } })
+    expect(productAfter.stock).toBe(48) // 50 - 2
+  })
+})
+</code></pre>
+<h2>15.3 Linting &amp; Formatting</h2>
+<table>
+<thead>
+<tr>
+<th>Outil</th>
+<th>Configuration</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ESLint</td>
+<td>Règles strictes, no-any, unused-vars</td>
+</tr>
+<tr>
+<td>Prettier</td>
+<td>Formatage automatique</td>
+</tr>
+<tr>
+<td>Husky</td>
+<td>Pre-commit hooks</td>
+</tr>
+<tr>
+<td>lint-staged</td>
+<td>Lint only staged files</td>
+</tr>
+</tbody></table>
+<pre><code class="language-json">// package.json
+{
+  &quot;scripts&quot;: {
+    &quot;lint&quot;: &quot;eslint src/ --ext .js&quot;,
+    &quot;lint:fix&quot;: &quot;eslint src/ --ext .js --fix&quot;,
+    &quot;format&quot;: &quot;prettier --write &#39;src/**/*.js&#39;&quot;,
+    &quot;test&quot;: &quot;vitest&quot;,
+    &quot;test:coverage&quot;: &quot;vitest --coverage&quot;,
+    &quot;test:ui&quot;: &quot;vitest --ui&quot;
+  }
+}
+</code></pre>
+<h2>15.4 CI Quality Gates</h2>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Seuil</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tests passent</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Couverture minimale</td>
+<td>70%</td>
+</tr>
+<tr>
+<td>Lint erreurs</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Build réussi</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Pas de dépendances vulnérables</td>
+<td>0 high/critical</td>
+</tr>
+</tbody></table>
+<hr>
+<h1>Chapitre 16 — Roadmap &amp; Planning</h1>
+<h2>16.1 Phase 1 — Fondation (Semaines 1-4)</h2>
+<table>
+<thead>
+<tr>
+<th>Semaine</th>
+<th>Tâches</th>
+<th>Livrables</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>S1</td>
+<td>Setup projet, Docker, Prisma, DB schema</td>
+<td>Repo, DB opérationnelle</td>
+</tr>
+<tr>
+<td>S2</td>
+<td>Auth (register, login, JWT, RBAC)</td>
+<td>API auth complète</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>Produits CRUD, catégories, upload images</td>
+<td>API produits</td>
+</tr>
+<tr>
+<td>S4</td>
+<td>Panier, coupons, commandes</td>
+<td>API panier + commandes</td>
+</tr>
+</tbody></table>
+<h2>16.2 Phase 2 — Paiements &amp; Vendeur (Semaines 5-8)</h2>
+<table>
+<thead>
+<tr>
+<th>Semaine</th>
+<th>Tâches</th>
+<th>Livrables</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>S5</td>
+<td>Intégration Stripe, webhooks</td>
+<td>Paiement carte</td>
+</tr>
+<tr>
+<td>S6</td>
+<td>PayPal, Mobile Money</td>
+<td>Multi-paiement</td>
+</tr>
+<tr>
+<td>S7</td>
+<td>Dashboard vendeur, produits vendeur</td>
+<td>Espace vendeur</td>
+</tr>
+<tr>
+<td>S8</td>
+<td>Analytics vendeur, payouts</td>
+<td>Vendeur complet</td>
+</tr>
+</tbody></table>
+<h2>16.3 Phase 3 — Admin &amp; Support (Semaines 9-11)</h2>
+<table>
+<thead>
+<tr>
+<th>Semaine</th>
+<th>Tâches</th>
+<th>Livrables</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>S9</td>
+<td>Dashboard admin, gestion users</td>
+<td>Admin users</td>
+</tr>
+<tr>
+<td>S9</td>
+<td>Modération produits, gestion commandes</td>
+<td>Admin orders</td>
+</tr>
+<tr>
+<td>S10</td>
+<td>Rapports, paramètres système</td>
+<td>Admin complet</td>
+</tr>
+<tr>
+<td>S11</td>
+<td>Tickets support, base de connaissances</td>
+<td>Support</td>
+</tr>
+</tbody></table>
+<h2>16.4 Phase 4 — Notifications &amp; Optimisation (Semaines 12-14)</h2>
+<table>
+<thead>
+<tr>
+<th>Semaine</th>
+<th>Tâches</th>
+<th>Livrables</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>S12</td>
+<td>Emails transactionnels, templates</td>
+<td>Notifications email</td>
+</tr>
+<tr>
+<td>S12</td>
+<td>Notifications push, in-app</td>
+<td>Push notifications</td>
+</tr>
+<tr>
+<td>S13</td>
+<td>Performance (caching, indexes, N+1)</td>
+<td>Optimisation</td>
+</tr>
+<tr>
+<td>S13</td>
+<td>Tests (unit, integration, coverage)</td>
+<td>Qualité</td>
+</tr>
+<tr>
+<td>S14</td>
+<td>Sécurité (audit OWASP, pentest)</td>
+<td>Sécurité</td>
+</tr>
+<tr>
+<td>S14</td>
+<td>Documentation API (Swagger)</td>
+<td>Docs</td>
+</tr>
+</tbody></table>
+<h2>16.5 Phase 5 — Déploiement (Semaines 15-16)</h2>
+<table>
+<thead>
+<tr>
+<th>Semaine</th>
+<th>Tâches</th>
+<th>Livrables</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>S15</td>
+<td>CI/CD, Docker prod, monitoring</td>
+<td>Pipeline</td>
+</tr>
+<tr>
+<td>S15</td>
+<td>Backup, restore, runbooks</td>
+<td>Ops</td>
+</tr>
+<tr>
+<td>S16</td>
+<td>Staging test, load test</td>
+<td>Validation</td>
+</tr>
+<tr>
+<td>S16</td>
+<td>Production deploy</td>
+<td>Mise en ligne</td>
+</tr>
+</tbody></table>
+<h2>16.6 Estimation des coûts (infrastructure)</h2>
+<h3>Phase 1 (Development)</h3>
+<table>
+<thead>
+<tr>
+<th>Ressource</th>
+<th>Coût mensuel</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>VPS (2 vCPU, 4 GB)</td>
+<td>~20 €</td>
+</tr>
+<tr>
+<td>PostgreSQL managed</td>
+<td>~25 €</td>
+</tr>
+<tr>
+<td>Redis managed</td>
+<td>~15 €</td>
+</tr>
+<tr>
+<td>Domaine + SSL</td>
+<td>~10 €</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>~70 €/mois</strong></td>
+</tr>
+</tbody></table>
+<h3>Phase 2 (Production - 10K users)</h3>
+<table>
+<thead>
+<tr>
+<th>Ressource</th>
+<th>Coût mensuel</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>App server (4 vCPU, 8 GB)</td>
+<td>~60 €</td>
+</tr>
+<tr>
+<td>PostgreSQL (4 vCPU, 16 GB)</td>
+<td>~80 €</td>
+</tr>
+<tr>
+<td>Redis (2 GB)</td>
+<td>~30 €</td>
+</tr>
+<tr>
+<td>CDN + Storage</td>
+<td>~20 €</td>
+</tr>
+<tr>
+<td>Email (SendGrid)</td>
+<td>~20 €</td>
+</tr>
+<tr>
+<td>Monitoring (Datadog)</td>
+<td>~25 €</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>~235 €/mois</strong></td>
+</tr>
+</tbody></table>
+<h3>Phase 3 (Scale - 100K+ users)</h3>
+<table>
+<thead>
+<tr>
+<th>Ressource</th>
+<th>Coût mensuel</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Kubernetes (3 nodes)</td>
+<td>~300 €</td>
+</tr>
+<tr>
+<td>PostgreSQL HA</td>
+<td>~200 €</td>
+</tr>
+<tr>
+<td>Redis Cluster</td>
+<td>~100 €</td>
+</tr>
+<tr>
+<td>CDN + Storage</td>
+<td>~100 €</td>
+</tr>
+<tr>
+<td>Email + Push</td>
+<td>~50 €</td>
+</tr>
+<tr>
+<td>Monitoring + Logs</td>
+<td>~100 €</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>~850 €/mois</strong></td>
+</tr>
+</tbody></table>
+<hr>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+const API = {
+  AUTH: {
+    LOGIN: '/api/auth/login',
+    REGISTER: '/api/auth/register',
+    LOGOUT: '/api/auth/logout',
+    REFRESH: '/api/auth/refresh',
+    FORGOT_PASSWORD: '/api/auth/forgot-password',
+    RESET_PASSWORD: '/api/auth/reset-password',
+    VERIFY_EMAIL: '/api/auth/verify-email',
+    ME: '/api/auth/me',
+  },
+  USERS: {
+    BASE: '/api/users',
+    BY_ID: (id) => `/api/users/${id}`,
+    AVATAR: (id) => `/api/users/${id}/avatar`,
+    WISHLIST: '/api/users/wishlist',
+    WISHLIST_ITEM: (productId) => `/api/users/wishlist/${productId}`,
+  },
+  PRODUCTS: {
+    BASE: '/api/products',
+    BY_ID: (id) => `/api/products/${id}`,
+    SEARCH: '/api/products/search',
+    CATEGORIES: '/api/products/categories',
+    REVIEWS: (id) => `/api/products/${id}/reviews`,
+    REVIEW: (productId, reviewId) => `/api/products/${productId}/reviews/${reviewId}`,
+    IMAGES: (id) => `/api/products/${id}/images`,
+  },
+  CART: {
+    BASE: '/api/cart',
+    ITEM: (productId) => `/api/cart/items/${productId}`,
+  },
+  ORDERS: {
+    BASE: '/api/orders',
+    BY_ID: (id) => `/api/orders/${id}`,
+    PAY: (id) => `/api/orders/${id}/pay`,
+    CANCEL: (id) => `/api/orders/${id}/cancel`,
+  },
+  CHECKOUT: {
+    BASE: '/api/checkout',
+    INTENT: '/api/checkout/intent',
+    CONFIRM: '/api/checkout/confirm',
+  },
+  SELLER: {
+    DASHBOARD: '/api/seller/dashboard',
+    PRODUCTS: '/api/seller/products',
+    PRODUCT_BY_ID: (id) => `/api/seller/products/${id}`,
+    ORDERS: '/api/seller/orders',
+    ORDER_BY_ID: (id) => `/api/seller/orders/${id}`,
+    ANALYTICS: '/api/seller/analytics',
+    PAYOUTS: '/api/seller/payouts',
+    REGISTER: '/api/seller/register',
+    SHOP: (id) => `/api/seller/shop/${id}`,
+  },
+  ADMIN: {
+    DASHBOARD: '/api/admin/dashboard',
+    USERS: '/api/admin/users',
+    USER_BY_ID: (id) => `/api/admin/users/${id}`,
+    PRODUCTS: '/api/admin/products',
+    PRODUCT_BY_ID: (id) => `/api/admin/products/${id}`,
+    ORDERS: '/api/admin/orders',
+    ORDER_BY_ID: (id) => `/api/admin/orders/${id}`,
+    MODERATION: '/api/admin/moderation',
+    REPORTS: '/api/admin/reports',
+    SETTINGS: '/api/admin/settings',
+  },
+  UPLOAD: {
+    SINGLE: '/api/upload/single',
+    MULTIPLE: '/api/upload/multiple',
+  },
+  SUPPORT: {
+    TICKETS: '/api/support/tickets',
+    TICKET_BY_ID: (id) => `/api/support/tickets/${id}`,
+  },
+};
+
+export default API;
