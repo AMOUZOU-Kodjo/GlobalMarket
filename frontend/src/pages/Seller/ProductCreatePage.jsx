@@ -1,27 +1,23 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Package, ArrowLeft, Save, AlertCircle, Image,
 } from 'lucide-react'
 import sellerService from '../../services/seller.service'
+import categoryService from '../../services/category.service'
 import FormField from '../../components/molecules/FormField'
 import FileUpload from '../../components/molecules/FileUpload'
-
-const CATEGORIES = [
-  'Électronique', 'Mode', 'Maison & Jardin', 'Beauté & Santé',
-  'Sports & Loisirs', 'Auto & Moto', 'Alimentation', 'Art & Artisanat',
-  'Livres & Médias', 'Jouets & Enfants', 'Animaux', 'Autre',
-]
 
 export default function ProductCreatePage() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [files, setFiles] = useState([])
+  const [categories, setCategories] = useState([])
   const [form, setForm] = useState({
     name: '',
     description: '',
-    category: '',
+    categoryId: '',
     price: '',
     compareAtPrice: '',
     stock: '',
@@ -34,6 +30,15 @@ export default function ProductCreatePage() {
   })
   const [errors, setErrors] = useState({})
 
+  useEffect(() => {
+    categoryService.getAll()
+      .then((data) => {
+        const cats = Array.isArray(data) ? data : data.categories || data.data || []
+        setCategories(cats)
+      })
+      .catch(() => setCategories([]))
+  }, [])
+
   const handleChange = (e) => {
     const { name, value } = e.target
     setForm((prev) => ({ ...prev, [name]: value }))
@@ -44,7 +49,7 @@ export default function ProductCreatePage() {
     const errs = {}
     if (!form.name.trim()) errs.name = 'Le nom est requis'
     if (!form.description.trim()) errs.description = 'La description est requise'
-    if (!form.category) errs.category = 'La catégorie est requise'
+    if (!form.categoryId) errs.categoryId = 'La catégorie est requise'
     if (!form.price || isNaN(Number(form.price)) || Number(form.price) <= 0) errs.price = 'Un prix valide est requis'
     if (form.stock === '' || isNaN(Number(form.stock)) || Number(form.stock) < 0) errs.stock = 'Le stock est requis'
     setErrors(errs)
@@ -66,28 +71,32 @@ export default function ProductCreatePage() {
     setLoading(true)
     setError(null)
     try {
-      const formData = new FormData()
-      formData.append('name', form.name.trim())
-      formData.append('description', form.description.trim())
-      formData.append('category', form.category)
-      formData.append('price', Number(form.price))
-      if (form.compareAtPrice) formData.append('compareAtPrice', Number(form.compareAtPrice))
-      formData.append('stock', Number(form.stock))
-      if (form.sku) formData.append('sku', form.sku.trim())
-      if (form.weight) formData.append('weight', Number(form.weight))
-      if (form.length) formData.append('dimensions[length]', Number(form.length))
-      if (form.width) formData.append('dimensions[width]', Number(form.width))
-      if (form.height) formData.append('dimensions[height]', Number(form.height))
-      formData.append('status', form.status)
+      const payload = {
+        name: form.name.trim(),
+        description: form.description.trim(),
+        categoryId: form.categoryId,
+        price: Number(form.price),
+        stock: Number(form.stock),
+        status: form.status,
+      }
+      if (form.compareAtPrice) payload.compareAtPrice = Number(form.compareAtPrice)
+      if (form.sku) payload.sku = form.sku.trim()
+      if (form.weight) payload.weight = Number(form.weight)
+      if (form.length || form.width || form.height) {
+        payload.dimensions = {}
+        if (form.length) payload.dimensions.length = Number(form.length)
+        if (form.width) payload.dimensions.width = Number(form.width)
+        if (form.height) payload.dimensions.height = Number(form.height)
+      }
 
-      files.forEach((file) => {
-        if (file instanceof File) {
-          formData.append('images', file)
-        }
-      })
+      const created = await sellerService.createProduct(payload)
 
-      await sellerService.createProduct(formData)
-      navigate('/seller/products')
+      const imageFiles = files.filter((f) => f instanceof File)
+      if (imageFiles.length > 0 && created?.id) {
+        await sellerService.uploadImages(created.id, imageFiles)
+      }
+
+      navigate('/seller/shop/products')
     } catch (err) {
       setError(err?.response?.data?.message || err?.message || 'Erreur lors de la création du produit.')
     } finally {
@@ -145,17 +154,17 @@ export default function ProductCreatePage() {
               />
             </FormField>
 
-            <FormField label="Catégorie" required error={errors.category} htmlFor="category">
+            <FormField label="Catégorie" required error={errors.categoryId} htmlFor="categoryId">
               <select
-                id="category"
-                name="category"
+                id="categoryId"
+                name="categoryId"
                 className="select select-bordered w-full"
-                value={form.category}
+                value={form.categoryId}
                 onChange={handleChange}
               >
                 <option value="">Sélectionner une catégorie</option>
-                {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>{cat}</option>
+                {categories.map((cat) => (
+                  <option key={cat.id || cat.slug} value={cat.id}>{cat.name}</option>
                 ))}
               </select>
             </FormField>

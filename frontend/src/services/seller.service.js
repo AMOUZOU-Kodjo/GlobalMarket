@@ -16,6 +16,21 @@ const sellerService = {
 
   createProduct: (data) => api.post('/seller/products', data),
 
+  uploadImages: (id, files) => {
+    const formData = new FormData()
+    files.forEach((file) => formData.append('images', file))
+    return fetch(`/api/products/${id}/images`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: formData,
+    }).then((res) => {
+      if (!res.ok) throw new Error(`Erreur ${res.status}`)
+      return res.json()
+    }).then((json) => json.data !== undefined ? json.data : json)
+  },
+
   updateProduct: (id, data) => api.put(`/seller/products/${id}`, data),
 
   deleteProduct: (id) => api.delete(`/seller/products/${id}`),

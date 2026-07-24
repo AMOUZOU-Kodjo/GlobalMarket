@@ -18,12 +18,11 @@ import {
 } from 'lucide-react'
 
 const NAV_ITEMS = [
-  { to: '/seller', label: 'Dashboard', icon: LayoutDashboard, end: true },
-  { to: '/seller/shop', label: 'Ma Boutique', icon: Store },
-  { to: '/seller/products', label: 'Produits', icon: Package },
-  { to: '/seller/orders', label: 'Commandes', icon: ShoppingCart },
-  { to: '/seller/analytics', label: 'Analyses', icon: BarChart3 },
-  { to: '/seller/payouts', label: 'Virements', icon: Wallet },
+  { to: '/seller/shop', label: 'Dashboard', icon: LayoutDashboard, end: true },
+  { to: '/seller/shop/products', label: 'Produits', icon: Package },
+  { to: '/seller/shop/orders', label: 'Commandes', icon: ShoppingCart },
+  { to: '/seller/shop/analytics', label: 'Analyses', icon: BarChart3 },
+  { to: '/seller/shop/payouts', label: 'Virements', icon: Wallet },
 ]
 
 export default function SellerLayout() {

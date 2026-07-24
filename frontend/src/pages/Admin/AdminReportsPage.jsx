@@ -26,7 +26,7 @@ export default function AdminReportsPage() {
         const params = {}
         if (dateFrom) params.from = dateFrom
         if (dateTo) params.to = dateTo
-        const res = await adminService.getReports('overview', params)
+        const res = await adminService.getReports('sales', params)
         setData(res.data || res)
       } catch (err) {
         setError(err?.response?.data?.message || err?.message || 'Erreur lors du chargement des rapports.')
@@ -59,13 +59,13 @@ export default function AdminReportsPage() {
   const kpis = [
     {
       title: 'Revenus totaux',
-      value: formatCurrency(data?.totalRevenue ?? 0),
+      value: formatCurrency(data?.summary?.totalSales ?? data?.totalRevenue ?? 0),
       icon: DollarSign,
       color: 'success',
     },
     {
       title: 'Commandes',
-      value: formatNumber(data?.totalOrders ?? 0),
+      value: formatNumber(data?.summary?.totalOrders ?? data?.totalOrders ?? 0),
       icon: ShoppingCart,
       color: 'primary',
     },
@@ -84,8 +84,16 @@ export default function AdminReportsPage() {
   ]
 
   const salesReport = data?.salesReport || []
-  const topSellers = data?.topSellers || []
-  const topProducts = data?.topProducts || []
+  const topSellers = (data?.topSellers || []).map((ts) => ({
+    name: ts.seller?.shopName || ts.seller?.name || '—',
+    revenue: ts._sum?.totalPrice || ts.revenue || 0,
+    orders: ts._count || ts.orders || 0,
+  }))
+  const topProducts = (data?.topProducts || []).map((tp) => ({
+    name: tp.product?.name || tp.name || '—',
+    revenue: tp._sum?.totalPrice || tp.revenue || 0,
+    unitsSold: tp._sum?.quantity || tp.unitsSold || 0,
+  }))
 
   const salesColumns = [
     {

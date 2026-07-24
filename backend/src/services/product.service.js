@@ -158,13 +158,15 @@ async function getRelated(id) {
   })
 }
 
-async function create(sellerId, data) {
+async function create(userId, data) {
+  const seller = await prisma.seller.findUnique({ where: { userId } })
+  if (!seller) throw new Error('Vendeur non trouvé')
   const slug = slugify(data.name)
   const existing = await prisma.product.findUnique({ where: { slug } })
   if (existing) throw new Error('Un produit avec ce nom existe déjà')
 
   const productData = {
-    sellerId,
+    sellerId: seller.id,
     categoryId: data.categoryId,
     name: data.name,
     slug,
@@ -212,10 +214,11 @@ async function create(sellerId, data) {
   return prisma.product.findUnique({ where: { id: product.id }, include: productInclude })
 }
 
-async function update(id, sellerId, data) {
+async function update(id, userId, data) {
   const product = await prisma.product.findUnique({ where: { id } })
   if (!product) throw new Error('Produit non trouvé')
-  if (product.sellerId !== sellerId) throw new Error('Non autorisé à modifier ce produit')
+  const seller = await prisma.seller.findUnique({ where: { userId } })
+  if (!seller || product.sellerId !== seller.id) throw new Error('Non autorisé à modifier ce produit')
 
   const updateData = {}
   if (data.name !== undefined) {
@@ -263,10 +266,11 @@ async function update(id, sellerId, data) {
   return prisma.product.update({ where: { id }, data: updateData, include: productInclude })
 }
 
-async function remove(id, sellerId) {
+async function remove(id, userId) {
   const product = await prisma.product.findUnique({ where: { id } })
   if (!product) throw new Error('Produit non trouvé')
-  if (product.sellerId !== sellerId) throw new Error('Non autorisé à supprimer ce produit')
+  const seller = await prisma.seller.findUnique({ where: { userId } })
+  if (!seller || product.sellerId !== seller.id) throw new Error('Non autorisé à supprimer ce produit')
 
   const hasOrders = await prisma.orderItem.findFirst({ where: { productId: id } })
   if (hasOrders) {
@@ -278,10 +282,11 @@ async function remove(id, sellerId) {
   return { message: 'Produit supprimé avec succès' }
 }
 
-async function uploadImages(id, sellerId, files) {
+async function uploadImages(id, userId, files) {
   const product = await prisma.product.findUnique({ where: { id } })
   if (!product) throw new Error('Produit non trouvé')
-  if (product.sellerId !== sellerId) throw new Error('Non autorisé')
+  const seller = await prisma.seller.findUnique({ where: { userId } })
+  if (!seller || product.sellerId !== seller.id) throw new Error('Non autorisé')
 
   const count = await prisma.productImage.count({ where: { productId: id } })
   const images = await prisma.productImage.createMany({
@@ -297,10 +302,11 @@ async function uploadImages(id, sellerId, files) {
   return prisma.productImage.findMany({ where: { productId: id }, orderBy: { sortOrder: 'asc' } })
 }
 
-async function deleteImage(id, imageId, sellerId) {
+async function deleteImage(id, imageId, userId) {
   const product = await prisma.product.findUnique({ where: { id } })
   if (!product) throw new Error('Produit non trouvé')
-  if (product.sellerId !== sellerId) throw new Error('Non autorisé')
+  const seller = await prisma.seller.findUnique({ where: { userId } })
+  if (!seller || product.sellerId !== seller.id) throw new Error('Non autorisé')
 
   const image = await prisma.productImage.findFirst({ where: { id: imageId, productId: id } })
   if (!image) throw new Error('Image non trouvée')

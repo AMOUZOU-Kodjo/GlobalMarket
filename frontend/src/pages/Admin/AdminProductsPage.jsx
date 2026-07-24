@@ -40,9 +40,11 @@ export default function AdminProductsPage() {
       if (search) params.search = search
       if (statusFilter) params.status = statusFilter
       const res = await adminService.getProducts(params)
-      const data = res.data || res
-      setProducts(data.products || data || [])
-      setTotalItems(data.total || (data.products || data || []).length)
+      const raw = res.data !== undefined ? res.data : res
+      const list = Array.isArray(raw) ? raw : raw.products || raw.data || []
+      const total = raw.meta?.total ?? raw.total ?? list.length
+      setProducts(list)
+      setTotalItems(total)
     } catch (err) {
       setError(err?.response?.data?.message || err?.message || 'Erreur lors du chargement des produits.')
     } finally {
@@ -75,9 +77,9 @@ export default function AdminProductsPage() {
       width: '50px',
       render: (_, row) => (
         <div className="w-9 h-9 rounded overflow-hidden bg-base-200">
-          {row.images?.[0] || row.image ? (
+          {row.images?.[0]?.url || row.image ? (
             <img
-              src={row.images?.[0] || row.image}
+              src={row.images?.[0]?.url || row.image}
               alt={row.name}
               className="w-full h-full object-cover"
             />
@@ -96,7 +98,7 @@ export default function AdminProductsPage() {
       render: (_, row) => (
         <div>
           <p className="font-medium text-sm">{row.name}</p>
-          <p className="text-xs text-base-content/50">{row.category}</p>
+          <p className="text-xs text-base-content/50">{typeof row.category === 'object' ? row.category?.name : row.category}</p>
         </div>
       ),
     },
@@ -104,7 +106,7 @@ export default function AdminProductsPage() {
       key: 'sellerName',
       label: 'Vendeur',
       render: (val, row) => (
-        <span className="text-sm">{val || row.seller?.name || '—'}</span>
+        <span className="text-sm">{val || row.seller?.shopName || row.seller?.name || '—'}</span>
       ),
     },
     {

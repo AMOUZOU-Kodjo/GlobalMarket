@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useSearchParams, Link } from 'react-router-dom'
-import { SlidersHorizontal, ArrowUpDown, Grid3X3, List, PackageSearch } from 'lucide-react'
+import { useSearchParams } from 'react-router-dom'
+import { ArrowUpDown, Grid3X3, List, PackageSearch } from 'lucide-react'
 import Breadcrumb from '../components/atoms/Breadcrumb'
 import ProductGrid from '../components/organisms/ProductGrid'
 import FilterSidebar from '../components/organisms/FilterSidebar'
@@ -176,59 +176,13 @@ export default function Products() {
         className="mb-4"
       />
 
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold">Produits</h1>
-          {!loading && (
-            <p className="text-sm opacity-60 mt-1">
-              {totalProducts} produit{totalProducts !== 1 ? 's' : ''} trouvé{totalProducts !== 1 ? 's' : ''}
-            </p>
-          )}
-        </div>
-
-        <div className="flex items-center gap-2 flex-wrap">
-          <FilterSidebar
-            categories={categories}
-            activeFilters={activeFilters}
-            onFilterChange={handleFilterChange}
-            onClearAll={handleClearFilters}
-            loading={loadingCategories}
-          />
-
-          <div className="join">
-            <button
-              type="button"
-              className={`btn btn-sm join-item ${layout === 'grid' ? 'btn-active' : ''}`}
-              onClick={() => setLayout('grid')}
-              aria-label="Vue grille"
-            >
-              <Grid3X3 size={16} />
-            </button>
-            <button
-              type="button"
-              className={`btn btn-sm join-item ${layout === 'list' ? 'btn-active' : ''}`}
-              onClick={() => setLayout('list')}
-              aria-label="Vue liste"
-            >
-              <List size={16} />
-            </button>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <ArrowUpDown size={14} className="opacity-50 hidden sm:block" />
-            <select
-              className="select select-bordered select-sm"
-              value={currentSort}
-              onChange={handleSortChange}
-            >
-              {SORT_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+      <div className="mb-6">
+        <h1 className="text-2xl md:text-3xl font-bold">Produits</h1>
+        {!loading && (
+          <p className="text-sm text-base-content/50 mt-1">
+            {totalProducts} produit{totalProducts !== 1 ? 's' : ''} trouvé{totalProducts !== 1 ? 's' : ''}
+          </p>
+        )}
       </div>
 
       {error && (
@@ -244,41 +198,103 @@ export default function Products() {
         </div>
       )}
 
-      <ProductGrid
-        products={products}
-        loading={loading}
-        layout={layout}
-        skeletonCount={ITEMS_PER_PAGE}
-        onAddToCart={handleAddToCart}
-        emptyMessage="Aucun produit trouvé avec ces filtres"
-      />
-
-      {!loading && products.length === 0 && !error && (
-        <EmptyState
-          icon={PackageSearch}
-          title="Aucun produit trouvé"
-          description="Essayez de modifier vos filtres ou votre recherche."
-          action={
-            <button
-              type="button"
-              className="btn btn-primary btn-sm"
-              onClick={handleClearFilters}
-            >
-              Effacer les filtres
-            </button>
-          }
-        />
-      )}
-
-      {!loading && totalPages > 1 && (
-        <div className="flex justify-center mt-8">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
+      <div className="flex gap-6 items-start">
+        <aside className="hidden lg:block w-64 shrink-0">
+          <FilterSidebar
+            categories={categories}
+            activeFilters={activeFilters}
+            onFilterChange={handleFilterChange}
+            onClearAll={handleClearFilters}
+            loading={loadingCategories}
           />
+        </aside>
+
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between gap-3 mb-5">
+            <div className="lg:hidden">
+              <FilterSidebar
+                categories={categories}
+                activeFilters={activeFilters}
+                onFilterChange={handleFilterChange}
+                onClearAll={handleClearFilters}
+                loading={loadingCategories}
+              />
+            </div>
+
+            <div className="flex items-center gap-2 ml-auto">
+              <div className="join">
+                <button
+                  type="button"
+                  className={`btn btn-sm join-item ${layout === 'grid' ? 'btn-active' : ''}`}
+                  onClick={() => setLayout('grid')}
+                  aria-label="Vue grille"
+                >
+                  <Grid3X3 size={16} />
+                </button>
+                <button
+                  type="button"
+                  className={`btn btn-sm join-item ${layout === 'list' ? 'btn-active' : ''}`}
+                  onClick={() => setLayout('list')}
+                  aria-label="Vue liste"
+                >
+                  <List size={16} />
+                </button>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <ArrowUpDown size={14} className="opacity-50 hidden sm:block" />
+                <select
+                  className="select select-bordered select-sm"
+                  value={currentSort}
+                  onChange={handleSortChange}
+                >
+                  {SORT_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <ProductGrid
+            products={products}
+            loading={loading}
+            layout={layout}
+            skeletonCount={ITEMS_PER_PAGE}
+            onAddToCart={handleAddToCart}
+            emptyMessage="Aucun produit trouvé avec ces filtres"
+          />
+
+          {!loading && products.length === 0 && !error && (
+            <EmptyState
+              icon={PackageSearch}
+              title="Aucun produit trouvé"
+              description="Essayez de modifier vos filtres ou votre recherche."
+              action={
+                <button
+                  type="button"
+                  className="btn btn-primary btn-sm"
+                  onClick={handleClearFilters}
+                >
+                  Effacer les filtres
+                </button>
+              }
+            />
+          )}
+
+          {!loading && totalPages > 1 && (
+            <div className="flex justify-center mt-8">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   )
 }

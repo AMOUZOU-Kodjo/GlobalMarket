@@ -147,7 +147,7 @@ export default function SellerProductsPage() {
           <h1 className="text-2xl font-bold">Mes produits</h1>
           <p className="text-base-content/60 text-sm">{totalItems} produit{totalItems !== 1 ? 's' : ''} au total</p>
         </div>
-        <Link to="/seller/products/create" className="btn btn-primary btn-sm">
+        <Link to="/seller/shop/products/create" className="btn btn-primary btn-sm">
           <Plus size={16} />
           Ajouter un produit
         </Link>

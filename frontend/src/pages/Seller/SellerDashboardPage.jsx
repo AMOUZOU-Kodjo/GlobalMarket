@@ -87,11 +87,11 @@ export default function SellerDashboardPage() {
           <p className="text-base-content/60 text-sm">Vue d'ensemble de votre boutique</p>
         </div>
         <div className="flex gap-2">
-          <Link to="/seller/products/create" className="btn btn-primary btn-sm">
+          <Link to="/seller/shop/products/create" className="btn btn-primary btn-sm">
             <Plus size={16} />
             Ajouter un produit
           </Link>
-          <Link to="/seller/orders" className="btn btn-outline btn-sm">
+          <Link to="/seller/shop/orders" className="btn btn-outline btn-sm">
             <Eye size={16} />
             Voir les commandes
           </Link>

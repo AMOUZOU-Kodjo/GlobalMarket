@@ -1,5 +1,5 @@
 import { useCallback, useState, useRef } from 'react'
-import { Upload, X, File, Image, FileText, AlertCircle } from 'lucide-react'
+import { Upload, X, File as FileIcon, Image, FileText, AlertCircle } from 'lucide-react'
 import classNames from '../../utils/classNames'
 import formatCurrency from '../../utils/formatCurrency'
 
@@ -14,7 +14,7 @@ function getFileIcon(file) {
   const type = file.type || file.mimeType || ''
   if (type.startsWith('image/')) return <Image size={20} />
   if (type.includes('pdf') || type.includes('document')) return <FileText size={20} />
-  return <File size={20} />
+  return <FileIcon size={20} />
 }
 
 export function FileUpload({

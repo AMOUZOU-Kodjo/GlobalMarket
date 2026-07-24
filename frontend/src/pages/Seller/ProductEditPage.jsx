@@ -1,18 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
-  Package, ArrowLeft, Save, AlertCircle, X, Trash2,
+  Package, ArrowLeft, Save, AlertCircle, X,
 } from 'lucide-react'
 import sellerService from '../../services/seller.service'
+import categoryService from '../../services/category.service'
 import FormField from '../../components/molecules/FormField'
 import FileUpload from '../../components/molecules/FileUpload'
 import Spinner from '../../components/atoms/Spinner'
-
-const CATEGORIES = [
-  'Électronique', 'Mode', 'Maison & Jardin', 'Beauté & Santé',
-  'Sports & Loisirs', 'Auto & Moto', 'Alimentation', 'Art & Artisanat',
-  'Livres & Médias', 'Jouets & Enfants', 'Animaux', 'Autre',
-]
 
 export default function ProductEditPage() {
   const { id } = useParams()
@@ -20,13 +15,14 @@ export default function ProductEditPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
+  const [categories, setCategories] = useState([])
   const [existingImages, setExistingImages] = useState([])
   const [newFiles, setNewFiles] = useState([])
   const [removedImages, setRemovedImages] = useState([])
   const [form, setForm] = useState({
     name: '',
     description: '',
-    category: '',
+    categoryId: '',
     price: '',
     compareAtPrice: '',
     stock: '',
@@ -40,35 +36,36 @@ export default function ProductEditPage() {
   const [errors, setErrors] = useState({})
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const res = await sellerService.getProducts()
-        const data = res.data || res
-        const allProducts = data.products || data || []
-        const product = allProducts.find((p) => (p._id || p.id) === id)
-        if (!product) throw new Error('Produit introuvable')
-        setForm({
-          name: product.name || '',
-          description: product.description || '',
-          category: product.category || '',
-          price: product.price?.toString() || '',
-          compareAtPrice: product.compareAtPrice?.toString() || '',
-          stock: product.stock?.toString() || '',
-          sku: product.sku || '',
-          weight: product.weight?.toString() || '',
-          length: product.dimensions?.length?.toString() || '',
-          width: product.dimensions?.width?.toString() || '',
-          height: product.dimensions?.height?.toString() || '',
-          status: product.status || 'draft',
-        })
-        setExistingImages(product.images || (product.image ? [product.image] : []))
-      } catch (err) {
-        setError(err?.response?.data?.message || err?.message || 'Erreur lors du chargement du produit.')
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchProduct()
+    Promise.all([
+      categoryService.getAll().catch(() => []),
+      sellerService.getProducts().catch(() => ({ data: { products: [] } })),
+    ]).then(([cats, res]) => {
+      const catList = Array.isArray(cats) ? cats : cats?.categories || cats?.data || []
+      setCategories(catList)
+
+      const data = res?.data || res || {}
+      const allProducts = data?.products || (Array.isArray(data) ? data : [])
+      const product = allProducts.find((p) => (p._id || p.id) === id)
+      if (!product) throw new Error('Produit introuvable')
+      setForm({
+        name: product.name || '',
+        description: product.description || '',
+        categoryId: product.categoryId || product.category?.id || '',
+        price: Number(product.price || 0).toString(),
+        compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice).toString() : '',
+        stock: (product.stock ?? '').toString(),
+        sku: product.sku || '',
+        weight: product.weight?.toString() || '',
+        length: product.dimensions?.length?.toString() || '',
+        width: product.dimensions?.width?.toString() || '',
+        height: product.dimensions?.height?.toString() || '',
+        status: product.status || 'draft',
+      })
+      const imgs = (product.images || []).map((img) => (typeof img === 'string' ? img : img.url)).filter(Boolean)
+      setExistingImages(imgs)
+    }).catch((err) => {
+      setError(err?.response?.data?.message || err?.message || 'Erreur lors du chargement du produit.')
+    }).finally(() => setLoading(false))
   }, [id])
 
   const handleChange = (e) => {
@@ -81,7 +78,7 @@ export default function ProductEditPage() {
     const errs = {}
     if (!form.name.trim()) errs.name = 'Le nom est requis'
     if (!form.description.trim()) errs.description = 'La description est requise'
-    if (!form.category) errs.category = 'La catégorie est requise'
+    if (!form.categoryId) errs.categoryId = 'La catégorie est requise'
     if (!form.price || isNaN(Number(form.price)) || Number(form.price) <= 0) errs.price = 'Un prix valide est requis'
     if (form.stock === '' || isNaN(Number(form.stock)) || Number(form.stock) < 0) errs.stock = 'Le stock est requis'
     setErrors(errs)
@@ -108,30 +105,34 @@ export default function ProductEditPage() {
     setSaving(true)
     setError(null)
     try {
-      const formData = new FormData()
-      formData.append('name', form.name.trim())
-      formData.append('description', form.description.trim())
-      formData.append('category', form.category)
-      formData.append('price', Number(form.price))
-      if (form.compareAtPrice) formData.append('compareAtPrice', Number(form.compareAtPrice))
-      formData.append('stock', Number(form.stock))
-      if (form.sku) formData.append('sku', form.sku.trim())
-      if (form.weight) formData.append('weight', Number(form.weight))
-      if (form.length) formData.append('dimensions[length]', Number(form.length))
-      if (form.width) formData.append('dimensions[width]', Number(form.width))
-      if (form.height) formData.append('dimensions[height]', Number(form.height))
-      formData.append('status', form.status)
-      formData.append('existingImages', JSON.stringify(existingImages))
-      formData.append('removedImages', JSON.stringify(removedImages))
+      const payload = {
+        name: form.name.trim(),
+        description: form.description.trim(),
+        categoryId: form.categoryId,
+        price: Number(form.price),
+        stock: Number(form.stock),
+        status: form.status,
+        existingImages,
+        removedImages,
+      }
+      if (form.compareAtPrice) payload.compareAtPrice = Number(form.compareAtPrice)
+      if (form.sku) payload.sku = form.sku.trim()
+      if (form.weight) payload.weight = Number(form.weight)
+      if (form.length || form.width || form.height) {
+        payload.dimensions = {}
+        if (form.length) payload.dimensions.length = Number(form.length)
+        if (form.width) payload.dimensions.width = Number(form.width)
+        if (form.height) payload.dimensions.height = Number(form.height)
+      }
 
-      newFiles.forEach((file) => {
-        if (file instanceof File) {
-          formData.append('images', file)
-        }
-      })
+      await sellerService.updateProduct(id, payload)
 
-      await sellerService.updateProduct(id, formData)
-      navigate('/seller/products')
+      const imageFiles = newFiles.filter((f) => f instanceof File)
+      if (imageFiles.length > 0) {
+        await sellerService.uploadImages(id, imageFiles)
+      }
+
+      navigate('/seller/shop/products')
     } catch (err) {
       setError(err?.response?.data?.message || err?.message || 'Erreur lors de la mise à jour du produit.')
     } finally {
@@ -208,17 +209,17 @@ export default function ProductEditPage() {
               />
             </FormField>
 
-            <FormField label="Catégorie" required error={errors.category} htmlFor="category">
+            <FormField label="Catégorie" required error={errors.categoryId} htmlFor="categoryId">
               <select
-                id="category"
-                name="category"
+                id="categoryId"
+                name="categoryId"
                 className="select select-bordered w-full"
-                value={form.category}
+                value={form.categoryId}
                 onChange={handleChange}
               >
                 <option value="">Sélectionner une catégorie</option>
-                {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>{cat}</option>
+                {categories.map((cat) => (
+                  <option key={cat.id || cat.slug} value={cat.id}>{cat.name}</option>
                 ))}
               </select>
             </FormField>

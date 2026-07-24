@@ -1,21 +1,21 @@
-import { useState } from "react";
+import { useState } from "react"
 import {
   SlidersHorizontal,
   ChevronDown,
   ChevronUp,
   X,
   Star,
-} from "lucide-react";
-import { Badge } from "../atoms/Badge";
+} from "lucide-react"
+import { Badge } from "../atoms/Badge"
 
 function FilterSection({ title, defaultOpen = true, children }) {
-  const [open, setOpen] = useState(defaultOpen);
+  const [open, setOpen] = useState(defaultOpen)
 
   return (
     <div className="border-b border-base-200 pb-4 mb-4 last:border-0 last:mb-0">
       <button
         type="button"
-        className="flex items-center justify-between w-full text-left font-semibold text-sm mb-2"
+        className="flex items-center justify-between w-full text-left font-semibold text-sm mb-2 hover:text-primary transition-colors"
         onClick={() => setOpen(!open)}
       >
         {title}
@@ -23,7 +23,7 @@ function FilterSection({ title, defaultOpen = true, children }) {
       </button>
       {open && children}
     </div>
-  );
+  )
 }
 
 export function FilterSidebar({
@@ -35,57 +35,49 @@ export function FilterSidebar({
   categories = [],
   className = "",
 }) {
-  const [priceMin, setPriceMin] = useState(activeFilters.priceMin || "");
-  const [priceMax, setPriceMax] = useState(activeFilters.priceMax || "");
-  const [showMobile, setShowMobile] = useState(false);
+  const [priceMin, setPriceMin] = useState(activeFilters.priceMin || "")
+  const [priceMax, setPriceMax] = useState(activeFilters.priceMax || "")
+  const [showMobile, setShowMobile] = useState(false)
 
   const activeCount = Object.values(activeFilters).reduce((count, val) => {
-    if (Array.isArray(val)) return count + val.length;
-    if (val !== undefined && val !== null && val !== "" && val !== false) return count + 1;
-    return count;
-  }, 0);
+    if (Array.isArray(val)) return count + val.length
+    if (val !== undefined && val !== null && val !== "" && val !== false) return count + 1
+    return count
+  }, 0)
 
-  const handleCategoryToggle = (categoryId) => {
-    const current = activeFilters.categories || [];
-    const updated = current.includes(categoryId)
-      ? current.filter((id) => id !== categoryId)
-      : [...current, categoryId];
-    onFilterChange?.({ ...activeFilters, categories: updated });
-  };
+  const handleCategoryToggle = (slug) => {
+    const current = activeFilters.categories || []
+    const updated = current.includes(slug)
+      ? current.filter((s) => s !== slug)
+      : [...current, slug]
+    onFilterChange?.({ ...activeFilters, categories: updated })
+  }
 
   const handleRatingChange = (value) => {
     onFilterChange?.({
       ...activeFilters,
       rating: activeFilters.rating === value ? undefined : value,
-    });
-  };
-
-  const handleBrandToggle = (brand) => {
-    const current = activeFilters.brands || [];
-    const updated = current.includes(brand)
-      ? current.filter((b) => b !== brand)
-      : [...current, brand];
-    onFilterChange?.({ ...activeFilters, brands: updated });
-  };
+    })
+  }
 
   const handlePriceApply = () => {
     onFilterChange?.({
       ...activeFilters,
       priceMin: priceMin !== "" ? Number(priceMin) : undefined,
       priceMax: priceMax !== "" ? Number(priceMax) : undefined,
-    });
-  };
+    })
+  }
 
   const handleClearAll = () => {
-    setPriceMin("");
-    setPriceMax("");
-    onClearAll?.();
-  };
+    setPriceMin("")
+    setPriceMax("")
+    onClearAll?.()
+  }
 
   const sidebarContent = (
-    <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold flex items-center gap-2">
+    <div className="flex flex-col">
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="font-bold text-base flex items-center gap-2">
           <SlidersHorizontal size={18} />
           Filtres
           {activeCount > 0 && (
@@ -113,28 +105,28 @@ export function FilterSidebar({
         <>
           {categories.length > 0 && (
             <FilterSection title="Catégories">
-              <div className="flex flex-col gap-1.5 max-h-60 overflow-y-auto">
+              <div className="flex flex-col gap-0.5 max-h-64 overflow-y-auto pr-1">
                 {categories.map((cat) => {
-                  const id = cat._id || cat.id || cat.slug;
-                  const name = cat.name || cat.label;
-                  const count = cat.productCount ?? cat.count;
+                  const slug = cat.slug || cat.id
+                  const name = cat.name || cat.label
+                  const count = cat.productCount ?? cat.count
                   return (
                     <label
-                      key={id}
-                      className="flex items-center gap-2 cursor-pointer text-sm hover:bg-base-200 rounded px-2 py-1"
+                      key={slug}
+                      className="flex items-center gap-2.5 cursor-pointer text-sm hover:bg-base-200/60 rounded-lg px-2.5 py-1.5 transition-colors"
                     >
                       <input
                         type="checkbox"
                         className="checkbox checkbox-sm checkbox-primary"
-                        checked={(activeFilters.categories || []).includes(id)}
-                        onChange={() => handleCategoryToggle(id)}
+                        checked={(activeFilters.categories || []).includes(slug)}
+                        onChange={() => handleCategoryToggle(slug)}
                       />
                       <span className="flex-1 truncate">{name}</span>
                       {count !== undefined && (
-                        <span className="text-xs opacity-40">({count})</span>
+                        <span className="text-xs text-base-content/40 font-medium">({count})</span>
                       )}
                     </label>
-                  );
+                  )
                 })}
               </div>
             </FilterSection>
@@ -145,16 +137,16 @@ export function FilterSidebar({
               <input
                 type="number"
                 placeholder="Min"
-                className="input input-bordered input-sm w-full"
+                className="input input-bordered input-sm w-full focus:input-primary"
                 value={priceMin}
                 onChange={(e) => setPriceMin(e.target.value)}
                 min="0"
               />
-              <span className="opacity-40">-</span>
+              <span className="text-base-content/30 text-sm">—</span>
               <input
                 type="number"
                 placeholder="Max"
-                className="input input-bordered input-sm w-full"
+                className="input input-bordered input-sm w-full focus:input-primary"
                 value={priceMax}
                 onChange={(e) => setPriceMax(e.target.value)}
                 min="0"
@@ -162,7 +154,7 @@ export function FilterSidebar({
             </div>
             <button
               type="button"
-              className="btn btn-primary btn-sm btn-block mt-2"
+              className="btn btn-primary btn-sm btn-block mt-3"
               onClick={handlePriceApply}
             >
               Appliquer
@@ -170,15 +162,15 @@ export function FilterSidebar({
           </FilterSection>
 
           <FilterSection title="Note minimale">
-            <div className="flex flex-col gap-1.5">
+            <div className="flex flex-col gap-1">
               {[4, 3, 2, 1].map((value) => (
                 <button
                   key={value}
                   type="button"
-                  className={`flex items-center gap-2 px-2 py-1.5 rounded text-sm transition-colors ${
+                  className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-all ${
                     activeFilters.rating === value
-                      ? "bg-primary/10 text-primary"
-                      : "hover:bg-base-200"
+                      ? "bg-primary/10 text-primary font-medium ring-1 ring-primary/20"
+                      : "hover:bg-base-200/60"
                   }`}
                   onClick={() => handleRatingChange(value)}
                 >
@@ -195,7 +187,7 @@ export function FilterSidebar({
                       />
                     ))}
                   </div>
-                  <span className="opacity-60">& up</span>
+                  <span className="opacity-50">& up</span>
                 </button>
               ))}
             </div>
@@ -203,23 +195,29 @@ export function FilterSidebar({
 
           {filters.brands && filters.brands.length > 0 && (
             <FilterSection title="Marques">
-              <div className="flex flex-col gap-1.5 max-h-60 overflow-y-auto">
+              <div className="flex flex-col gap-0.5 max-h-60 overflow-y-auto pr-1">
                 {filters.brands.map((brand) => {
-                  const value = typeof brand === "string" ? brand : brand.name || brand.slug;
+                  const value = typeof brand === "string" ? brand : brand.name || brand.slug
                   return (
                     <label
                       key={value}
-                      className="flex items-center gap-2 cursor-pointer text-sm hover:bg-base-200 rounded px-2 py-1"
+                      className="flex items-center gap-2.5 cursor-pointer text-sm hover:bg-base-200/60 rounded-lg px-2.5 py-1.5 transition-colors"
                     >
                       <input
                         type="checkbox"
                         className="checkbox checkbox-sm checkbox-primary"
                         checked={(activeFilters.brands || []).includes(value)}
-                        onChange={() => handleBrandToggle(value)}
+                        onChange={() => {
+                          const current = activeFilters.brands || []
+                          const updated = current.includes(value)
+                            ? current.filter((b) => b !== value)
+                            : [...current, value]
+                          onFilterChange?.({ ...activeFilters, brands: updated })
+                        }}
                       />
                       <span className="truncate">{value}</span>
                     </label>
-                  );
+                  )
                 })}
               </div>
             </FilterSection>
@@ -227,12 +225,12 @@ export function FilterSidebar({
         </>
       )}
     </div>
-  );
+  )
 
   return (
     <>
       <div className="hidden lg:block">
-        <div className={`bg-base-100 border border-base-200 rounded-xl p-4 sticky top-24 ${className}`}>
+        <div className={`bg-base-100 border border-base-200/80 rounded-xl p-5 sticky top-24 ${className}`}>
           {sidebarContent}
         </div>
       </div>
@@ -240,7 +238,7 @@ export function FilterSidebar({
       <div className="lg:hidden">
         <button
           type="button"
-          className="btn btn-outline btn-sm"
+          className="btn btn-outline btn-sm gap-2"
           onClick={() => setShowMobile(true)}
         >
           <SlidersHorizontal size={16} />
@@ -253,12 +251,12 @@ export function FilterSidebar({
         {showMobile && (
           <div className="fixed inset-0 z-50 flex">
             <div
-              className="absolute inset-0 bg-black/50"
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
               onClick={() => setShowMobile(false)}
             />
-            <div className="relative ml-auto w-full max-w-sm bg-base-100 h-full overflow-y-auto p-4">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="font-bold">Filtres</h3>
+            <div className="relative ml-auto w-full max-w-sm bg-base-100 h-full overflow-y-auto shadow-2xl">
+              <div className="sticky top-0 bg-base-100 z-10 flex justify-between items-center px-5 py-4 border-b border-base-200">
+                <h3 className="font-bold text-lg">Filtres</h3>
                 <button
                   type="button"
                   className="btn btn-ghost btn-sm btn-circle"
@@ -267,8 +265,10 @@ export function FilterSidebar({
                   <X size={20} />
                 </button>
               </div>
-              {sidebarContent}
-              <div className="sticky bottom-0 bg-base-100 pt-4 border-t border-base-200 mt-4">
+              <div className="px-5 py-4">
+                {sidebarContent}
+              </div>
+              <div className="sticky bottom-0 bg-base-100 px-5 py-4 border-t border-base-200">
                 <button
                   type="button"
                   className="btn btn-primary btn-block"
@@ -282,7 +282,7 @@ export function FilterSidebar({
         )}
       </div>
     </>
-  );
+  )
 }
 
-export default FilterSidebar;
+export default FilterSidebar
