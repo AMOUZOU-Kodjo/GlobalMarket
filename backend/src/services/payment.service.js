@@ -1,5 +1,5 @@
 const prisma = require('../config/database')
-const { v4: uuidv4 } = require('uuid')
+const crypto = require('crypto')
 const { paginate, paginatedResponse } = require('../utils/pagination')
 
 async function createIntent(data) {
@@ -21,15 +21,15 @@ async function createIntent(data) {
 
   const providerData = {
     paymentId: payment.id,
-    clientSecret: `pi_${uuidv4().replace(/-/g, '').slice(0, 24)}`,
+    clientSecret: `pi_${crypto.randomUUID().replace(/-/g, '').slice(0, 24)}`,
     amount: Number(amount),
     currency
   }
 
   if (method === 'paypal') {
-    providerData.approvalUrl = `https://www.paypal.com/checkoutnow?token=EC-${uuidv4().slice(0, 20)}`
+    providerData.approvalUrl = `https://www.paypal.com/checkoutnow?token=EC-${crypto.randomUUID().slice(0, 20)}`
   } else if (method === 'mobile_money') {
-    providerData.ussdCode = `*150*1*${uuidv4().slice(0, 8)}#`
+    providerData.ussdCode = `*150*1*${crypto.randomUUID().slice(0, 8)}#`
   }
 
   return { payment, providerData }

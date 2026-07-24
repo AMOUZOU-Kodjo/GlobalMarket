@@ -1,5 +1,5 @@
 const prisma = require('../config/database')
-const { v4: uuidv4 } = require('uuid')
+const crypto = require('crypto')
 const path = require('path')
 const fs = require('fs')
 
@@ -37,7 +37,7 @@ async function uploadImage(file, userId) {
   }
 
   const ext = path.extname(file.originalname)
-  const filename = `${uuidv4()}${ext}`
+  const filename = `${crypto.randomUUID()}${ext}`
   const subDir = 'images'
   const uploadPath = getUploadDir(subDir)
 
@@ -92,7 +92,7 @@ async function uploadDocument(file, userId) {
   }
 
   const ext = path.extname(file.originalname)
-  const filename = `${uuidv4()}${ext}`
+  const filename = `${crypto.randomUUID()}${ext}`
   const subDir = 'documents'
   const uploadPath = getUploadDir(subDir)
 

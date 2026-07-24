@@ -1,6 +1,6 @@
 const prisma = require('../config/database')
 const { paginate, paginatedResponse } = require('../utils/pagination')
-const { v4: uuidv4 } = require('uuid')
+const crypto = require('crypto')
 
 async function getDashboard() {
   const now = new Date()
