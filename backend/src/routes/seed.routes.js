@@ -119,25 +119,32 @@ router.post('/seed', async (req, res) => {
       const catMap = Object.fromEntries(cats.map(c => [c.slug, c.id]))
 
       const products = [
-        { name: 'iPhone 15 Pro Max 256Go', slug: 'iphone-15-pro-max-256go', description: 'Le dernier iPhone avec puce A17 Pro.', shortDescription: 'Smartphone Apple dernier cri', price: 1399.00, compareAtPrice: 1499.00, stock: 25, categorySlug: 'electronique', featured: true, trending: true, tags: ['apple', 'smartphone'], averageRating: 4.8, reviewCount: 124, salesCount: 340 },
-        { name: 'MacBook Air M3 15"', slug: 'macbook-air-m3-15', description: 'Ordinateur portable Apple avec puce M3.', shortDescription: 'Ultrabook performant et léger', price: 1549.00, compareAtPrice: 1699.00, stock: 15, categorySlug: 'electronique', featured: true, tags: ['apple', 'laptop'], averageRating: 4.9, reviewCount: 87, salesCount: 210 },
-        { name: 'Samsung Galaxy S24 Ultra', slug: 'samsung-galaxy-s24-ultra', description: 'Smartphone Samsung avec IA Galaxy.', shortDescription: 'Le flagship Samsung avec IA', price: 1299.00, compareAtPrice: 1399.00, stock: 30, categorySlug: 'electronique', trending: true, tags: ['samsung', 'smartphone'], averageRating: 4.7, reviewCount: 98, salesCount: 275 },
-        { name: 'Casque Sony WH-1000XM5', slug: 'casque-sony-wh1000xm5', description: 'Casque ANC premium.', shortDescription: 'ANC premium Sony', price: 329.00, compareAtPrice: 399.00, stock: 40, categorySlug: 'electronique', featured: true, tags: ['casque', 'audio'], averageRating: 4.6, reviewCount: 203, salesCount: 520 },
-        { name: 'T-shirt Premium Coton Bio', slug: 'tshirt-premium-coton-bio', description: 'T-shirt en coton bio certifié GOTS.', shortDescription: 'Coton bio certifié GOTS', price: 29.90, compareAtPrice: 39.90, stock: 150, categorySlug: 'mode-vetements', trending: true, tags: ['bio', 'mode'], averageRating: 4.4, reviewCount: 312, salesCount: 1240 },
-        { name: 'Sneakers Urban Step', slug: 'sneakers-urban-step', description: 'Baskets tendance en cuir synthétique.', shortDescription: 'Baskets mode urbaine', price: 89.90, compareAtPrice: 119.90, stock: 60, categorySlug: 'mode-vetements', tags: ['chaussures', 'sport'], averageRating: 4.3, reviewCount: 156, salesCount: 430 },
-        { name: 'Canapé Modulable 3 Places', slug: 'canape-modulable-3-places', description: 'Canapé modulable tissu grisé.', shortDescription: 'Canapé convertible et modulable', price: 649.00, compareAtPrice: 899.00, stock: 8, categorySlug: 'maison-jardin', featured: true, tags: ['canapé', 'salon'], averageRating: 4.5, reviewCount: 67, salesCount: 89 },
-        { name: 'Lampe Connectée LED RGB', slug: 'lampe-connectee-led-rgb', description: "Lampe d'ambiance à LED RGB.", shortDescription: 'Lampe smart 16M de couleurs', price: 49.90, compareAtPrice: 69.90, stock: 80, categorySlug: 'maison-jardin', trending: true, tags: ['smart-home', 'led'], averageRating: 4.2, reviewCount: 234, salesCount: 670 },
-        { name: 'Raquette Tennis Pro Carbon', slug: 'raquette-tennis-pro-carbon', description: 'Raquette en graphite/carbone.', shortDescription: 'Raquette carbone pro', price: 189.00, compareAtPrice: 229.00, stock: 20, categorySlug: 'sports-loisirs', tags: ['tennis', 'sport'], averageRating: 4.6, reviewCount: 45, salesCount: 120 },
-        { name: "Parfum Unisexe Bois d'Ambre", slug: 'parfum-unisexe-bois-ambre', description: 'Eau de parfum 100ml.', shortDescription: 'Eau de parfum artisanale', price: 65.00, compareAtPrice: 85.00, stock: 50, categorySlug: 'beaute-sante', featured: true, tags: ['parfum', 'unisexe'], averageRating: 4.7, reviewCount: 89, salesCount: 210 },
+        { name: 'iPhone 15 Pro Max 256Go', slug: 'iphone-15-pro-max-256go', description: 'Le dernier iPhone avec puce A17 Pro.', shortDescription: 'Smartphone Apple dernier cri', price: 1399.00, compareAtPrice: 1499.00, stock: 25, categorySlug: 'electronique', featured: true, trending: true, tags: ['apple', 'smartphone'], averageRating: 4.8, reviewCount: 124, salesCount: 340, image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=600&q=80' },
+        { name: 'MacBook Air M3 15"', slug: 'macbook-air-m3-15', description: 'Ordinateur portable Apple avec puce M3.', shortDescription: 'Ultrabook performant et léger', price: 1549.00, compareAtPrice: 1699.00, stock: 15, categorySlug: 'electronique', featured: true, tags: ['apple', 'laptop'], averageRating: 4.9, reviewCount: 87, salesCount: 210, image: 'https://images.unsplash.com/photo-1526570207772-784d36084510?w=600&q=80' },
+        { name: 'Samsung Galaxy S24 Ultra', slug: 'samsung-galaxy-s24-ultra', description: 'Smartphone Samsung avec IA Galaxy.', shortDescription: 'Le flagship Samsung avec IA', price: 1299.00, compareAtPrice: 1399.00, stock: 30, categorySlug: 'electronique', trending: true, tags: ['samsung', 'smartphone'], averageRating: 4.7, reviewCount: 98, salesCount: 275, image: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600&q=80' },
+        { name: 'Casque Sony WH-1000XM5', slug: 'casque-sony-wh1000xm5', description: 'Casque ANC premium.', shortDescription: 'ANC premium Sony', price: 329.00, compareAtPrice: 399.00, stock: 40, categorySlug: 'electronique', featured: true, tags: ['casque', 'audio'], averageRating: 4.6, reviewCount: 203, salesCount: 520, image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80' },
+        { name: 'T-shirt Premium Coton Bio', slug: 'tshirt-premium-coton-bio', description: 'T-shirt en coton bio certifié GOTS.', shortDescription: 'Coton bio certifié GOTS', price: 29.90, compareAtPrice: 39.90, stock: 150, categorySlug: 'mode-vetements', trending: true, tags: ['bio', 'mode'], averageRating: 4.4, reviewCount: 312, salesCount: 1240, image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80' },
+        { name: 'Sneakers Urban Step', slug: 'sneakers-urban-step', description: 'Baskets tendance en cuir synthétique.', shortDescription: 'Baskets mode urbaine', price: 89.90, compareAtPrice: 119.90, stock: 60, categorySlug: 'mode-vetements', tags: ['chaussures', 'sport'], averageRating: 4.3, reviewCount: 156, salesCount: 430, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80' },
+        { name: 'Canapé Modulable 3 Places', slug: 'canape-modulable-3-places', description: 'Canapé modulable tissu grisé.', shortDescription: 'Canapé convertible et modulable', price: 649.00, compareAtPrice: 899.00, stock: 8, categorySlug: 'maison-jardin', featured: true, tags: ['canapé', 'salon'], averageRating: 4.5, reviewCount: 67, salesCount: 89, image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80' },
+        { name: 'Lampe Connectée LED RGB', slug: 'lampe-connectee-led-rgb', description: "Lampe d'ambiance à LED RGB.", shortDescription: 'Lampe smart 16M de couleurs', price: 49.90, compareAtPrice: 69.90, stock: 80, categorySlug: 'maison-jardin', trending: true, tags: ['smart-home', 'led'], averageRating: 4.2, reviewCount: 234, salesCount: 670, image: 'https://images.unsplash.com/photo-1507473885765-e6ed057ab788?w=600&q=80' },
+        { name: 'Raquette Tennis Pro Carbon', slug: 'raquette-tennis-pro-carbon', description: 'Raquette en graphite/carbone.', shortDescription: 'Raquette carbone pro', price: 189.00, compareAtPrice: 229.00, stock: 20, categorySlug: 'sports-loisirs', tags: ['tennis', 'sport'], averageRating: 4.6, reviewCount: 45, salesCount: 120, image: 'https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?w=600&q=80' },
+        { name: "Parfum Unisexe Bois d'Ambre", slug: 'parfum-unisexe-bois-ambre', description: 'Eau de parfum 100ml.', shortDescription: 'Eau de parfum artisanale', price: 65.00, compareAtPrice: 85.00, stock: 50, categorySlug: 'beaute-sante', featured: true, tags: ['parfum', 'unisexe'], averageRating: 4.7, reviewCount: 89, salesCount: 210, image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=600&q=80' },
       ]
 
       let productCount = 0
+      let updatedCount = 0
       for (const p of products) {
         const catId = catMap[p.categorySlug]
         if (!catId) continue
         try {
           const existing = await prisma.product.findUnique({ where: { slug: p.slug } })
-          if (!existing) {
+          if (existing) {
+            const oldImg = await prisma.productImage.findFirst({ where: { productId: existing.id, isPrimary: true } })
+            if (oldImg && oldImg.url.includes('placehold.co')) {
+              await prisma.productImage.update({ where: { id: oldImg.id }, data: { url: p.image } })
+              updatedCount++
+            }
+          } else {
             await prisma.product.create({
               data: {
                 sellerId: seller.id, categoryId: catId, name: p.name, slug: p.slug,
@@ -146,14 +153,14 @@ router.post('/seed', async (req, res) => {
                 status: 'active', featured: !!p.featured, trending: !!p.trending,
                 tags: p.tags || [], averageRating: p.averageRating || 0,
                 reviewCount: p.reviewCount || 0, salesCount: p.salesCount || 0, publishedAt: new Date(),
-                images: { create: [{ url: `https://placehold.co/600x600?text=${encodeURIComponent(p.name.slice(0, 20))}`, alt: p.name, isPrimary: true, sortOrder: 0 }] }
+                images: { create: [{ url: p.image || `https://images.unsplash.com/photo-1607082349566-187342175e2f?w=600&q=80`, alt: p.name, isPrimary: true, sortOrder: 0 }] }
               }
             })
             productCount++
           }
         } catch (e) { /* skip */ }
       }
-      logs.push(`${productCount} products`)
+      logs.push(`${productCount} products created, ${updatedCount} images updated`)
     } catch (e) { logs.push('products error: ' + e.message) }
 
     res.json({ message: 'Seed complete', logs })
