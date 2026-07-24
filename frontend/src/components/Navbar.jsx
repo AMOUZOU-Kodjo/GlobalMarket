@@ -162,7 +162,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <div className="navbar-center hidden lg:flex gap-1">
+        <div className="navbar hidden lg:flex gap-1">
           <NavLink
             to="/"
             end

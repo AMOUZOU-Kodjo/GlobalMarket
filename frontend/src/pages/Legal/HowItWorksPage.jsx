@@ -28,8 +28,8 @@ const SELLER_STEPS = [
 
 const FAQ_ITEMS = [
   { q: 'Comment créer un compte ?', a: 'Cliquez sur "Créer un compte" et remplissez le formulaire. L\'inscription est gratuite et ne prend que quelques minutes.' },
-  { q: 'Comment payer mes achats ?', a: 'Nous acceptons les cartes bancaires (Visa, Mastercard), PayPal, Apple Pay et Google Pay. Tous les paiements sont sécurisés.' },
-  { q: 'Quels sont les délais de livraison ?', a: 'La livraison standard prend 3-5 jours ouvrés en France métropolitaine. La livraison express est disponible en 1-2 jours.' },
+  { q: 'Comment payer mes achats ?', a: 'Nous acceptons les cartes bancaires, Mobile Money (T-Money, Flooz), et les virements bancaires. Tous les paiements sont sécurisés.' },
+  { q: 'Quels sont les délais de livraison ?', a: 'La livraison standard prend 1-5 jours selon votre région au Togo. La livraison express est disponible en 1-2 jours à Lomé.' },
   { q: 'Comment retourner un produit ?', a: 'Vous disposez de 30 jours après réception pour retourner un produit. Rendez-vous dans votre espace "Mes commandes" pour initier le retour.' },
   { q: 'Comment devenir vendeur ?', a: 'Rendez-vous sur la page "Ouvrir une boutique" et suivez les étapes d\'inscription. Vous pourrez commencer à vendre en quelques heures.' },
   { q: 'Les paiements sont-ils sécurisés ?', a: 'Oui, tous les paiements sont chiffrés et sécurisés par Stripe. Nous ne stockons jamais vos données bancaires.' },

@@ -132,12 +132,12 @@ export default function ShippingPage() {
               <div className="card-body">
                 <div className="flex items-center gap-3 mb-4">
                   <Globe size={28} className="text-primary" />
-                  <h3 className="card-title">Couverture mondiale</h3>
+                  <h3 className="card-title">Couverture régionale</h3>
                 </div>
                 <ul className="text-sm text-base-content/70 flex flex-col gap-2">
                   <li className="flex items-center gap-2">
                     <span className="badge badge-primary badge-xs" />
-                    +30 pays couverts
+                    Tout le Togo + CEDEAO
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="badge badge-primary badge-xs" />

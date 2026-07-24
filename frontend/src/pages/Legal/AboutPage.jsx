@@ -19,7 +19,7 @@ import {
 const TIMELINE = [
   { year: '2020', title: 'Fondation', desc: 'MarcoStore est née de l\'envie de créer une plateforme de commerce en ligne accessible à tous.' },
   { year: '2021', title: 'Lancement', desc: 'Ouverture officielle de la plateforme avec 100 vendeurs pionniers.' },
-  { year: '2022', title: 'Croissance', desc: 'Expansion internationale dans 15 pays et plus de 10 000 vendeurs actifs.' },
+  { year: '2022', title: 'Croissance', desc: 'Expansion au Togo et dans les pays voisins, plus de 10 000 vendeurs actifs.' },
   { year: '2023', title: 'Innovation', desc: 'Lancement de l\'application mobile et du programme de protection acheteur.' },
   { year: '2024', title: 'Maturité', desc: 'Plus de 500 000 produits référencés et 1 million d\'utilisateurs satisfaits.' },
   { year: '2025', title: 'Avenir', desc: 'Intelligence artificielle et durabilité au cœur de notre évolution.' },

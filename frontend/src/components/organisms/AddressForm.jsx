@@ -4,7 +4,7 @@ import { MapPin } from 'lucide-react'
 import FormField from '../molecules/FormField'
 
 const DEFAULT_ADDRESS = {
-  firstName: '', lastName: '', street: '', street2: '', city: '', state: '', zip: '', country: 'France', phone: '', isDefault: false, label: 'Domicile',
+  firstName: '', lastName: '', street: '', street2: '', city: '', state: '', zip: '', country: 'Togo', phone: '', isDefault: false, label: 'Domicile',
 }
 
 function toForm(backend) {
@@ -18,7 +18,7 @@ function toForm(backend) {
     city: backend.city || '',
     state: backend.state || '',
     zip: backend.postalCode || backend.zip || '',
-    country: backend.country || 'France',
+    country: backend.country || 'Togo',
     phone: backend.phone || '',
     isDefault: backend.isDefault || false,
     label: backend.label || 'Domicile',
@@ -102,18 +102,19 @@ export default function AddressForm({ address, onSave, onCancel, loading }) {
         </FormField>
         <FormField label={t('address.country')} error={errors.country} required>
           <select name="country" value={form.country} onChange={handleChange} className="select select-bordered w-full">
-            <option value="France">France</option>
-            <option value="Belgique">Belgique</option>
-            <option value="Suisse">Suisse</option>
-            <option value="Canada">Canada</option>
+            <option value="Togo">Togo</option>
+            <option value="Bénin">Bénin</option>
+            <option value="Ghana">Ghana</option>
             <option value="Côte d'Ivoire">Côte d'Ivoire</option>
             <option value="Sénégal">Sénégal</option>
-            <option value="Maroc">Maroc</option>
+            <option value="Niger">Niger</option>
+            <option value="Burkina Faso">Burkina Faso</option>
+            <option value="Nigeria">Nigeria</option>
           </select>
         </FormField>
       </div>
       <FormField label={t('address.phone')}>
-        <input name="phone" value={form.phone} onChange={handleChange} className="input input-bordered w-full" placeholder="+33 6 12 34 56 78" />
+        <input name="phone" value={form.phone} onChange={handleChange} className="input input-bordered w-full" placeholder="+228 90 12 34 56" />
       </FormField>
       <label className="flex items-center gap-2 cursor-pointer">
         <input type="checkbox" name="isDefault" checked={form.isDefault} onChange={handleChange} className="checkbox checkbox-sm checkbox-primary" />

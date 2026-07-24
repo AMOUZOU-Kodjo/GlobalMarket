@@ -175,14 +175,14 @@ export default function ContactPage() {
                       <MapPin size={20} className="text-primary mt-0.5 shrink-0" />
                       <div>
                         <p className="font-medium">Adresse</p>
-                        <p className="text-sm text-base-content/70">123 Rue du Commerce<br />75001 Paris, France</p>
+                        <p className="text-sm text-base-content/70">Boulevard du 13 Janvier<br />Lomé, Togo</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
                       <Phone size={20} className="text-primary mt-0.5 shrink-0" />
                       <div>
                         <p className="font-medium">Téléphone</p>
-                        <p className="text-sm text-base-content/70">+33 1 23 45 67 89</p>
+                        <p className="text-sm text-base-content/70">+228 90 12 34 56</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">

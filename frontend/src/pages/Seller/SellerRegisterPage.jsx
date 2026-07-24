@@ -17,7 +17,7 @@ export default function SellerRegisterPage() {
     shopName: '',
     description: '',
     category: '',
-    country: '',
+    country: 'Togo',
     businessType: 'individual',
     acceptTerms: false,
   })
@@ -31,9 +31,9 @@ export default function SellerRegisterPage() {
   ]
 
   const COUNTRIES = [
-    t('countries.senegal'), t('countries.ivoryCoast'), t('countries.mali'),
-    t('countries.burkinaFaso'), t('countries.guinea'), t('countries.cameroon'),
-    t('countries.benin'), t('countries.togo'), t('countries.niger'),
+    t('countries.togo'), t('countries.benin'), t('countries.ivoryCoast'),
+    t('countries.senegal'), t('countries.mali'), t('countries.burkinaFaso'),
+    t('countries.guinea'), t('countries.cameroon'), t('countries.niger'),
     t('countries.congo'), t('countries.gabon'), t('countries.france'),
   ]
 

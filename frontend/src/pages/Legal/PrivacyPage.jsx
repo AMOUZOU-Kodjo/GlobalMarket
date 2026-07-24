@@ -82,12 +82,12 @@ Pour exercer vos droits, contactez notre Délégué à la Protection des Donnée
 **Adresse postale** :
 Délégué à la Protection des Données
 MarcoStore
-123 Rue du Commerce
-75001 Paris, France
+Boulevard du 13 Janvier
+Lomé, Togo
 
-**Téléphone** : +33 1 23 45 67 90
+**Téléphone** : +228 90 12 34 56
 
-Vous pouvez également déposer une plainte auprès de la CNIL (Commission Nationale de l'Informatique et des Libertés) : www.cnil.fr` },
+Vous pouvez également déposer une plainte auprès de la Commission des Données Personnelles du Togo (CDP).` },
 ]
 
 export default function PrivacyPage() {

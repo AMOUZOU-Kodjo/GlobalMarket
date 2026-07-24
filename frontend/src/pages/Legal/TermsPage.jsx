@@ -48,11 +48,11 @@ Notre responsabilité ne saurait être engagée en cas de :
 - Contenu publié par les utilisateurs
 
 MarcoStore met tout en œuvre pour assurer la sécurité des transactions, mais ne garantit pas l'absence de fraude. En cas de litige, notre équipe de médiation se tient à votre disposition.` },
-  { id: 'droit-applicable', title: 'Droit Applicable et Juridiction', content: `Les présentes conditions sont régies par le droit français. En cas de litige, les parties s'engagent à rechercher une solution amiable avant toute action judiciaire.
+  { id: 'droit-applicable', title: 'Droit Applicable et Juridiction', content: `Les présentes conditions sont régies par la législation togolaise. En cas de litige, les parties s'engagent à rechercher une solution amiable avant toute action judiciaire.
 
-À défaut de résolution amiable, tout litige relatif à l'interprétation ou l'exécution des présentes conditions sera soumis aux tribunaux compétents de Paris, France.
+À défaut de résolution amiable, tout litige relatif à l'interprétation ou l'exécution des présentes conditions sera soumis aux tribunaux compétents de Lomé, Togo.
 
-Conformément au règlement européen (UE) 2016/679 (RGPD), vous disposez de droits concernant vos données personnelles, notamment un droit d'accès, de rectification et de suppression.` },
+Conformément à la loi n°2019-14 du 16 octobre 2019 relative à la protection des données à caractère personnel au Togo, vous disposez de droits concernant vos données personnelles, notamment un droit d'accès, de rectification et de suppression.` },
 ]
 
 export default function TermsPage() {

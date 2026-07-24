@@ -9,9 +9,9 @@ export default function PartnersPage() {
         {
           title: 'Nos partenaires logistiques',
           items: [
-            { title: 'Chronopost', description: 'Livraison express 24h/48h en France et international.' },
-            { title: 'Colissimo', description: 'Livraison en point relais et à domicile partout en France.' },
-            { title: 'DHL Express', description: 'Livraison internationale rapide pour 220+ pays.' },
+            { title: 'Togo Express', description: 'Livraison express partout au Togo et en Afrique de l\'Ouest.' },
+            { title: 'DHL', description: 'Livraison internationale rapide pour l\'Afrique et le monde entier.' },
+            { title: 'Relais Togo', description: 'Points relais et livraison à domicile au Togo.' },
             { title: 'UPS', description: 'Solutions logistiques professionnelnes pour gros volumes.' },
           ],
         },

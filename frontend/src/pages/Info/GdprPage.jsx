@@ -12,10 +12,10 @@ export default function GdprPage() {
         },
         {
           title: 'Responsable du traitement',
-          content: `MarcoStore SAS
-123 Rue du Commerce, 75001 Paris, France
+          content: `MarcoStore SARL
+Boulevard du 13 Janvier, Lomé, Togo
 DPO : dpo@marcostore.com
-SIRET : 123 456 789 00012`,
+Registre du commerce : TI/Lomé/2026/B/1234`,
         },
         {
           title: 'Données collectées',
