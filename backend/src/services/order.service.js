@@ -40,7 +40,8 @@ async function getById(id, userId) {
       items: {
         include: {
           product: { select: { id: true, slug: true } },
-          variant: { select: { id: true, name: true } }
+          variant: { select: { id: true, name: true } },
+          seller: { select: { userId: true, shopName: true } }
         }
       },
       payments: true,

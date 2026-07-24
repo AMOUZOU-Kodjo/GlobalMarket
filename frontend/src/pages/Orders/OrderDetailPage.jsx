@@ -7,7 +7,10 @@ import {
   Download,
   XCircle,
   Clock,
+  MessageSquare,
 } from 'lucide-react'
+import { useAuth } from '../../context/AuthContext'
+import messageService from '../../services/message.service'
 import { useTranslation } from 'react-i18next'
 import { Header } from '../../components/organisms/Header'
 import OrderTimeline from '../../components/organisms/OrderTimeline'
@@ -25,6 +28,7 @@ export default function OrderDetailPage() {
   const { t } = useTranslation()
   const { orderId } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [order, setOrder] = useState(null)
   const [tracking, setTracking] = useState([])
   const [loading, setLoading] = useState(true)
@@ -115,6 +119,7 @@ export default function OrderDetailPage() {
   if (!order) return null
 
   const canCancel = CANCELABLE_STATUSES.includes(order.status)
+  const firstSellerUserId = order.items?.find(i => i.seller?.userId)?.seller?.userId
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -271,6 +276,22 @@ export default function OrderDetailPage() {
           </div>
 
           <div className="flex flex-col gap-2">
+            {user && firstSellerUserId && (
+              <button
+                type="button"
+                className="btn btn-outline btn-block gap-2"
+                onClick={async () => {
+                  try {
+                    await messageService.findOrCreate(firstSellerUserId)
+                    navigate(`/messages?to=${firstSellerUserId}`)
+                  } catch { navigate(`/messages?to=${firstSellerUserId}`) }
+                }}
+              >
+                <MessageSquare size={16} />
+                {t('messages.contactSeller')}
+              </button>
+            )}
+
             <button
               type="button"
               className="btn btn-outline btn-block"

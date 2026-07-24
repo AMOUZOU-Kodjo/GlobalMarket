@@ -9,6 +9,7 @@ import {
   XCircle,
   AlertTriangle,
   Copy,
+  MessageSquare,
 } from 'lucide-react'
 import Breadcrumb from '../components/atoms/Breadcrumb'
 import ProductImageGallery from '../components/organisms/ProductImageGallery'
@@ -20,6 +21,7 @@ import RelatedProducts from '../components/organisms/RelatedProducts'
 import Spinner from '../components/atoms/Spinner'
 import { EmptyState } from '../components/atoms/EmptyState'
 import { useCart } from '../context/CartContext'
+import { useAuth } from '../context/AuthContext'
 import productService from '../services/product.service'
 import formatCurrency from '../utils/formatCurrency'
 import MOCK_PRODUCTS from '../data/mockProducts'
@@ -28,6 +30,7 @@ export default function ProductDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { addItem } = useCart()
+  const { user } = useAuth()
 
   const [product, setProduct] = useState(null)
   const [related, setRelated] = useState([])
@@ -314,6 +317,17 @@ export default function ProductDetail() {
                 </div>
               )}
             </div>
+
+            {user && product.seller?.userId && (
+              <button
+                type="button"
+                className="btn btn-outline btn-lg gap-2"
+                onClick={() => navigate(`/messages?to=${product.seller.userId}`)}
+              >
+                <MessageSquare size={18} />
+                <span className="hidden sm:inline">{t('messages.contactSeller')}</span>
+              </button>
+            )}
           </div>
 
           <SellerInfoCard seller={product.seller} className="mt-4" />

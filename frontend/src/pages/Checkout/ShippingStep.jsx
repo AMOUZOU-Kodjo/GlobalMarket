@@ -121,7 +121,7 @@ export default function ShippingStep({ user, shippingData, onNext }) {
                 {editingAddress ? t('checkout.editAddress') : t('checkout.newAddress')}
               </h3>
               <AddressForm
-                initialData={editingAddress}
+                address={editingAddress}
                 onSave={handleAddressSave}
                 onCancel={() => {
                   setShowForm(false)

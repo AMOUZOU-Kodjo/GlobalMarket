@@ -4,7 +4,8 @@ const path = require('path')
 const fs = require('fs')
 
 const UPLOAD_DIR = process.env.UPLOAD_DIR || path.join(__dirname, '../../uploads')
-const BASE_URL = process.env.BASE_URL || 'http://localhost:5000'
+const PORT = process.env.PORT || 5001
+const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024
 const MAX_DOC_SIZE = 10 * 1024 * 1024
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']

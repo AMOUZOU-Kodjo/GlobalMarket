@@ -468,7 +468,7 @@ async function getPublicShop(slug) {
       logo: true, banner: true, category: true, country: true,
       rating: true, totalSales: true, totalRevenue: true,
       verified: true, createdAt: true,
-      user: { select: { name: true, avatar: true } },
+      user: { select: { id: true, name: true, avatar: true } },
       _count: { select: { products: { where: { status: 'active' } } } }
     }
   })

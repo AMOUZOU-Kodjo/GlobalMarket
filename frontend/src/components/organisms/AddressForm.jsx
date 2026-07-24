@@ -1,16 +1,54 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MapPin } from 'lucide-react'
 import FormField from '../molecules/FormField'
 
 const DEFAULT_ADDRESS = {
-  firstName: '', lastName: '', street: '', street2: '', city: '', state: '', zip: '', country: 'France', phone: '', isDefault: false,
+  firstName: '', lastName: '', street: '', street2: '', city: '', state: '', zip: '', country: 'France', phone: '', isDefault: false, label: 'Domicile',
+}
+
+function toForm(backend) {
+  if (!backend) return DEFAULT_ADDRESS
+  return {
+    id: backend.id,
+    firstName: backend.firstName || '',
+    lastName: backend.lastName || '',
+    street: backend.address1 || backend.street || '',
+    street2: backend.address2 || backend.street2 || '',
+    city: backend.city || '',
+    state: backend.state || '',
+    zip: backend.postalCode || backend.zip || '',
+    country: backend.country || 'France',
+    phone: backend.phone || '',
+    isDefault: backend.isDefault || false,
+    label: backend.label || 'Domicile',
+  }
+}
+
+function toBackend(form) {
+  return {
+    firstName: form.firstName,
+    lastName: form.lastName,
+    address1: form.street,
+    address2: form.street2 || null,
+    city: form.city,
+    state: form.state || null,
+    postalCode: form.zip,
+    country: form.country,
+    phone: form.phone || null,
+    isDefault: form.isDefault,
+    label: form.label || 'Domicile',
+  }
 }
 
 export default function AddressForm({ address, onSave, onCancel, loading }) {
   const { t } = useTranslation()
-  const [form, setForm] = useState({ ...DEFAULT_ADDRESS, ...address })
+  const [form, setForm] = useState(() => toForm(address))
   const [errors, setErrors] = useState({})
+
+  useEffect(() => {
+    setForm(toForm(address))
+  }, [address])
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -32,7 +70,7 @@ export default function AddressForm({ address, onSave, onCancel, loading }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (validate()) onSave?.(form)
+    if (validate()) onSave?.(toBackend(form))
   }
 
   return (

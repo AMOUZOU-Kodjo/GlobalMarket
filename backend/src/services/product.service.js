@@ -5,7 +5,7 @@ const { paginate, paginatedResponse } = require('../utils/pagination')
 const productInclude = {
   images: { orderBy: { sortOrder: 'asc' } },
   variants: { orderBy: { createdAt: 'asc' } },
-  seller: { select: { id: true, shopName: true, slug: true, logo: true, rating: true, verified: true } },
+  seller: { select: { id: true, userId: true, shopName: true, slug: true, logo: true, rating: true, verified: true } },
   category: { select: { id: true, name: true, slug: true } }
 }
 

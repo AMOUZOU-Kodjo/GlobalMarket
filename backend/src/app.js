@@ -1,3 +1,4 @@
+const path = require('path')
 const cors = require('cors')
 const helmet = require('helmet')
 const morgan = require('morgan')
@@ -19,6 +20,7 @@ const supportRoutes = require('./routes/support.routes')
 const uploadRoutes = require('./routes/upload.routes')
 const couponRoutes = require('./routes/coupon.routes')
 const addressRoutes = require('./routes/address.routes')
+const messageRoutes = require('./routes/message.routes')
 
 const app = express()
 
@@ -27,6 +29,9 @@ app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173', cred
 app.use(compression())
 app.use(cookieParser())
 app.use(morgan('combined'))
+
+const uploadsDir = path.join(__dirname, '../uploads')
+app.use('/uploads', express.static(uploadsDir))
 
 app.use('/api/webhooks/stripe', express.raw({ type: 'application/json' }))
 app.use('/api/webhooks/paypal', express.raw({ type: 'application/json' }))
@@ -51,6 +56,7 @@ app.use('/api/support', supportRoutes)
 app.use('/api/uploads', uploadRoutes)
 app.use('/api/coupons', couponRoutes)
 app.use('/api/addresses', addressRoutes)
+app.use('/api/messages', messageRoutes)
 
 app.use(errorHandler)
 

@@ -38,12 +38,16 @@ export default function ConfirmationStep({
           </h3>
           {shippingData.address ? (
             <div className="text-sm text-base-content/70 space-y-0.5">
-              <p className="font-medium text-base-content">{shippingData.address.name}</p>
-              <p>{shippingData.address.street}</p>
+              <p className="font-medium text-base-content">
+                {shippingData.address.firstName} {shippingData.address.lastName}
+              </p>
+              <p>{shippingData.address.address1 || shippingData.address.street}</p>
+              {(shippingData.address.address2 || shippingData.address.street2) && (
+                <p>{shippingData.address.address2 || shippingData.address.street2}</p>
+              )}
               <p>
-                {shippingData.address.city}
+                {shippingData.address.postalCode || shippingData.address.zip} {shippingData.address.city}
                 {shippingData.address.state ? `, ${shippingData.address.state}` : ''}{' '}
-                {shippingData.address.zip}
               </p>
               <p>{shippingData.address.country}</p>
               {shippingData.address.phone && <p>{t('checkout.phone')}: {shippingData.address.phone}</p>}

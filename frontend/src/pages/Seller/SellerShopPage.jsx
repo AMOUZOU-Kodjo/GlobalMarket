@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
-import { Store, Star, MapPin, Shield, Package } from 'lucide-react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { Store, Star, MapPin, Shield, Package, MessageSquare } from 'lucide-react'
+import { useAuth } from '../../context/AuthContext'
 import ProductCard from '../../components/organisms/ProductCard'
 import Spinner from '../../components/atoms/Spinner'
 import { api } from '../../services/api'
@@ -14,6 +15,8 @@ export default function SellerShopPage() {
   const [error, setError] = useState(null)
   const [sort, setSort] = useState('newest')
   const { t } = useTranslation()
+  const navigate = useNavigate()
+  const { user } = useAuth()
 
   useEffect(() => {
     setLoading(true)
@@ -92,6 +95,16 @@ export default function SellerShopPage() {
                   <span className="flex items-center gap-1">
                     <MapPin size={14} /> {shop.country}
                   </span>
+                )}
+                {user && shop.user?.id && user.id !== shop.user.id && (
+                  <button
+                    type="button"
+                    className="btn btn-outline btn-sm gap-1 ml-auto"
+                    onClick={() => navigate(`/messages?to=${shop.user.id}`)}
+                  >
+                    <MessageSquare size={14} />
+                    {t('messages.contactSeller')}
+                  </button>
                 )}
               </div>
             </div>

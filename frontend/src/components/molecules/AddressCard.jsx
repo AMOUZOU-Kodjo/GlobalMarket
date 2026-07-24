@@ -9,7 +9,15 @@ export function AddressCard({
   selected = false,
   onSelect,
 }) {
-  const { name, street, city, state, zip, country, phone, isDefault } = address
+  const street = address.address1 || address.street || ''
+  const street2 = address.address2 || address.street2 || ''
+  const postalCode = address.postalCode || address.zip || ''
+  const city = address.city || ''
+  const state = address.state || ''
+  const country = address.country || ''
+  const phone = address.phone || ''
+  const isDefault = address.isDefault || false
+  const name = address.label || `${address.firstName || ''} ${address.lastName || ''}`.trim() || 'Adresse'
 
   const handleClick = () => {
     if (selectable) {
@@ -83,11 +91,15 @@ export function AddressCard({
         </div>
 
         <div className="text-sm text-base-content/70 space-y-1 mt-1">
+          {(address.firstName || address.lastName) && (
+            <p className="font-medium text-base-content">{address.firstName} {address.lastName}</p>
+          )}
           <div className="flex items-start gap-2">
             <MapPin size={14} className="shrink-0 mt-0.5 opacity-50" />
             <div>
               <p>{street}</p>
-              <p>{city}{state ? `, ${state}` : ''} {zip}</p>
+              {street2 && <p>{street2}</p>}
+              <p>{postalCode} {city}{state ? `, ${state}` : ''}</p>
               <p>{country}</p>
             </div>
           </div>

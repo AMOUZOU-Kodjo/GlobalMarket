@@ -1,65 +1,105 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Header } from '../components/organisms/Header'
-import { MessageCircle, Send, Search, User, Package } from 'lucide-react'
+import { MessageCircle, Send, Search, Package, ArrowLeft } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
-
-const MOCK_CONVERSATIONS = [
-  {
-    id: 1,
-    name: 'Fatou Diallo — Mode Fatou',
-    lastMessage: 'Le colis a bien été expédié, vous le recevrez demain !',
-    time: 'Il y a 2h',
-    unread: 2,
-    avatar: 'F',
-    orderId: 'CMD-2026-0042',
-  },
-  {
-    id: 2,
-    name: 'TechStore Pro',
-    lastMessage: 'Merci pour votre achat ! N\'hésitez pas si vous avez des questions.',
-    time: 'Il y a 1j',
-    unread: 0,
-    avatar: 'T',
-    orderId: 'CMD-2026-0038',
-  },
-  {
-    id: 3,
-    name: 'Support GlobalMarket',
-    lastMessage: 'Votre remboursement a été traité. Il apparaîtra sous 3-5 jours.',
-    time: 'Il y a 3j',
-    unread: 1,
-    avatar: 'S',
-    orderId: null,
-  },
-]
-
-const MOCK_MESSAGES = [
-  { id: 1, sender: 'seller', text: 'Bonjour ! Votre commande a bien été reçue.', time: '14:30' },
-  { id: 2, sender: 'user', text: 'Super, merci ! Quand sera-t-elle expédiée ?', time: '14:35' },
-  { id: 3, sender: 'seller', text: 'Elle sera expédiée demain matin. Vous recevrez un numéro de suivi par email.', time: '14:40' },
-  { id: 4, sender: 'seller', text: 'Le colis a bien été expédié, vous le recevrez demain !', time: '16:15' },
-]
+import messageService from '../services/message.service'
 
 export default function MessagesPage() {
   const { user } = useAuth()
   const { t } = useTranslation()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [conversations, setConversations] = useState([])
   const [selectedConvo, setSelectedConvo] = useState(null)
+  const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState('')
-  const [messages, setMessages] = useState(MOCK_MESSAGES)
   const [searchQuery, setSearchQuery] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [sending, setSending] = useState(false)
+  const messagesEndRef = useRef(null)
+  const pollRef = useRef(null)
+  const hasAutoOpened = useRef(false)
 
-  const handleSend = (e) => {
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [])
+
+  const fetchConversations = useCallback(async () => {
+    try {
+      const data = await messageService.getConversations()
+      setConversations(data)
+    } catch { /* silent */ }
+  }, [])
+
+  const fetchMessages = useCallback(async (conversationId) => {
+    try {
+      const res = await messageService.getMessages(conversationId)
+      setMessages(res.data || res)
+      scrollToBottom()
+    } catch { /* silent */ }
+  }, [scrollToBottom])
+
+  useEffect(() => {
+    if (!user) return
+    setLoading(true)
+    fetchConversations().finally(() => setLoading(false))
+  }, [user, fetchConversations])
+
+  useEffect(() => {
+    if (!user || hasAutoOpened.current || loading) return
+    const toId = searchParams.get('to')
+    if (!toId) return
+    hasAutoOpened.current = true
+    setSearchParams({}, { replace: true })
+
+    messageService.findOrCreate(toId).then((convo) => {
+      fetchConversations().then(() => {
+        const full = { id: convo.id, other: { id: toId }, lastMessage: null, lastMessageAt: convo.createdAt, unread: 0 }
+        setSelectedConvo(full)
+        fetchMessages(convo.id)
+        messageService.markAsRead(convo.id)
+      })
+    }).catch(() => {})
+  }, [user, loading, searchParams, setSearchParams, fetchConversations, fetchMessages])
+
+  useEffect(() => {
+    if (!user) return
+    pollRef.current = setInterval(() => {
+      fetchConversations()
+      if (selectedConvo) fetchMessages(selectedConvo.id)
+    }, 10000)
+    return () => clearInterval(pollRef.current)
+  }, [user, selectedConvo, fetchConversations, fetchMessages])
+
+  const handleSelectConvo = async (convo) => {
+    setSelectedConvo(convo)
+    setMessages([])
+    await fetchMessages(convo.id)
+    await messageService.markAsRead(convo.id)
+    setConversations(prev => prev.map(c => c.id === convo.id ? { ...c, unread: 0 } : c))
+  }
+
+  const handleSend = async (e) => {
     e.preventDefault()
-    if (!newMessage.trim()) return
-    setMessages(prev => [...prev, {
-      id: prev.length + 1,
-      sender: 'user',
-      text: newMessage.trim(),
-      time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
-    }])
-    setNewMessage('')
+    if (!newMessage.trim() || sending) return
+    setSending(true)
+    try {
+      const msg = await messageService.sendMessage({
+        recipientId: selectedConvo.other.id,
+        content: newMessage.trim(),
+        conversationId: selectedConvo.id,
+      })
+      setMessages(prev => [...prev, msg])
+      setNewMessage('')
+      scrollToBottom()
+      setConversations(prev => prev.map(c =>
+        c.id === selectedConvo.id
+          ? { ...c, lastMessage: newMessage.trim(), lastMessageAt: new Date() }
+          : c
+      ))
+    } catch { /* silent */ }
+    setSending(false)
   }
 
   if (!user) {
@@ -72,9 +112,20 @@ export default function MessagesPage() {
     )
   }
 
-  const filteredConvos = MOCK_CONVERSATIONS.filter(c =>
-    c.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredConvos = conversations.filter(c =>
+    c.other.name?.toLowerCase().includes(searchQuery.toLowerCase())
   )
+
+  const formatTime = (date) => {
+    const d = new Date(date)
+    const now = new Date()
+    const diff = now - d
+    if (diff < 86400000) return d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+    if (diff < 604800000) return d.toLocaleDateString('fr-FR', { weekday: 'short' })
+    return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })
+  }
+
+  const getInitial = (name) => name?.charAt(0)?.toUpperCase() || '?'
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -101,42 +152,42 @@ export default function MessagesPage() {
               </label>
             </div>
             <div className="flex-1 overflow-y-auto">
-              {filteredConvos.map((convo) => (
-                <button
-                  key={convo.id}
-                  className={`w-full text-left p-3 hover:bg-base-200 transition-colors border-b border-base-100 ${
-                    selectedConvo?.id === convo.id ? 'bg-primary/5 border-l-2 border-l-primary' : ''
-                  }`}
-                  onClick={() => setSelectedConvo(convo)}
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="avatar placeholder shrink-0">
-                      <div className="bg-primary/10 text-primary w-10 rounded-full">
-                        <span className="text-sm font-bold">{convo.avatar}</span>
-                      </div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-sm truncate">{convo.name}</span>
-                        <span className="text-xs text-base-content/50 shrink-0">{convo.time}</span>
-                      </div>
-                      <p className="text-xs text-base-content/60 truncate mt-0.5">{convo.lastMessage}</p>
-                      {convo.orderId && (
-                        <span className="text-[10px] text-primary mt-1 inline-flex items-center gap-1">
-                          <Package size={10} /> {convo.orderId}
-                        </span>
-                      )}
-                    </div>
-                    {convo.unread > 0 && (
-                      <span className="badge badge-primary badge-sm shrink-0">{convo.unread}</span>
-                    )}
-                  </div>
-                </button>
-              ))}
-              {filteredConvos.length === 0 && (
+              {loading ? (
+                <div className="p-8 text-center text-sm text-base-content/50">
+                  <span className="loading loading-spinner loading-sm"></span>
+                </div>
+              ) : filteredConvos.length === 0 ? (
                 <div className="p-8 text-center text-sm text-base-content/50">
                   {t('messages.noConversations')}
                 </div>
+              ) : (
+                filteredConvos.map((convo) => (
+                  <button
+                    key={convo.id}
+                    className={`w-full text-left p-3 hover:bg-base-200 transition-colors border-b border-base-100 ${
+                      selectedConvo?.id === convo.id ? 'bg-primary/5 border-l-2 border-l-primary' : ''
+                    }`}
+                    onClick={() => handleSelectConvo(convo)}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="avatar placeholder shrink-0">
+                        <div className="bg-primary/10 text-primary w-10 rounded-full">
+                          <span className="text-sm font-bold">{getInitial(convo.other.name)}</span>
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium text-sm truncate">{convo.other.name}</span>
+                          <span className="text-xs text-base-content/50 shrink-0">{formatTime(convo.lastMessageAt)}</span>
+                        </div>
+                        <p className="text-xs text-base-content/60 truncate mt-0.5">{convo.lastMessage || t('messages.noMessages')}</p>
+                      </div>
+                      {convo.unread > 0 && (
+                        <span className="badge badge-primary badge-sm shrink-0">{convo.unread}</span>
+                      )}
+                    </div>
+                  </button>
+                ))
               )}
             </div>
           </div>
@@ -146,37 +197,35 @@ export default function MessagesPage() {
             {selectedConvo ? (
               <>
                 <div className="p-3 border-b border-base-200 flex items-center gap-3">
-                  <button className="btn btn-ghost btn-sm md:hidden" onClick={() => setSelectedConvo(null)}>
-                    ←
+                  <button className="btn btn-ghost btn-sm md:hidden" onClick={() => { setSelectedConvo(null); setMessages([]) }}>
+                    <ArrowLeft size={16} />
                   </button>
                   <div className="avatar placeholder">
                     <div className="bg-primary/10 text-primary w-8 rounded-full">
-                      <span className="text-xs font-bold">{selectedConvo.avatar}</span>
+                      <span className="text-xs font-bold">{getInitial(selectedConvo.other.name)}</span>
                     </div>
                   </div>
                   <div>
-                    <p className="font-medium text-sm">{selectedConvo.name}</p>
-                    {selectedConvo.orderId && (
-                      <p className="text-xs text-base-content/50">{t('messages.order')} {selectedConvo.orderId}</p>
-                    )}
+                    <p className="font-medium text-sm">{selectedConvo.other.name}</p>
                   </div>
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-3">
                   {messages.map((msg) => (
-                    <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div key={msg.id} className={`flex ${msg.senderId === user.id ? 'justify-end' : 'justify-start'}`}>
                       <div className={`max-w-[75%] rounded-xl px-4 py-2 ${
-                        msg.sender === 'user'
+                        msg.senderId === user.id
                           ? 'bg-primary text-primary-content'
                           : 'bg-base-200 text-base-content'
                       }`}>
-                        <p className="text-sm">{msg.text}</p>
-                        <p className={`text-[10px] mt-1 ${msg.sender === 'user' ? 'text-primary-content/70' : 'text-base-content/50'}`}>
-                          {msg.time}
+                        <p className="text-sm">{msg.content}</p>
+                        <p className={`text-[10px] mt-1 ${msg.senderId === user.id ? 'text-primary-content/70' : 'text-base-content/50'}`}>
+                          {formatTime(msg.createdAt)}
                         </p>
                       </div>
                     </div>
                   ))}
+                  <div ref={messagesEndRef} />
                 </div>
 
                 <form onSubmit={handleSend} className="p-3 border-t border-base-200 flex gap-2">
@@ -186,9 +235,10 @@ export default function MessagesPage() {
                     className="input input-bordered flex-1"
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
+                    disabled={sending}
                   />
-                  <button type="submit" className="btn btn-primary btn-circle" disabled={!newMessage.trim()}>
-                    <Send size={16} />
+                  <button type="submit" className="btn btn-primary btn-circle" disabled={!newMessage.trim() || sending}>
+                    {sending ? <span className="loading loading-spinner loading-xs"></span> : <Send size={16} />}
                   </button>
                 </form>
               </>
