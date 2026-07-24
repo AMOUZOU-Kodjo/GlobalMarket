@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs')
 const router = express.Router()
 const prisma = new PrismaClient()
 
-const SEED_SECRET = process.env.SEED_SECRET || 'globalmarket-seed-2026'
+const SEED_SECRET = process.env.SEED_SECRET || 'marcostore-seed-2026'
 
 const categories = [
   { name: 'Électronique', slug: 'electronique', icon: '📱' },
@@ -29,25 +29,25 @@ router.post('/seed', async (req, res, next) => {
 
     console.log('Seeding database via API...')
 
-    const adminHash = await bcrypt.hash('Admin@GlobalMarket2026!', 12)
+    const adminHash = await bcrypt.hash('Admin@MarcoStore2026!', 12)
     const admin = await prisma.user.upsert({
-      where: { email: 'admin@globalmarket.com' },
+      where: { email: 'admin@marcostore.com' },
       update: { passwordHash: adminHash, role: 'admin', status: 'active', emailVerified: true },
-      create: { email: 'admin@globalmarket.com', name: 'Administrateur', passwordHash: adminHash, role: 'admin', emailVerified: true, status: 'active' }
+      create: { email: 'admin@marcostore.com', name: 'Administrateur', passwordHash: adminHash, role: 'admin', emailVerified: true, status: 'active' }
     })
 
     const buyerHash = await bcrypt.hash('Buyer@2026!', 12)
     const buyer = await prisma.user.upsert({
-      where: { email: 'acheteur@globalmarket.com' },
+      where: { email: 'acheteur@marcostore.com' },
       update: { passwordHash: buyerHash, role: 'buyer', status: 'active', emailVerified: true },
-      create: { email: 'acheteur@globalmarket.com', name: 'Jean Dupont', passwordHash: buyerHash, role: 'buyer', emailVerified: true, status: 'active' }
+      create: { email: 'acheteur@marcostore.com', name: 'Jean Dupont', passwordHash: buyerHash, role: 'buyer', emailVerified: true, status: 'active' }
     })
 
     const sellerHash = await bcrypt.hash('Seller@2026!', 12)
     const sellerUser = await prisma.user.upsert({
-      where: { email: 'vendeur@globalmarket.com' },
+      where: { email: 'vendeur@marcostore.com' },
       update: { passwordHash: sellerHash, role: 'seller', status: 'active', emailVerified: true },
-      create: { email: 'vendeur@globalmarket.com', name: 'Marie Martin', passwordHash: sellerHash, role: 'seller', emailVerified: true, status: 'active' }
+      create: { email: 'vendeur@marcostore.com', name: 'Marie Martin', passwordHash: sellerHash, role: 'seller', emailVerified: true, status: 'active' }
     })
 
     const seller = await prisma.seller.upsert({
@@ -74,7 +74,7 @@ router.post('/seed', async (req, res, next) => {
       update: {},
       create: {
         key: 'general',
-        value: { siteName: 'GlobalMarket', siteDescription: 'Marketplace mondiale', commissionRate: 0.12, paymentMethods: ['credit_card', 'paypal', 'mobile_money'], defaultShippingRate: 5.99, shippingFreeThreshold: 50 }
+        value: { siteName: 'MarcoStore', siteDescription: 'Marketplace mondiale', commissionRate: 0.12, paymentMethods: ['credit_card', 'paypal', 'mobile_money'], defaultShippingRate: 5.99, shippingFreeThreshold: 50 }
       }
     })
 
@@ -117,9 +117,9 @@ router.post('/seed', async (req, res, next) => {
     res.json({
       message: 'Database seeded successfully',
       accounts: {
-        admin: { email: 'admin@globalmarket.com', password: 'Admin@GlobalMarket2026!' },
-        buyer: { email: 'acheteur@globalmarket.com', password: 'Buyer@2026!' },
-        seller: { email: 'vendeur@globalmarket.com', password: 'Seller@2026!' }
+        admin: { email: 'admin@marcostore.com', password: 'Admin@MarcoStore2026!' },
+        buyer: { email: 'acheteur@marcostore.com', password: 'Buyer@2026!' },
+        seller: { email: 'vendeur@marcostore.com', password: 'Seller@2026!' }
       }
     })
   } catch (error) {

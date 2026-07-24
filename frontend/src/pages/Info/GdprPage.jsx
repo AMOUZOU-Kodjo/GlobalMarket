@@ -8,13 +8,13 @@ export default function GdprPage() {
       sections={[
         {
           title: 'Préambule',
-          content: `GlobalMarket accorde une importance capitale à la protection de vos données personnelles. Conformément au Règlement Général sur la Protection des Données (RGPD) et à la loi Informatique et Libertés, nous mettons en œuvre toutes les mesures techniques et organisationnelles nécessaires pour protéger vos données.`,
+          content: `MarcoStore accorde une importance capitale à la protection de vos données personnelles. Conformément au Règlement Général sur la Protection des Données (RGPD) et à la loi Informatique et Libertés, nous mettons en œuvre toutes les mesures techniques et organisationnelles nécessaires pour protéger vos données.`,
         },
         {
           title: 'Responsable du traitement',
-          content: `GlobalMarket SAS
+          content: `MarcoStore SAS
 123 Rue du Commerce, 75001 Paris, France
-DPO : dpo@globalmarket.com
+DPO : dpo@marcostore.com
 SIRET : 123 456 789 00012`,
         },
         {
@@ -43,8 +43,8 @@ SIRET : 123 456 789 00012`,
           title: 'Exercer vos droits',
           content: `Pour exercer vos droits, contactez notre Délégué à la Protection des Données :
 
-Email : dpo@globalmarket.com
-Courrier : GlobalMarket SAS — DPO, 123 Rue du Commerce, 75001 Paris
+Email : dpo@marcostore.com
+Courrier : MarcoStore SAS — DPO, 123 Rue du Commerce, 75001 Paris
 
 Nous nous engageons à répondre dans un délai de 30 jours. Une pièce d'identité pourra vous être demandée pour vérification.`,
         },

@@ -77,11 +77,11 @@ Vous pouvez gérer vos préférences de cookies à tout moment via notre bandeau
 Pour exercer vos droits, contactez notre Délégué à la Protection des Données à l'adresse indiquée ci-dessous.` },
   { id: 'contact-dpo', icon: Mail, title: 'Contact DPO', content: `Pour toute question relative à la protection de vos données personnelles, vous pouvez contacter notre Délégué à la Protection des Données (DPO) :
 
-**Email** : dpo@globalmarket.com
+**Email** : dpo@marcostore.com
 
 **Adresse postale** :
 Délégué à la Protection des Données
-GlobalMarket
+MarcoStore
 123 Rue du Commerce
 75001 Paris, France
 
@@ -158,7 +158,7 @@ export default function PrivacyPage() {
             <div className="flex-1 min-w-0">
               <div className="alert alert-info mb-8">
                 <Shield size={20} />
-                <span>Cette politique explique comment GlobalMarket collecte, utilise et protège vos données personnelles conformément au RGPD.</span>
+                <span>Cette politique explique comment MarcoStore collecte, utilise et protège vos données personnelles conformément au RGPD.</span>
               </div>
 
               {SECTIONS.map((section) => {

@@ -4,11 +4,11 @@ export default function SellerApiPage() {
   return (
     <InfoPage
       title="API Vendeurs"
-      subtitle="Intégrez GlobalMarket à vos outils de gestion"
+      subtitle="Intégrez MarcoStore à vos outils de gestion"
       sections={[
         {
           title: 'Vue d\'ensemble',
-          content: `L'API REST de GlobalMarket permet aux vendeurs professionnels d'automatiser la gestion de leur boutique. Synchronisez vos stocks, gérez vos commandes et publiez des produits en masse.`,
+          content: `L'API REST de MarcoStore permet aux vendeurs professionnels d'automatiser la gestion de leur boutique. Synchronisez vos stocks, gérez vos commandes et publiez des produits en masse.`,
         },
         {
           title: 'Endpoints disponibles',
@@ -30,7 +30,7 @@ Chaque requête doit inclure le header : Authorization: Bearer <votre_token>`,
         },
         {
           title: 'Documentation',
-          content: `Documentation complète disponible sur docs.globalmarket.com/api
+          content: `Documentation complète disponible sur docs.marcostore.com/api
 
 SDK disponibles : JavaScript/Node.js, Python, PHP
 

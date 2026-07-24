@@ -148,7 +148,7 @@ export default function AdminSettingsPage() {
                   name="siteName"
                   type="text"
                   className="input input-bordered w-full"
-                  placeholder="GlobalMarket"
+                  placeholder="MarcoStore"
                   value={settings.siteName}
                   onChange={handleChange}
                 />

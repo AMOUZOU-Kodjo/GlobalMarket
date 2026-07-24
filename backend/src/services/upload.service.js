@@ -36,7 +36,7 @@ async function uploadImage(file, userId) {
     throw new Error('Le fichier dépasse la taille maximale de 5 Mo')
   }
 
-  const result = await uploadToCloudinary(file, 'globalmarket/images')
+  const result = await uploadToCloudinary(file, 'marcostore/images')
 
   const record = await prisma.uploadedFile.create({
     data: {
@@ -78,7 +78,7 @@ async function uploadDocument(file, userId) {
     throw new Error('Le fichier dépasse la taille maximale de 10 Mo')
   }
 
-  const result = await uploadToCloudinary(file, 'globalmarket/documents')
+  const result = await uploadToCloudinary(file, 'marcostore/documents')
 
   const record = await prisma.uploadedFile.create({
     data: {

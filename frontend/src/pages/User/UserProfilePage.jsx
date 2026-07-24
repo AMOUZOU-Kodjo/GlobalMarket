@@ -68,7 +68,7 @@ export default function UserProfilePage() {
 
   useEffect(() => {
     try {
-      const stored = JSON.parse(localStorage.getItem('globalmarket_wishlist') || '[]')
+      const stored = JSON.parse(localStorage.getItem('marcostore_wishlist') || '[]')
       setWishlistCount(stored.length)
     } catch { /* ignore */ }
   }, [])

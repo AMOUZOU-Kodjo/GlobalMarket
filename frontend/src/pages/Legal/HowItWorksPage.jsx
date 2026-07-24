@@ -46,7 +46,7 @@ export default function HowItWorksPage() {
             <Sparkles size={48} className="text-primary mx-auto mb-4" />
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Comment ça marche</h1>
             <p className="text-lg text-base-content/70">
-              Découvrez comment GlobalMarket simplifie vos achats et vos ventes en ligne.
+              Découvrez comment MarcoStore simplifie vos achats et vos ventes en ligne.
             </p>
           </div>
         </div>
@@ -56,7 +56,7 @@ export default function HowItWorksPage() {
         <div className="container mx-auto max-w-5xl">
           <h2 className="text-3xl font-bold text-center mb-4">Pour les Acheteurs</h2>
           <p className="text-center text-base-content/60 mb-12 max-w-xl mx-auto">
-            Acheter sur GlobalMarket est simple, rapide et sécurisé en 3 étapes.
+            Acheter sur MarcoStore est simple, rapide et sécurisé en 3 étapes.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {BUYER_STEPS.map((step, i) => {

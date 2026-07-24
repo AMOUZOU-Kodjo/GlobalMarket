@@ -31,7 +31,7 @@ const REFUND_TIMELINE = [
   { title: 'Remboursement par carte bancaire', time: '5-10 jours ouvrés' },
   { title: 'Remboursement par PayPal', time: '24-48 heures' },
   { title: 'Remboursement par virement', time: '3-5 jours ouvrés' },
-  { title: 'Crédit GlobalMarket', time: 'Immédiat' },
+  { title: 'Crédit MarcoStore', time: 'Immédiat' },
 ]
 
 export default function BuyerProtectionPage() {
@@ -43,7 +43,7 @@ export default function BuyerProtectionPage() {
             <ShieldCheck size={64} className="text-primary mx-auto mb-4" />
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Protection Acheteur</h1>
             <p className="text-lg text-base-content/70">
-              Achetez en toute confiance. Vos achats sont protégés par GlobalMarket.
+              Achetez en toute confiance. Vos achats sont protégés par MarcoStore.
             </p>
           </div>
         </div>

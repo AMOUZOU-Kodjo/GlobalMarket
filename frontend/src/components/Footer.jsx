@@ -147,11 +147,11 @@ const CURRENCIES = [
 ]
 
 const SOCIAL_LINKS = [
-  { platform: 'Facebook', icon: FacebookIcon, url: 'https://facebook.com/globalmarket', color: 'hover:text-blue-500' },
-  { platform: 'Twitter', icon: TwitterIcon, url: 'https://twitter.com/globalmarket', color: 'hover:text-sky-500' },
-  { platform: 'Instagram', icon: InstagramIcon, url: 'https://instagram.com/globalmarket', color: 'hover:text-pink-500' },
-  { platform: 'YouTube', icon: YoutubeIcon, url: 'https://youtube.com/globalmarket', color: 'hover:text-red-500' },
-  { platform: 'LinkedIn', icon: LinkedinIcon, url: 'https://linkedin.com/company/globalmarket', color: 'hover:text-blue-600' },
+  { platform: 'Facebook', icon: FacebookIcon, url: 'https://facebook.com/marcostore', color: 'hover:text-blue-500' },
+  { platform: 'Twitter', icon: TwitterIcon, url: 'https://twitter.com/marcostore', color: 'hover:text-sky-500' },
+  { platform: 'Instagram', icon: InstagramIcon, url: 'https://instagram.com/marcostore', color: 'hover:text-pink-500' },
+  { platform: 'YouTube', icon: YoutubeIcon, url: 'https://youtube.com/marcostore', color: 'hover:text-red-500' },
+  { platform: 'LinkedIn', icon: LinkedinIcon, url: 'https://linkedin.com/company/marcostore', color: 'hover:text-blue-600' },
 ]
 
 const PAYMENT_METHODS = [
@@ -399,9 +399,9 @@ export default function Footer() {
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="GlobalMarket" className="h-6 w-6 object-contain" />
+            <img src="/logo.png" alt="MarcoStore" className="h-6 w-6 object-contain" />
             <span className="font-bold">
-              <span className="text-primary">Global</span>Market
+              <span className="text-primary">Marco</span>Store
             </span>
           </div>
 
@@ -424,7 +424,7 @@ export default function Footer() {
           </div>
 
           <p className="text-sm text-base-content/50  flex items-center gap-1">
-            © {new Date().getFullYear()} GlobalMarket. {t('footer.allRights')}
+            © {new Date().getFullYear()} MarcoStore. {t('footer.allRights')}
             <span className="inline-flex items-center gap-0.5">
               {t('footer.madeWith')} <Heart size={12} className="text-error fill-error" /> {t('footer.worldwide')}
             </span>

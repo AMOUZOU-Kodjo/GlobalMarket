@@ -4,7 +4,7 @@ export default function PartnersPage() {
   return (
     <InfoPage
       title="Partenaires"
-      subtitle="Nos partenaires qui font vivre l'écosystème GlobalMarket"
+      subtitle="Nos partenaires qui font vivre l'écosystème MarcoStore"
       sections={[
         {
           title: 'Nos partenaires logistiques',
@@ -26,14 +26,14 @@ export default function PartnersPage() {
         },
         {
           title: 'Partenariat commercial',
-          content: `Vous souhaitez devenir partenaire de GlobalMarket ? Nous sommes ouverts à :
+          content: `Vous souhaitez devenir partenaire de MarcoStore ? Nous sommes ouverts à :
 
 • Co-branding et opérations conjointes
 • Intégration API pour plateformes tierces
 • Programme d'affiliation vendeurs
 • Sponsoring et événementiel
 
-Contactez notre équipe partenariats : partners@globalmarket.com`,
+Contactez notre équipe partenariats : partners@marcostore.com`,
         },
       ]}
     />

@@ -28,7 +28,7 @@ const STORIES = [
     shop: 'Art & Design CI',
     category: 'Art & Artisanat',
     revenue: '5 800 €/mois',
-    story: 'Artiste plasticien, Ibrahim vend ses œuvres et celles d\'autres artistes ivoiriens. GlobalMarket lui a permis de toucher une clientèle internationale qu\'il n\'aurait jamais atteinte seul.',
+    story: 'Artiste plasticien, Ibrahim vend ses œuvres et celles d\'autres artistes ivoiriens. MarcoStore lui a permis de toucher une clientèle internationale qu\'il n\'aurait jamais atteinte seul.',
   },
 ]
 
@@ -46,7 +46,7 @@ export default function SellerSuccessStoriesPage() {
           })),
         },
         {
-          title: 'Vous aussi, réussissez sur GlobalMarket',
+          title: 'Vous aussi, réussissez sur MarcoStore',
           content: 'Ces vendeurs ont commencé comme vous, avec une idée et de la motivation. Rejoignez-les et commencez à vendre dès aujourd\'hui.',
         },
       ]}

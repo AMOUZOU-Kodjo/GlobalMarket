@@ -50,7 +50,7 @@ export default function ProductDetail() {
 
   const { t } = useTranslation()
 
-  const WISHLIST_KEY = 'globalmarket_wishlist'
+  const WISHLIST_KEY = 'marcostore_wishlist'
 
   const fetchProduct = useCallback(async () => {
     setLoading(true)

@@ -23,10 +23,10 @@ const SUBJECTS = [
 ]
 
 const SOCIALS = [
-  { name: 'Facebook', url: 'https://facebook.com/globalmarket' },
-  { name: 'Twitter', url: 'https://twitter.com/globalmarket' },
-  { name: 'Instagram', url: 'https://instagram.com/globalmarket' },
-  { name: 'LinkedIn', url: 'https://linkedin.com/company/globalmarket' },
+  { name: 'Facebook', url: 'https://facebook.com/marcostore' },
+  { name: 'Twitter', url: 'https://twitter.com/marcostore' },
+  { name: 'Instagram', url: 'https://instagram.com/marcostore' },
+  { name: 'LinkedIn', url: 'https://linkedin.com/company/marcostore' },
 ]
 
 export default function ContactPage() {
@@ -189,7 +189,7 @@ export default function ContactPage() {
                       <Mail size={20} className="text-primary mt-0.5 shrink-0" />
                       <div>
                         <p className="font-medium">Email</p>
-                        <p className="text-sm text-base-content/70">contact@globalmarket.com</p>
+                        <p className="text-sm text-base-content/70">contact@marcostore.com</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">

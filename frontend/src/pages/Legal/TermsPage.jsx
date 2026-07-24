@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react'
 import { Header } from '../../components/organisms/Header'
 
 const SECTIONS = [
-  { id: 'acceptation', title: 'Acceptation des Conditions', content: `En accédant et en utilisant la plateforme GlobalMarket, vous acceptez sans réserve les présentes Conditions Générales d'Utilisation. Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser notre plateforme.
+  { id: 'acceptation', title: 'Acceptation des Conditions', content: `En accédant et en utilisant la plateforme MarcoStore, vous acceptez sans réserve les présentes Conditions Générales d'Utilisation. Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser notre plateforme.
 
-Ces conditions constituent un accord juridique entre vous et GlobalMarket. Nous nous réservons le droit de modifier ces conditions à tout moment. Les modifications prennent effet dès leur publication sur la plateforme.` },
-  { id: 'definitions', title: 'Définitions', content: `**Plateforme** : Le site web et l'application mobile GlobalMarket accessibles aux utilisateurs.
+Ces conditions constituent un accord juridique entre vous et MarcoStore. Nous nous réservons le droit de modifier ces conditions à tout moment. Les modifications prennent effet dès leur publication sur la plateforme.` },
+  { id: 'definitions', title: 'Définitions', content: `**Plateforme** : Le site web et l'application mobile MarcoStore accessibles aux utilisateurs.
 
 **Utilisateur** : Toute personne physique ou morale accédant à la plateforme, qu'elle soit acheteur ou vendeur.
 
@@ -15,13 +15,13 @@ Ces conditions constituent un accord juridique entre vous et GlobalMarket. Nous 
 
 **Contenu** : L'ensemble des informations, textes, images, vidéos et autres éléments publiés sur la plateforme.
 
-**Service** : L'ensemble des fonctionnalités offertes par GlobalMarket, incluant la mise en relation entre acheteurs et vendeurs, le système de paiement et la logistique.` },
+**Service** : L'ensemble des fonctionnalités offertes par MarcoStore, incluant la mise en relation entre acheteurs et vendeurs, le système de paiement et la logistique.` },
   { id: 'inscription', title: 'Inscription', content: `Pour utiliser certaines fonctionnalités de la plateforme, vous devez créer un compte. L'inscription est gratuite et ouverte à toute personne physique majeure ou morale.
 
 Lors de l'inscription, vous vous engagez à fournir des informations exactes et à les maintenir à jour. Vous êtes responsable de la confidentialité de vos identifiants de connexion.
 
-Un compte peut être supprimé à tout moment par l'utilisateur ou par GlobalMarket en cas de non-respect des présentes conditions.` },
-  { id: 'obligations', title: 'Obligations des Utilisateurs', content: `En utilisant GlobalMarket, vous vous engagez à :
+Un compte peut être supprimé à tout moment par l'utilisateur ou par MarcoStore en cas de non-respect des présentes conditions.` },
+  { id: 'obligations', title: 'Obligations des Utilisateurs', content: `En utilisant MarcoStore, vous vous engagez à :
 
 - Respecter les lois et réglementations en vigueur
 - Ne pas publier de contenu illicite, offensant ou trompeur
@@ -32,12 +32,12 @@ Un compte peut être supprimé à tout moment par l'utilisateur ou par GlobalMar
 - Fournir des informations exactes lors des transactions
 
 Tout manquement à ces obligations peut entraîner la suspension ou la suppression de votre compte.` },
-  { id: 'propriete-intellectuelle', title: 'Propriété Intellectuelle', content: `L'ensemble du contenu de la plateforme (textes, images, logos, marques, logiciels) est la propriété exclusive de GlobalMarket ou de ses partenaires et est protégé par les lois relatives à la propriété intellectuelle.
+  { id: 'propriete-intellectuelle', title: 'Propriété Intellectuelle', content: `L'ensemble du contenu de la plateforme (textes, images, logos, marques, logiciels) est la propriété exclusive de MarcoStore ou de ses partenaires et est protégé par les lois relatives à la propriété intellectuelle.
 
-Vous ne pouvez pas reproduire, distribuer, modifier ou créer des œuvres dérivées à partir du contenu de la plateforme sans l'autorisation préalable écrite de GlobalMarket.
+Vous ne pouvez pas reproduire, distribuer, modifier ou créer des œuvres dérivées à partir du contenu de la plateforme sans l'autorisation préalable écrite de MarcoStore.
 
-Les vendeurs conservent la propriété intellectuelle des produits qu'ils proposent à la vente. En soumettant un produit, le vendeur accorde à GlobalMarket une licence limitée pour afficher et promouvoir ledit produit.` },
-  { id: 'responsabilite', title: 'Limitation de Responsabilité', content: `GlobalMarket agit en tant qu'intermédiaire entre les acheteurs et les vendeurs. Nous ne sommes pas partie aux transactions entre utilisateurs.
+Les vendeurs conservent la propriété intellectuelle des produits qu'ils proposent à la vente. En soumettant un produit, le vendeur accorde à MarcoStore une licence limitée pour afficher et promouvoir ledit produit.` },
+  { id: 'responsabilite', title: 'Limitation de Responsabilité', content: `MarcoStore agit en tant qu'intermédiaire entre les acheteurs et les vendeurs. Nous ne sommes pas partie aux transactions entre utilisateurs.
 
 Notre responsabilité ne saurait être engagée en cas de :
 
@@ -47,7 +47,7 @@ Notre responsabilité ne saurait être engagée en cas de :
 - Pertes de données
 - Contenu publié par les utilisateurs
 
-GlobalMarket met tout en œuvre pour assurer la sécurité des transactions, mais ne garantit pas l'absence de fraude. En cas de litige, notre équipe de médiation se tient à votre disposition.` },
+MarcoStore met tout en œuvre pour assurer la sécurité des transactions, mais ne garantit pas l'absence de fraude. En cas de litige, notre équipe de médiation se tient à votre disposition.` },
   { id: 'droit-applicable', title: 'Droit Applicable et Juridiction', content: `Les présentes conditions sont régies par le droit français. En cas de litige, les parties s'engagent à rechercher une solution amiable avant toute action judiciaire.
 
 À défaut de résolution amiable, tout litige relatif à l'interprétation ou l'exécution des présentes conditions sera soumis aux tribunaux compétents de Paris, France.

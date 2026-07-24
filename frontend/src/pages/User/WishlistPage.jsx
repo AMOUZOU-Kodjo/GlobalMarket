@@ -6,7 +6,7 @@ import { useCart } from '../../context/CartContext'
 import ProductCard from '../../components/organisms/ProductCard'
 import { Header } from '../../components/organisms/Header'
 
-const WISHLIST_KEY = 'globalmarket_wishlist'
+const WISHLIST_KEY = 'marcostore_wishlist'
 
 function loadWishlist() {
   try {

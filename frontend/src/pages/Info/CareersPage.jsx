@@ -12,11 +12,11 @@ export default function CareersPage() {
   return (
     <InfoPage
       title="Carrières"
-      subtitle="Rejoignez l'aventure GlobalMarket"
+      subtitle="Rejoignez l'aventure MarcoStore"
       sections={[
         {
           title: 'Pourquoi nous rejoindre ?',
-          content: `GlobalMarket est en pleine croissance et nous recherchons des talents passionnés pour nous aider à construire la marketplace de demain. Nous offrons un environnement de travail stimulant, flexible et orienté vers l'innovation.`,
+          content: `MarcoStore est en pleine croissance et nous recherchons des talents passionnés pour nous aider à construire la marketplace de demain. Nous offrons un environnement de travail stimulant, flexible et orienté vers l'innovation.`,
         },
         {
           title: 'Nos valeurs',
@@ -46,7 +46,7 @@ export default function CareersPage() {
         },
         {
           title: 'Candidature spontanée',
-          content: 'Vous ne trouvez pas le poste qui vous correspond ? Envoyez-nous votre candidature spontanée à careers@globalmarket.com avec votre CV et une lettre de motivation.',
+          content: 'Vous ne trouvez pas le poste qui vous correspond ? Envoyez-nous votre candidature spontanée à careers@marcostore.com avec votre CV et une lettre de motivation.',
         },
       ]}
       cta={{

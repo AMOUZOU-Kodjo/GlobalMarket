@@ -40,7 +40,7 @@ export default function CheckoutLayout() {
             <Lock size={12} />
             <span>{t('checkout.secureMessage')}</span>
           </div>
-          <span>© {new Date().getFullYear()} GlobalMarket</span>
+          <span>© {new Date().getFullYear()} MarcoStore</span>
         </div>
       </footer>
     </div>

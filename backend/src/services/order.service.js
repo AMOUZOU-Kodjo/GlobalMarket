@@ -293,7 +293,7 @@ async function generateInvoice(id, userId) {
     doc.on('end', () => resolve(Buffer.concat(chunks)))
     doc.on('error', reject)
 
-    doc.fontSize(20).font('Helvetica-Bold').text('GlobalMarket', { align: 'center' })
+    doc.fontSize(20).font('Helvetica-Bold').text('MarcoStore', { align: 'center' })
     doc.fontSize(10).font('Helvetica').text('Facture / Invoice', { align: 'center' })
     doc.moveDown()
 
@@ -368,7 +368,7 @@ async function generateInvoice(id, userId) {
 
     y += 40
     doc.fontSize(8).font('Helvetica').fillColor('#888888')
-    doc.text('Merci pour votre achat! - GlobalMarket', 50, y, { align: 'center', width: 490 })
+    doc.text('Merci pour votre achat! - MarcoStore', 50, y, { align: 'center', width: 490 })
 
     doc.end()
   })

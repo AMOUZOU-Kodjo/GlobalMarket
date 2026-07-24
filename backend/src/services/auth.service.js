@@ -33,7 +33,7 @@ async function register(name, email, password) {
     </div>
     <p>Ce code expire dans 24 heures.</p>
   `)
-  await sendEmail(email, 'Vérifiez votre email - GlobalMarket', html)
+  await sendEmail(email, 'Vérifiez votre email - MarcoStore', html)
 
   return {
     user: { id: user.id, name: user.name, email: user.email, role: user.role },
@@ -113,7 +113,7 @@ async function forgotPassword(email) {
     <p>Ce lien expire dans 1 heure.</p>
     <p>Si vous n'avez pas fait cette demande, ignorez cet email.</p>
   `)
-  await sendEmail(email, 'Réinitialisation du mot de passe - GlobalMarket', html)
+  await sendEmail(email, 'Réinitialisation du mot de passe - MarcoStore', html)
 
   return { message: 'Si cet email existe, un lien de réinitialisation a été envoyé' }
 }

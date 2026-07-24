@@ -8,7 +8,7 @@ export default function AccessibilityPage() {
       sections={[
         {
           title: 'Notre politique d\'accessibilité',
-          content: `GlobalMarket s'engage à rendre sa plateforme accessible à l'ensemble des utilisateurs, y compris les personnes en situation de handicap. Nous suivons les directives WCAG 2.1 niveau AA et la loi n°2005-102 du 11 février 2005 sur l'égalité des chances.`,
+          content: `MarcoStore s'engage à rendre sa plateforme accessible à l'ensemble des utilisateurs, y compris les personnes en situation de handicap. Nous suivons les directives WCAG 2.1 niveau AA et la loi n°2005-102 du 11 février 2005 sur l'égalité des chances.`,
         },
         {
           title: 'Fonctionnalités d\'accessibilité',
@@ -35,7 +35,7 @@ export default function AccessibilityPage() {
         {
           title: 'Contact et retours',
           content: `Si vous rencontrez un problème d'accessibilité, contactez-nous à :
-accessibility@globalmarket.com
+accessibility@marcostore.com
 
 Nous nous engageons à répondre sous 5 jours ouvrés et à corriger tout problème identifié.`,
         },

@@ -16,7 +16,7 @@ import { Header } from '../../components/organisms/Header'
 import Tabs from '../../components/atoms/Tabs'
 import Alert from '../../components/atoms/Alert'
 
-const SETTINGS_KEY = 'globalmarket_settings'
+const SETTINGS_KEY = 'marcostore_settings'
 
 function loadSettings() {
   try {

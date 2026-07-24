@@ -28,7 +28,7 @@ import { useCart } from '../context/CartContext'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import messageService from '../services/message.service'
 
-const WISHLIST_KEY = 'globalmarket_wishlist'
+const WISHLIST_KEY = 'marcostore_wishlist'
 
 function loadWishlistCount() {
   try {
@@ -154,10 +154,10 @@ export default function Navbar() {
             {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
 
-          <Link to="/" className="btn btn-ghost text-xl gap-2 normal-case" aria-label="GlobalMarket - Accueil">
-            <img src="/logo.png" alt="GlobalMarket" className="h-8 w-8 object-contain" />
+          <Link to="/" className="btn btn-ghost text-xl gap-2 normal-case" aria-label="MarcoStore - Accueil">
+            <img src="/logo.png" alt="MarcoStore" className="h-8 w-8 object-contain" />
             <span className="hidden sm:inline font-bold">
-              <span className="text-primary">Global</span>Market
+              <span className="text-primary">Marco</span>Store
             </span>
           </Link>
         </div>

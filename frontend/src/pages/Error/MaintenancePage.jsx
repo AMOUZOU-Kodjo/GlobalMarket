@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { Wrench, Clock, ExternalLink } from 'lucide-react'
 
 const SOCIAL_LINKS = [
-  { name: 'Twitter', url: 'https://twitter.com/globalmarket' },
-  { name: 'Facebook', url: 'https://facebook.com/globalmarket' },
-  { name: 'Instagram', url: 'https://instagram.com/globalmarket' },
+  { name: 'Twitter', url: 'https://twitter.com/marcostore' },
+  { name: 'Facebook', url: 'https://facebook.com/marcostore' },
+  { name: 'Instagram', url: 'https://instagram.com/marcostore' },
 ]
 
 export default function MaintenancePage() {

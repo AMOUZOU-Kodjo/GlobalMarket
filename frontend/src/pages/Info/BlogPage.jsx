@@ -6,7 +6,7 @@ const ARTICLES = [
   { title: 'Optimiser la livraison de vos commandes', description: 'Conseils pratiques pour réduire les délais de livraison et améliorer la satisfaction de vos clients.' },
   { title: 'Photographie de produits : les bases', description: 'Apprenez à prendre des photos de produits attractives avec votre smartphone uniquement.' },
   { title: 'Gérer un conflit avec un acheteur', description: 'Nos conseils pour résoudre professionnellement les litiges et préserver votre réputation vendeur.' },
-  { title: 'SEO pour vendeurs : être trouvé sur GlobalMarket', description: 'Optimisez vos fiches produits pour apparaître en tête des résultats de recherche sur la plateforme.' },
+  { title: 'SEO pour vendeurs : être trouvé sur MarcoStore', description: 'Optimisez vos fiches produits pour apparaître en tête des résultats de recherche sur la plateforme.' },
   { title: 'Les erreurs à éviter quand on lance une boutique en ligne', description: 'Les 7 pièges les plus fréquents pour les nouveaux vendeurs et comment les contourner.' },
   { title: 'Programme de fidélité : boostez vos ventes récurrentes', description: 'Comment mettre en place un programme de fidélité efficace pour fidéliser vos clients.' },
 ]
@@ -24,7 +24,7 @@ export default function BlogPage() {
         {
           title: 'Catégories',
           list: [
-            'Guides vendeurs — Conseils pratiques pour vendre sur GlobalMarket',
+            'Guides vendeurs — Conseils pratiques pour vendre sur MarcoStore',
             'Tendances — Les dernières innovations du e-commerce',
             'Acheteurs — Tips pour acheter malin et en sécurité',
             'Success Stories — Témoignages de nos vendeurs',

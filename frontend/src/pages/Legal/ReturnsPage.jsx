@@ -23,7 +23,7 @@ const REFUND_INFO = [
   { icon: CreditCard, title: 'Carte bancaire', time: '5-10 jours ouvrés' },
   { icon: CreditCard, title: 'PayPal', time: '24-48 heures' },
   { icon: CreditCard, title: 'Virement bancaire', time: '3-5 jours ouvrés' },
-  { icon: CreditCard, title: 'Crédit GlobalMarket', time: 'Immédiat' },
+  { icon: CreditCard, title: 'Crédit MarcoStore', time: 'Immédiat' },
 ]
 
 const EXCEPTIONS = [

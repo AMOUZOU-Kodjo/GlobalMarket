@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback, useMemo } 
 
 const CartContext = createContext(null)
 
-const CART_STORAGE_KEY = 'globalmarket_cart'
+const CART_STORAGE_KEY = 'marcostore_cart'
 
 function loadCartFromStorage() {
   try {

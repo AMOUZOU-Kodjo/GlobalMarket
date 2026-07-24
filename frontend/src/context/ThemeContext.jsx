@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback, useMemo } 
 
 const ThemeContext = createContext(null)
 
-const THEME_STORAGE_KEY = 'globalmarket_theme'
+const THEME_STORAGE_KEY = 'marcostore_theme'
 
 function getInitialTheme() {
   try {

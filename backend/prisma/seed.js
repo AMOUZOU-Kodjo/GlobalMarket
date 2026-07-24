@@ -20,12 +20,12 @@ async function main() {
   console.log('Seeding database...')
 
   // Create admin
-  const adminHash = await bcrypt.hash('Admin@GlobalMarket2026!', 12)
+  const adminHash = await bcrypt.hash('Admin@MarcoStore2026!', 12)
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@globalmarket.com' },
+    where: { email: 'admin@marcostore.com' },
     update: {},
     create: {
-      email: 'admin@globalmarket.com',
+      email: 'admin@marcostore.com',
       name: 'Administrateur',
       passwordHash: adminHash,
       role: 'admin',
@@ -38,10 +38,10 @@ async function main() {
   // Create buyer
   const buyerHash = await bcrypt.hash('Buyer@2026!', 12)
   const buyer = await prisma.user.upsert({
-    where: { email: 'acheteur@globalmarket.com' },
+    where: { email: 'acheteur@marcostore.com' },
     update: {},
     create: {
-      email: 'acheteur@globalmarket.com',
+      email: 'acheteur@marcostore.com',
       name: 'Jean Dupont',
       passwordHash: buyerHash,
       role: 'buyer',
@@ -54,10 +54,10 @@ async function main() {
   // Create seller user + seller profile
   const sellerHash = await bcrypt.hash('Seller@2026!', 12)
   const sellerUser = await prisma.user.upsert({
-    where: { email: 'vendeur@globalmarket.com' },
+    where: { email: 'vendeur@marcostore.com' },
     update: {},
     create: {
-      email: 'vendeur@globalmarket.com',
+      email: 'vendeur@marcostore.com',
       name: 'Marie Martin',
       passwordHash: sellerHash,
       role: 'seller',
@@ -100,7 +100,7 @@ async function main() {
 
   // Create system settings
   const defaultSettings = {
-    siteName: 'GlobalMarket',
+    siteName: 'MarcoStore',
     siteDescription: 'Marketplace mondiale',
     commissionRate: 0.12,
     paymentMethods: ['credit_card', 'paypal', 'mobile_money'],
@@ -176,9 +176,9 @@ async function main() {
 
   console.log('\nSeed complete!')
   console.log('\nTest accounts:')
-  console.log('  Admin:  admin@globalmarket.com / Admin@GlobalMarket2026!')
-  console.log('  Buyer:  acheteur@globalmarket.com / Buyer@2026!')
-  console.log('  Seller: vendeur@globalmarket.com / Seller@2026!')
+  console.log('  Admin:  admin@marcostore.com / Admin@MarcoStore2026!')
+  console.log('  Buyer:  acheteur@marcostore.com / Buyer@2026!')
+  console.log('  Seller: vendeur@marcostore.com / Seller@2026!')
 }
 
 main()

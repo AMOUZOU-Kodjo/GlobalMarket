@@ -17,7 +17,7 @@ import {
 } from 'lucide-react'
 
 const TIMELINE = [
-  { year: '2020', title: 'Fondation', desc: 'GlobalMarket est née de l\'envie de créer une plateforme de commerce en ligne accessible à tous.' },
+  { year: '2020', title: 'Fondation', desc: 'MarcoStore est née de l\'envie de créer une plateforme de commerce en ligne accessible à tous.' },
   { year: '2021', title: 'Lancement', desc: 'Ouverture officielle de la plateforme avec 100 vendeurs pionniers.' },
   { year: '2022', title: 'Croissance', desc: 'Expansion internationale dans 15 pays et plus de 10 000 vendeurs actifs.' },
   { year: '2023', title: 'Innovation', desc: 'Lancement de l\'application mobile et du programme de protection acheteur.' },
@@ -54,7 +54,7 @@ export default function AboutPage() {
       <section className="hero min-h-[50vh] bg-gradient-to-br from-primary/10 to-secondary/10">
         <div className="hero-content text-center">
           <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">À propos de GlobalMarket</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">À propos de MarcoStore</h1>
             <p className="text-lg text-base-content/70">
               Nous connectons les acheteurs et les vendeurs du monde entier pour créer une expérience de commerce unique.
             </p>
@@ -68,7 +68,7 @@ export default function AboutPage() {
             <div className="flex-1">
               <h2 className="text-3xl font-bold mb-4">Notre Mission</h2>
               <p className="text-base-content/70 mb-4">
-                GlobalMarket a pour mission de démocratiser le commerce en ligne en offrant à chaque entrepreneur,
+                MarcoStore a pour mission de démocratiser le commerce en ligne en offrant à chaque entrepreneur,
                 quelle que soit sa taille, la possibilité de vendre ses produits à un public mondial.
               </p>
               <p className="text-base-content/70">
@@ -155,7 +155,7 @@ export default function AboutPage() {
 
       <section className="py-16 px-4">
         <div className="container mx-auto max-w-5xl">
-          <h2 className="text-3xl font-bold text-center mb-12">GlobalMarket en chiffres</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">MarcoStore en chiffres</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {STATS.map((stat) => (
               <div key={stat.label} className="stat bg-base-100 rounded-box shadow-md text-center">

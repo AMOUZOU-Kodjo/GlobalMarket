@@ -8,8 +8,8 @@ export default function AuthLayout() {
         <div className="card-body">
           <div className="flex justify-center mb-4">
             <Link to="/" className="flex items-center gap-2 text-primary">
-              <img src="/logo.png" alt="GlobalMarket" className="h-8 w-8 object-contain" />
-              <span className="text-2xl font-bold">GlobalMarket</span>
+              <img src="/logo.png" alt="MarcoStore" className="h-8 w-8 object-contain" />
+              <span className="text-2xl font-bold">MarcoStore</span>
             </Link>
           </div>
           <Outlet />

@@ -166,7 +166,7 @@ function getKnowledgeBase(filters = {}) {
       id: '5',
       title: 'Méthodes de paiement acceptées',
       category: 'paiement',
-      content: 'GlobalMarket accepte les cartes de crédit et débit (Visa, Mastercard), PayPal, Apple Pay, Google Pay, Mobile Money (Orange Money, MTN MoMo) et le paiement à la livraison.',
+      content: 'MarcoStore accepte les cartes de crédit et débit (Visa, Mastercard), PayPal, Apple Pay, Google Pay, Mobile Money (Orange Money, MTN MoMo) et le paiement à la livraison.',
       tags: ['paiement', 'carte', 'paypal', 'mobile money']
     },
     {
