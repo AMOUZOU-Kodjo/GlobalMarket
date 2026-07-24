@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { MapPin, CreditCard, ArrowLeft, ShieldCheck } from 'lucide-react'
 import formatCurrency from '../../utils/formatCurrency'
 import Spinner from '../../components/atoms/Spinner'
@@ -14,25 +15,26 @@ export default function ConfirmationStep({
   onConfirm,
   submitting,
 }) {
+  const { t } = useTranslation()
   const shippingMethod = shippingData.method === 'express' ? 'Express' : 'Standard'
   const paymentLabel = paymentData.method
     ? {
-        card: `Carte ${paymentData.method.brand?.toUpperCase() || ''} **** ${paymentData.method.last4 || ''}`,
-        mobile_money: 'Mobile Money',
-        paypal: 'PayPal',
-        bank: 'Virement bancaire',
-      }[paymentData.method.type] || 'Paiement'
-    : 'Non sélectionné'
+        card: `${t('checkout.creditCard')} ${paymentData.method.brand?.toUpperCase() || ''} **** ${paymentData.method.last4 || ''}`,
+        mobile_money: t('checkout.mobileMoney'),
+        paypal: t('checkout.paypal'),
+        bank: t('checkout.bankTransfer'),
+      }[paymentData.method.type] || t('checkout.paymentMethod')
+    : t('checkout.notSelected')
 
   return (
     <div className="space-y-6">
-      <h2 className="text-lg font-bold">Récapitulatif de la commande</h2>
+      <h2 className="text-lg font-bold">{t('checkout.orderSummary')}</h2>
 
       <div className="card bg-base-100 border border-base-200">
         <div className="card-body p-4">
           <h3 className="font-semibold text-sm flex items-center gap-2 mb-3">
             <MapPin size={16} />
-            Adresse de livraison
+            {t('checkout.shippingAddress')}
           </h3>
           {shippingData.address ? (
             <div className="text-sm text-base-content/70 space-y-0.5">
@@ -44,16 +46,16 @@ export default function ConfirmationStep({
                 {shippingData.address.zip}
               </p>
               <p>{shippingData.address.country}</p>
-              {shippingData.address.phone && <p>Tél: {shippingData.address.phone}</p>}
+              {shippingData.address.phone && <p>{t('checkout.phone')}: {shippingData.address.phone}</p>}
             </div>
           ) : (
-            <p className="text-sm text-error">Aucune adresse sélectionnée</p>
+            <p className="text-sm text-error">{t('checkout.noAddressSelected')}</p>
           )}
           <div className="mt-2 text-sm">
-            <span className="text-base-content/50">Méthode: </span>
+            <span className="text-base-content/50">{t('checkout.method')} </span>
             <span className="font-medium">{shippingMethod}</span>
             {shippingCost === 0 ? (
-              <span className="text-success ml-2">(Gratuit)</span>
+              <span className="text-success ml-2">({t('checkout.free')})</span>
             ) : (
               <span className="ml-2">({formatCurrency(shippingCost)})</span>
             )}
@@ -65,12 +67,12 @@ export default function ConfirmationStep({
         <div className="card-body p-4">
           <h3 className="font-semibold text-sm flex items-center gap-2 mb-3">
             <CreditCard size={16} />
-            Moyen de paiement
+            {t('checkout.paymentMethod')}
           </h3>
           {paymentData.method ? (
             <p className="text-sm font-medium">{paymentLabel}</p>
           ) : (
-            <p className="text-sm text-error">Aucun moyen de paiement sélectionné</p>
+            <p className="text-sm text-error">{t('checkout.noPaymentSelected')}</p>
           )}
         </div>
       </div>
@@ -78,7 +80,7 @@ export default function ConfirmationStep({
       <div className="card bg-base-100 border border-base-200">
         <div className="card-body p-4">
           <h3 className="font-semibold text-sm mb-3">
-            Articles ({items.length})
+            {t('checkout.items')} ({items.length})
           </h3>
           <div className="flex flex-col gap-3 max-h-60 overflow-y-auto">
             {items.map((item, index) => (
@@ -107,16 +109,16 @@ export default function ConfirmationStep({
 
           <div className="flex flex-col gap-1.5 text-sm">
             <div className="flex justify-between">
-              <span className="text-base-content/60">Sous-total</span>
+              <span className="text-base-content/60">{t('checkout.subtotal')}</span>
               <span>{formatCurrency(subtotal)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-base-content/60">Livraison</span>
-              <span>{shippingCost === 0 ? 'Gratuit' : formatCurrency(shippingCost)}</span>
+              <span className="text-base-content/60">{t('checkout.shipping')}</span>
+              <span>{shippingCost === 0 ? t('checkout.free') : formatCurrency(shippingCost)}</span>
             </div>
             {discount > 0 && (
               <div className="flex justify-between text-success">
-                <span>Réduction</span>
+                <span>{t('checkout.discount')}</span>
                 <span>-{formatCurrency(discount)}</span>
               </div>
             )}
@@ -125,7 +127,7 @@ export default function ConfirmationStep({
           <div className="divider my-2" />
 
           <div className="flex justify-between text-lg font-bold">
-            <span>Total</span>
+            <span>{t('checkout.total')}</span>
             <span className="text-primary">{formatCurrency(total)}</span>
           </div>
         </div>
@@ -139,7 +141,7 @@ export default function ConfirmationStep({
           disabled={submitting}
         >
           <ArrowLeft size={16} />
-          Retour
+          {t('common.back')}
         </button>
         <button
           type="button"
@@ -152,7 +154,7 @@ export default function ConfirmationStep({
           ) : (
             <>
               <ShieldCheck size={18} />
-              Confirmer et payer {formatCurrency(total)}
+              {t('checkout.confirmOrder')} {formatCurrency(total)}
             </>
           )}
         </button>

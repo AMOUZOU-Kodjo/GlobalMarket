@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../context/AuthContext'
 import {
   User,
@@ -18,15 +19,16 @@ import AddressCard from '../../components/molecules/AddressCard'
 import Alert from '../../components/atoms/Alert'
 import Spinner from '../../components/atoms/Spinner'
 
-const TABS = [
-  { id: 'profile', label: 'Profil', icon: User },
-  { id: 'addresses', label: 'Adresses', icon: MapPin },
-  { id: 'security', label: 'Sécurité', icon: Shield },
-]
-
 export default function UserProfilePage() {
+  const { t } = useTranslation()
   const { user, updateUser } = useAuth()
   const [activeTab, setActiveTab] = useState('profile')
+
+  const TABS = [
+    { id: 'profile', label: t('nav.profile'), icon: User },
+    { id: 'addresses', label: t('profile.addresses'), icon: MapPin },
+    { id: 'security', label: t('settings.privacy'), icon: Shield },
+  ]
 
   const [profileForm, setProfileForm] = useState({
     name: user?.name || '',
@@ -57,7 +59,7 @@ export default function UserProfilePage() {
 
   const handleProfileSave = async () => {
     if (!profileForm.name.trim()) {
-      setProfileError('Le nom est requis.')
+      setProfileError(t('validation.nameRequired'))
       return
     }
     setProfileSaving(true)
@@ -68,7 +70,7 @@ export default function UserProfilePage() {
       setProfileSuccess(true)
       setTimeout(() => setProfileSuccess(false), 3000)
     } catch (err) {
-      setProfileError(err?.message || 'Erreur lors de la mise à jour du profil.')
+      setProfileError(err?.message || t('profile.updateError'))
     } finally {
       setProfileSaving(false)
     }
@@ -77,15 +79,15 @@ export default function UserProfilePage() {
   const validatePasswordForm = () => {
     const errors = {}
     if (!passwordForm.currentPassword) {
-      errors.currentPassword = 'Le mot de passe actuel est requis.'
+      errors.currentPassword = t('profile.currentPasswordRequired')
     }
     if (!passwordForm.newPassword) {
-      errors.newPassword = 'Le nouveau mot de passe est requis.'
+      errors.newPassword = t('profile.newPasswordRequired')
     } else if (passwordForm.newPassword.length < 8) {
-      errors.newPassword = 'Le mot de passe doit contenir au moins 8 caractères.'
+      errors.newPassword = t('validation.passwordMinLength')
     }
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      errors.confirmPassword = 'Les mots de passe ne correspondent pas.'
+      errors.confirmPassword = t('auth.passwordMismatch')
     }
     setPasswordErrors(errors)
     return Object.keys(errors).length === 0
@@ -104,7 +106,7 @@ export default function UserProfilePage() {
       setPasswordErrors({})
       setTimeout(() => setPasswordSuccess(false), 3000)
     } catch (err) {
-      setPasswordError(err?.message || 'Erreur lors du changement de mot de passe.')
+      setPasswordError(err?.message || t('profile.passwordChangeError'))
     } finally {
       setPasswordSaving(false)
     }
@@ -113,8 +115,8 @@ export default function UserProfilePage() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <Header
-        title="Mon profil"
-        subtitle="Gérez vos informations personnelles"
+        title={t('profile.title')}
+        subtitle={t('profile.manageInfo')}
       />
 
       <Tabs
@@ -140,7 +142,7 @@ export default function UserProfilePage() {
                   <button
                     type="button"
                     className="btn btn-circle btn-sm btn-primary absolute -bottom-1 -right-1"
-                    title="Changer l'avatar"
+                    title={t('profile.changeAvatar')}
                   >
                     <Camera size={14} />
                   </button>
@@ -153,7 +155,7 @@ export default function UserProfilePage() {
 
               {profileSuccess && (
                 <Alert type="success" className="mb-4">
-                  Profil mis à jour avec succès.
+                  {t('profile.updated')}
                 </Alert>
               )}
               {profileError && (
@@ -163,7 +165,7 @@ export default function UserProfilePage() {
               )}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FormField label="Nom complet" required htmlFor="profile-name">
+                <FormField label={t('auth.fullName')} required htmlFor="profile-name">
                   <input
                     id="profile-name"
                     type="text"
@@ -172,7 +174,7 @@ export default function UserProfilePage() {
                     onChange={(e) => handleProfileChange('name', e.target.value)}
                   />
                 </FormField>
-                <FormField label="Email" required htmlFor="profile-email">
+                <FormField label={t('auth.email')} required htmlFor="profile-email">
                   <input
                     id="profile-email"
                     type="email"
@@ -181,7 +183,7 @@ export default function UserProfilePage() {
                     onChange={(e) => handleProfileChange('email', e.target.value)}
                   />
                 </FormField>
-                <FormField label="Téléphone" htmlFor="profile-phone">
+                <FormField label={t('checkout.phone')} htmlFor="profile-phone">
                   <input
                     id="profile-phone"
                     type="tel"
@@ -205,7 +207,7 @@ export default function UserProfilePage() {
                   ) : (
                     <>
                       <Save size={16} />
-                      Enregistrer
+                      {t('common.save')}
                     </>
                   )}
                 </button>
@@ -226,7 +228,7 @@ export default function UserProfilePage() {
                 setShowAddressForm(true)
               }}
             >
-              Ajouter une adresse
+              {t('profile.addAddress')}
             </button>
           </div>
 
@@ -260,9 +262,9 @@ export default function UserProfilePage() {
             <div className="card bg-base-100 border border-base-200">
               <div className="card-body items-center text-center py-12">
                 <MapPin size={48} className="text-base-content/20 mb-3" />
-                <h3 className="font-semibold">Aucune adresse enregistrée</h3>
+                <h3 className="font-semibold">{t('profile.noAddresses')}</h3>
                 <p className="text-sm text-base-content/50 mb-4">
-                  Ajoutez une adresse pour vos livraisons.
+                  {t('profile.addAddressHint')}
                 </p>
                 <button
                   type="button"
@@ -272,7 +274,7 @@ export default function UserProfilePage() {
                     setShowAddressForm(true)
                   }}
                 >
-                  Ajouter une adresse
+                  {t('profile.addAddress')}
                 </button>
               </div>
             </div>
@@ -304,12 +306,12 @@ export default function UserProfilePage() {
             <div className="card-body p-6">
               <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
                 <Lock size={20} />
-                Changer le mot de passe
+                {t('profile.changePassword')}
               </h3>
 
               {passwordSuccess && (
                 <Alert type="success" className="mb-4">
-                  Mot de passe modifié avec succès.
+                  {t('profile.passwordChanged')}
                 </Alert>
               )}
               {passwordError && (
@@ -320,7 +322,7 @@ export default function UserProfilePage() {
 
               <div className="flex flex-col gap-4">
                 <FormField
-                  label="Mot de passe actuel"
+                  label={t('profile.currentPassword')}
                   required
                   error={passwordErrors.currentPassword}
                   htmlFor="current-password"
@@ -340,10 +342,10 @@ export default function UserProfilePage() {
                   />
                 </FormField>
                 <FormField
-                  label="Nouveau mot de passe"
+                  label={t('profile.newPassword')}
                   required
                   error={passwordErrors.newPassword}
-                  hint="Minimum 8 caractères"
+                  hint={t('validation.passwordHint')}
                   htmlFor="new-password"
                 >
                   <input
@@ -361,7 +363,7 @@ export default function UserProfilePage() {
                   />
                 </FormField>
                 <FormField
-                  label="Confirmer le mot de passe"
+                  label={t('auth.confirmPassword')}
                   required
                   error={passwordErrors.confirmPassword}
                   htmlFor="confirm-password"
@@ -394,7 +396,7 @@ export default function UserProfilePage() {
                   ) : (
                     <>
                       <Lock size={16} />
-                      Modifier le mot de passe
+                      {t('profile.changePassword')}
                     </>
                   )}
                 </button>

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   ShoppingCart,
   ArrowLeft,
@@ -19,6 +20,7 @@ import formatCurrency from '../utils/formatCurrency'
 
 function CartItemRow({ item, onUpdateQuantity, onRemove }) {
   const { productId, name, price, image, quantity, seller, stock = 99 } = item
+  const { t } = useTranslation()
 
   return (
     <div className="flex gap-4 p-4 bg-base-100 rounded-box border border-base-300">
@@ -51,7 +53,7 @@ function CartItemRow({ item, onUpdateQuantity, onRemove }) {
             </Link>
             {seller && (
               <p className="text-xs text-base-content/50 mt-0.5">
-                Vendeur: {seller}
+                {t('cart.sellerLabel')} {seller}
               </p>
             )}
           </div>
@@ -59,7 +61,7 @@ function CartItemRow({ item, onUpdateQuantity, onRemove }) {
             type="button"
             className="btn btn-ghost btn-circle btn-sm text-error hover:bg-error/10 shrink-0"
             onClick={() => onRemove(productId)}
-            aria-label={`Supprimer ${name}`}
+            aria-label={`${t('common.delete')} ${name}`}
           >
             <Trash2 size={16} />
           </button>
@@ -72,7 +74,7 @@ function CartItemRow({ item, onUpdateQuantity, onRemove }) {
               className="btn btn-ghost btn-circle btn-sm"
               onClick={() => onUpdateQuantity(productId, quantity - 1)}
               disabled={quantity <= 1}
-              aria-label="Diminuer la quantité"
+              aria-label={t('cart.decreaseQuantity')}
             >
               -
             </button>
@@ -81,21 +83,21 @@ function CartItemRow({ item, onUpdateQuantity, onRemove }) {
               className="input input-bordered input-sm w-14 text-center text-xs"
               value={quantity}
               readOnly
-              aria-label="Quantité"
+              aria-label={t('cart.quantity')}
             />
             <button
               type="button"
               className="btn btn-ghost btn-circle btn-sm"
               onClick={() => onUpdateQuantity(productId, quantity + 1)}
               disabled={quantity >= stock}
-              aria-label="Augmenter la quantité"
+              aria-label={t('cart.increaseQuantity')}
             >
               +
             </button>
             {stock <= 5 && stock > 0 && (
-              <span className="text-xs text-warning ml-1 hidden sm:inline">
-                Stock: {stock}
-              </span>
+                <span className="text-xs text-warning ml-1 hidden sm:inline">
+                  {t('products.stock')}: {stock}
+                </span>
             )}
           </div>
 
@@ -127,6 +129,8 @@ export default function Cart() {
   const [couponLoading, setCouponLoading] = useState(false)
   const [couponError, setCouponError] = useState('')
 
+  const { t } = useTranslation()
+
   const handleApplyCoupon = async () => {
     if (!couponCode.trim()) return
     setCouponLoading(true)
@@ -136,7 +140,7 @@ export default function Cart() {
       applyCoupon(data)
       setCouponCode('')
     } catch (err) {
-      setCouponError(err.message || 'Code promo invalide')
+      setCouponError(err.message || t('cart.promoInvalid'))
     } finally {
       setCouponLoading(false)
     }
@@ -155,20 +159,20 @@ export default function Cart() {
       <div className="container mx-auto px-4 py-6">
         <Breadcrumb
           items={[
-            { label: 'Accueil', href: '/' },
-            { label: 'Panier' },
+            { label: t('nav.home'), href: '/' },
+            { label: t('cart.title') },
           ]}
           className="mb-4"
         />
 
         <EmptyState
           icon={ShoppingCart}
-          title="Votre panier est vide"
-          description="Ajoutez des produits pour commencer vos achats."
+          title={t('cart.empty')}
+          description={t('cart.emptyDescription')}
           action={
             <Link to="/products" className="btn btn-primary gap-2">
               <ArrowLeft size={18} />
-              Voir les produits
+              {t('cart.addToProducts')}
             </Link>
           }
         />
@@ -180,15 +184,15 @@ export default function Cart() {
     <div className="container mx-auto px-4 py-6">
       <Breadcrumb
         items={[
-          { label: 'Accueil', href: '/' },
-          { label: 'Panier' },
+          { label: t('nav.home'), href: '/' },
+          { label: t('cart.title') },
         ]}
         className="mb-4"
       />
 
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl md:text-3xl font-bold">
-          Panier ({totalItems} article{totalItems !== 1 ? 's' : ''})
+          {t('cart.title')} ({t('cart.itemsCount', { count: totalItems })})
         </h1>
         <button
           type="button"
@@ -196,7 +200,7 @@ export default function Cart() {
           onClick={clearCart}
         >
           <Trash2 size={14} />
-          Vider le panier
+          {t('cart.clearCart')}
         </button>
       </div>
 
@@ -214,21 +218,21 @@ export default function Cart() {
 
         <div className="lg:col-span-1">
           <div className="bg-base-100 border border-base-300 rounded-xl p-6 sticky top-24">
-            <h2 className="font-bold text-lg mb-4">Récapitulatif</h2>
+            <h2 className="font-bold text-lg mb-4">{t('cart.summary')}</h2>
 
             <div className="flex flex-col gap-3 text-sm">
               <div className="flex justify-between">
                 <span className="opacity-70">
-                  Sous-total ({totalItems} article{totalItems !== 1 ? 's' : ''})
+                  {t('cart.subtotal')} ({t('cart.itemsCount', { count: totalItems })})
                 </span>
                 <span className="font-medium">{formatCurrency(subtotal)}</span>
               </div>
 
               <div className="flex justify-between">
-                <span className="opacity-70">Livraison estimée</span>
+                <span className="opacity-70">{t('cart.shippingEstimate')}</span>
                 <span className="font-medium">
                   {shippingEstimate === 0 ? (
-                    <span className="text-success">Gratuite</span>
+                    <span className="text-success">{t('cart.freeShipping')}</span>
                   ) : (
                     formatCurrency(shippingEstimate)
                   )}
@@ -237,7 +241,7 @@ export default function Cart() {
 
               {shippingEstimate > 0 && (
                 <p className="text-xs opacity-50">
-                  Livraison gratuite dès {formatCurrency(50000)} d'achats
+                  {t('cart.freeShippingThreshold', { amount: formatCurrency(50000) })}
                 </p>
               )}
 
@@ -246,7 +250,7 @@ export default function Cart() {
                   <div className="flex items-center gap-2 text-success">
                     <Tag size={14} />
                     <span className="text-sm font-medium">
-                      {coupon.code || 'Promo'}
+                      {coupon.code || t('cart.promoCodeFallback')}
                       {coupon.type === 'percentage'
                         ? ` (-${coupon.value}%)`
                         : ` (-${formatCurrency(coupon.value)})`}
@@ -265,7 +269,7 @@ export default function Cart() {
               <div className="divider my-1" />
 
               <div className="flex justify-between font-bold text-base">
-                <span>Total</span>
+                <span>{t('cart.total')}</span>
                 <span className="text-primary">{formatCurrency(totalWithShipping)}</span>
               </div>
             </div>
@@ -275,7 +279,7 @@ export default function Cart() {
                 <input
                   type="text"
                   className="input input-bordered join-item flex-1 text-sm"
-                  placeholder="Code promo"
+                  placeholder={t('cart.promoCode')}
                   value={couponCode}
                   onChange={(e) => {
                     setCouponCode(e.target.value)
@@ -292,7 +296,7 @@ export default function Cart() {
                   {couponLoading ? (
                     <span className="loading loading-spinner loading-xs" />
                   ) : (
-                    'Appliquer'
+                    t('cart.apply')
                   )}
                 </button>
               </div>
@@ -307,7 +311,7 @@ export default function Cart() {
               onClick={() => navigate('/checkout')}
             >
               <ShoppingBag size={18} />
-              Passer la commande
+              {t('cart.checkout')}
             </button>
 
             <Link
@@ -315,7 +319,7 @@ export default function Cart() {
               className="btn btn-ghost btn-block btn-sm mt-2 gap-1"
             >
               <ArrowLeft size={16} />
-              Continuer mes achats
+              {t('cart.continueShopping')}
             </Link>
           </div>
         </div>

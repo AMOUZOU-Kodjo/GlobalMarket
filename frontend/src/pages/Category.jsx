@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useSearchParams, Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { ArrowUpDown, ChevronRight, PackageSearch } from 'lucide-react'
 import Breadcrumb from '../components/atoms/Breadcrumb'
 import ProductGrid from '../components/organisms/ProductGrid'
@@ -11,14 +12,6 @@ import { useCart } from '../context/CartContext'
 import productService from '../services/product.service'
 import categoryService from '../services/category.service'
 import MOCK_PRODUCTS from '../data/mockProducts'
-
-const SORT_OPTIONS = [
-  { value: 'newest', label: 'Plus récents' },
-  { value: 'price_asc', label: 'Prix croissant' },
-  { value: 'price_desc', label: 'Prix décroissant' },
-  { value: 'rating', label: 'Meilleures notes' },
-  { value: 'popularity', label: 'Popularité' },
-]
 
 const ITEMS_PER_PAGE = 12
 
@@ -36,6 +29,16 @@ export default function Category() {
   const [loadingProducts, setLoadingProducts] = useState(true)
   const [loadingCategories, setLoadingCategories] = useState(true)
   const [error, setError] = useState(null)
+
+  const { t } = useTranslation()
+
+  const SORT_OPTIONS = [
+    { value: 'newest', label: t('common.newest') },
+    { value: 'price_asc', label: t('common.priceAsc') },
+    { value: 'price_desc', label: t('common.priceDesc') },
+    { value: 'rating', label: t('common.rating') },
+    { value: 'popularity', label: t('common.popular') },
+  ]
 
   const currentPage = parseInt(searchParams.get('page') || '1', 10)
   const currentSort = searchParams.get('sort') || 'newest'
@@ -180,7 +183,7 @@ export default function Category() {
   if (loadingCategory) {
     return (
       <div className="container mx-auto px-4 py-16 flex justify-center">
-        <Spinner size="lg" text="Chargement de la catégorie..." />
+        <Spinner size="lg" text={t('common.loading')} />
       </div>
     )
   }
@@ -190,11 +193,11 @@ export default function Category() {
       <div className="container mx-auto px-4 py-16">
         <EmptyState
           icon={PackageSearch}
-          title="Catégorie introuvable"
-          description="Cette catégorie n'existe pas ou a été supprimée."
+          title={t('common.pageNotFound')}
+          description={t('common.oopsError')}
           action={
             <Link to="/products" className="btn btn-primary">
-              Voir tous les produits
+              {t('home.allProducts')}
             </Link>
           }
         />
@@ -206,8 +209,8 @@ export default function Category() {
     <div className="container mx-auto px-4 py-6">
       <Breadcrumb
         items={[
-          { label: 'Accueil', href: '/' },
-          { label: 'Catégories', href: '/products' },
+          { label: t('nav.home'), href: '/' },
+          { label: t('nav.categories'), href: '/products' },
           { label: category.name || category.label || slug },
         ]}
         className="mb-4"
@@ -223,7 +226,7 @@ export default function Category() {
       {subcategories.length > 0 && (
         <div className="mb-8">
           <h2 className="text-sm font-semibold opacity-60 uppercase tracking-wider mb-3">
-            Sous-catégories
+            {t('home.subcategories')}
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {subcategories.map((sub) => {
@@ -252,14 +255,8 @@ export default function Category() {
         </div>
       )}
 
-      <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
-        <p className="text-sm opacity-60">
-          {loadingProducts
-            ? 'Chargement...'
-            : `${totalProducts} produit${totalProducts !== 1 ? 's' : ''}`}
-        </p>
-
-        <div className="flex items-center gap-2">
+      <div className="flex gap-6 items-start">
+        <aside className="hidden lg:block w-64 shrink-0 sticky top-24">
           <FilterSidebar
             categories={allCategories}
             activeFilters={activeFilters}
@@ -267,67 +264,89 @@ export default function Category() {
             onClearAll={handleClearFilters}
             loading={loadingCategories}
           />
+        </aside>
 
-          <div className="flex items-center gap-2">
-            <ArrowUpDown size={14} className="opacity-50 hidden sm:block" />
-            <select
-              className="select select-bordered select-sm"
-              value={currentSort}
-              onChange={handleSortChange}
-            >
-              {SORT_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
+            <p className="text-sm opacity-60">
+              {loadingProducts
+                ? t('common.loading')
+                : `${totalProducts} produit${totalProducts !== 1 ? 's' : ''}`}
+            </p>
+
+            <div className="flex items-center gap-2">
+              <div className="lg:hidden">
+                <FilterSidebar
+                  categories={allCategories}
+                  activeFilters={activeFilters}
+                  onFilterChange={handleFilterChange}
+                  onClearAll={handleClearFilters}
+                  loading={loadingCategories}
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <ArrowUpDown size={14} className="opacity-50 hidden sm:block" />
+                <select
+                  className="select select-bordered select-sm"
+                  value={currentSort}
+                  onChange={handleSortChange}
+                >
+                  {SORT_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </div>
+
+          {error && (
+            <div className="alert alert-error mb-6">
+              <span>{error}</span>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => window.location.reload()}
+              >
+                {t('common.retry')}
+              </button>
+            </div>
+          )}
+
+          <ProductGrid
+            products={products}
+            loading={loadingProducts}
+            skeletonCount={ITEMS_PER_PAGE}
+            onAddToCart={handleAddToCart}
+            emptyMessage={`Aucun produit dans "${category.name || category.label}"`}
+          />
+
+          {!loadingProducts && products.length === 0 && !error && (
+            <EmptyState
+              icon={PackageSearch}
+              title={t('products.noneFound')}
+              description={t('common.tryModifyFilters')}
+              action={
+                <Link to="/products" className="btn btn-primary btn-sm gap-1">
+                  {t('home.allProducts')}
+                </Link>
+              }
+            />
+          )}
+
+          {!loadingProducts && totalPages > 1 && (
+            <div className="flex justify-center mt-8">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          )}
         </div>
       </div>
-
-      {error && (
-        <div className="alert alert-error mb-6">
-          <span>{error}</span>
-          <button
-            type="button"
-            className="btn btn-ghost btn-sm"
-            onClick={() => window.location.reload()}
-          >
-            Réessayer
-          </button>
-        </div>
-      )}
-
-      <ProductGrid
-        products={products}
-        loading={loadingProducts}
-        skeletonCount={ITEMS_PER_PAGE}
-        onAddToCart={handleAddToCart}
-        emptyMessage={`Aucun produit dans "${category.name || category.label}"`}
-      />
-
-      {!loadingProducts && products.length === 0 && !error && (
-        <EmptyState
-          icon={PackageSearch}
-          title={`Aucun produit trouvé`}
-          description={`Il n'y a pas encore de produits dans cette catégorie.`}
-          action={
-            <Link to="/products" className="btn btn-primary btn-sm gap-1">
-              Voir tous les produits
-            </Link>
-          }
-        />
-      )}
-
-      {!loadingProducts && totalPages > 1 && (
-        <div className="flex justify-center mt-8">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        </div>
-      )}
     </div>
   )
 }

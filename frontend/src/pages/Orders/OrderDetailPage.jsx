@@ -8,6 +8,7 @@ import {
   XCircle,
   Clock,
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Header } from '../../components/organisms/Header'
 import OrderTimeline from '../../components/organisms/OrderTimeline'
 import OrderItem from '../../components/molecules/OrderItem'
@@ -21,6 +22,7 @@ import { formatDate } from '../../utils/formatDate'
 const CANCELABLE_STATUSES = ['pending', 'confirmed']
 
 export default function OrderDetailPage() {
+  const { t } = useTranslation()
   const { orderId } = useParams()
   const navigate = useNavigate()
   const [order, setOrder] = useState(null)
@@ -45,7 +47,7 @@ export default function OrderDetailPage() {
       } catch (err) {
         setError(
           err?.response?.data?.message ||
-            'Erreur lors du chargement de la commande.'
+            t('orders.loadErrorDetail')
         )
       } finally {
         setLoading(false)
@@ -63,7 +65,7 @@ export default function OrderDetailPage() {
     } catch (err) {
       setError(
         err?.response?.data?.message ||
-          'Erreur lors de l\'annulation de la commande.'
+          t('orders.cancelError')
       )
     } finally {
       setCancelling(false)
@@ -85,7 +87,7 @@ export default function OrderDetailPage() {
     } catch (err) {
       setError(
         err?.response?.data?.message ||
-          'Erreur lors du téléchargement de la facture.'
+          t('orders.invoiceError')
       )
     } finally {
       setDownloading(false)
@@ -96,7 +98,7 @@ export default function OrderDetailPage() {
     return (
       <div className="container mx-auto px-4 py-16 max-w-4xl">
         <div className="flex justify-center">
-          <Spinner text="Chargement de la commande..." />
+          <Spinner text={t('orders.loadingDetail')} />
         </div>
       </div>
     )
@@ -117,10 +119,10 @@ export default function OrderDetailPage() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <Header
-        title={`Commande #${orderId.slice(-8)}`}
+        title={`${t('orders.orderNumber')} ${orderId.slice(-8)}`}
         breadcrumbs={[
-          { label: 'Accueil', href: '/' },
-          { label: 'Commandes', href: '/orders' },
+          { label: t('nav.home'), href: '/' },
+          { label: t('orders.title'), href: '/orders' },
           { label: `#${orderId.slice(-8)}` },
         ]}
         actions={
@@ -142,14 +144,14 @@ export default function OrderDetailPage() {
             <div className="card-body p-4 sm:p-5">
               <div className="flex flex-col sm:flex-row justify-between gap-3 mb-4">
                 <div>
-                  <p className="text-xs text-base-content/50">Date de la commande</p>
+                  <p className="text-xs text-base-content/50">{t('orders.date')}</p>
                   <p className="font-medium text-sm flex items-center gap-2">
                     <Clock size={14} />
                     {formatDate(order.createdAt, { style: 'long' })}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-base-content/50">Total</p>
+                  <p className="text-xs text-base-content/50">{t('orders.total')}</p>
                   <p className="font-bold text-lg text-primary">
                     {formatCurrency(order.totalAmount)}
                   </p>
@@ -162,7 +164,7 @@ export default function OrderDetailPage() {
             <div className="card-body p-4 sm:p-5">
               <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
                 <Package size={16} />
-                Suivi de commande
+                {t('orders.tracking')}
               </h3>
               <OrderTimeline
                 status={order.status}
@@ -175,7 +177,7 @@ export default function OrderDetailPage() {
             <div className="card-body p-4 sm:p-5">
               <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
                 <Package size={16} />
-                Articles ({order.items?.length || 0})
+                {t('orders.items')} ({order.items?.length || 0})
               </h3>
               <div className="flex flex-col gap-3">
                 {(order.items || []).map((item, index) => (
@@ -192,7 +194,7 @@ export default function OrderDetailPage() {
               <div className="card-body p-4">
                 <h3 className="font-bold text-sm mb-3 flex items-center gap-2">
                   <MapPin size={16} />
-                  Adresse de livraison
+                  {t('orders.shippingAddress')}
                 </h3>
                 <div className="text-sm text-base-content/70 space-y-0.5">
                   <p className="font-medium text-base-content">
@@ -205,7 +207,7 @@ export default function OrderDetailPage() {
                   </p>
                   <p>{order.address.country}</p>
                   {order.address.phone && (
-                    <p>Tél: {order.address.phone}</p>
+                    <p>{t('orders.phone')}: {order.address.phone}</p>
                   )}
                 </div>
               </div>
@@ -216,18 +218,18 @@ export default function OrderDetailPage() {
             <div className="card-body p-4">
               <h3 className="font-bold text-sm mb-3 flex items-center gap-2">
                 <CreditCard size={16} />
-                Paiement
+                {t('orders.paymentDetails')}
               </h3>
               <div className="text-sm text-base-content/70 space-y-1">
                 <p>
-                  <span className="text-base-content/50">Méthode: </span>
+                  <span className="text-base-content/50">{t('orders.paymentMethod')}: </span>
                   <span className="font-medium">
-                    {order.payments?.[0]?.method || order.paymentMethod || 'Non spécifié'}
+                    {order.payments?.[0]?.method || order.paymentMethod || t('orders.notSpecified')}
                   </span>
                 </p>
                 {(order.payments?.[0]?.status || order.paymentStatus) && (
                   <p>
-                    <span className="text-base-content/50">Statut: </span>
+                    <span className="text-base-content/50">{t('orders.paymentStatus')}: </span>
                     <span className="font-medium capitalize">
                       {order.payments?.[0]?.status || order.paymentStatus}
                     </span>
@@ -239,29 +241,29 @@ export default function OrderDetailPage() {
 
           <div className="card bg-base-100 border border-base-200">
             <div className="card-body p-4">
-              <h3 className="font-bold text-sm mb-3">Résumé</h3>
+              <h3 className="font-bold text-sm mb-3">{t('orders.summary')}</h3>
               <div className="flex flex-col gap-1.5 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-base-content/60">Sous-total</span>
+                  <span className="text-base-content/60">{t('orders.subtotal')}</span>
                   <span>{formatCurrency(order.subtotal)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-base-content/60">Livraison</span>
+                  <span className="text-base-content/60">{t('orders.shipping')}</span>
                   <span>
                     {Number(order.shippingCost || 0) === 0
-                      ? 'Gratuit'
+                      ? t('orders.free')
                       : formatCurrency(order.shippingCost)}
                   </span>
                 </div>
                 {Number(order.discountAmount) > 0 && (
                   <div className="flex justify-between text-success">
-                    <span>Réduction</span>
+                    <span>{t('orders.discount')}</span>
                     <span>-{formatCurrency(order.discountAmount)}</span>
                   </div>
                 )}
                 <div className="divider my-1" />
                 <div className="flex justify-between font-bold">
-                  <span>Total</span>
+                  <span>{t('orders.total')}</span>
                   <span className="text-primary">{formatCurrency(order.totalAmount)}</span>
                 </div>
               </div>
@@ -280,7 +282,7 @@ export default function OrderDetailPage() {
               ) : (
                 <Download size={16} />
               )}
-              Télécharger la facture
+              {t('orders.downloadInvoice')}
             </button>
 
             {canCancel && (
@@ -289,7 +291,7 @@ export default function OrderDetailPage() {
                   <div className="card bg-error/5 border border-error/20">
                     <div className="card-body p-4">
                       <p className="text-sm font-medium text-error mb-3">
-                        Êtes-vous sûr de vouloir annuler cette commande?
+                        {t('orders.cancelConfirm')}
                       </p>
                       <div className="flex gap-2">
                         <button
@@ -297,7 +299,7 @@ export default function OrderDetailPage() {
                           className="btn btn-ghost btn-sm flex-1"
                           onClick={() => setShowCancelConfirm(false)}
                         >
-                          Non
+                          {t('orders.no')}
                         </button>
                         <button
                           type="button"
@@ -308,7 +310,7 @@ export default function OrderDetailPage() {
                           {cancelling ? (
                             <span className="loading loading-spinner loading-xs" />
                           ) : (
-                            'Oui, annuler'
+                            t('orders.yesCancel')
                           )}
                         </button>
                       </div>
@@ -321,7 +323,7 @@ export default function OrderDetailPage() {
                     onClick={() => setShowCancelConfirm(true)}
                   >
                     <XCircle size={16} />
-                    Annuler la commande
+                    {t('orders.cancelOrder')}
                   </button>
                 )}
               </>

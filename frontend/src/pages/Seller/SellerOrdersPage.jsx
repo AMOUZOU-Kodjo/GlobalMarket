@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import {
   Search, ShoppingCart, AlertCircle, Eye, ChevronDown,
@@ -14,15 +15,6 @@ import usePagination from '../../hooks/usePagination'
 import formatCurrency from '../../utils/formatCurrency'
 import { formatDate } from '../../utils/formatDate'
 
-const ORDER_STATUSES = [
-  { value: '', label: 'Tous les statuts' },
-  { value: 'pending', label: 'En attente' },
-  { value: 'confirmed', label: 'Confirmée' },
-  { value: 'shipped', label: 'Expédiée' },
-  { value: 'delivered', label: 'Livrée' },
-  { value: 'cancelled', label: 'Annulée' },
-]
-
 export default function SellerOrdersPage() {
   const [orders, setOrders] = useState([])
   const [totalItems, setTotalItems] = useState(0)
@@ -33,6 +25,16 @@ export default function SellerOrdersPage() {
   const [updatingOrder, setUpdatingOrder] = useState(null)
 
   const { page, totalPages, goToPage } = usePagination(totalItems, 10)
+  const { t } = useTranslation()
+
+  const ORDER_STATUSES = [
+    { value: '', label: t('seller.filterByStatus') },
+    { value: 'pending', label: t('orderStatus.pending') },
+    { value: 'confirmed', label: t('orderStatus.confirmed') },
+    { value: 'shipped', label: t('orderStatus.shipped') },
+    { value: 'delivered', label: t('orderStatus.delivered') },
+    { value: 'cancelled', label: t('orderStatus.cancelled') },
+  ]
 
   const fetchOrders = useCallback(async () => {
     setLoading(true)
@@ -46,7 +48,7 @@ export default function SellerOrdersPage() {
       setOrders(data.orders || data || [])
       setTotalItems(data.total || (data.orders || data || []).length)
     } catch (err) {
-      setError(err?.response?.data?.message || err?.message || 'Erreur lors du chargement des commandes.')
+      setError(err?.response?.data?.message || err?.message || t('errors.ordersLoad'))
     } finally {
       setLoading(false)
     }
@@ -62,28 +64,28 @@ export default function SellerOrdersPage() {
       setUpdatingOrder(null)
       fetchOrders()
     } catch (err) {
-      setError(err?.response?.data?.message || 'Erreur lors de la mise à jour du statut.')
+      setError(err?.response?.data?.message || t('errors.statusUpdate'))
     }
   }
 
   const columns = [
     {
       key: '_id',
-      label: 'ID',
+      label: t('seller.orderNumber'),
       render: (val) => (
         <span className="font-mono text-xs">#{(val || '').slice(-6).toUpperCase()}</span>
       ),
     },
     {
       key: 'customerName',
-      label: 'Client',
+      label: t('seller.client'),
       render: (val, row) => (
         <span>{val || row.customer?.name || '—'}</span>
       ),
     },
     {
       key: 'createdAt',
-      label: 'Date',
+      label: t('common.date'),
       sortable: true,
       render: (val) => (
         <span className="text-sm">{formatDate(val)}</span>
@@ -91,7 +93,7 @@ export default function SellerOrdersPage() {
     },
     {
       key: 'totalAmount',
-      label: 'Total',
+      label: t('seller.total'),
       sortable: true,
       render: (val) => (
         <span className="font-medium">{formatCurrency(val)}</span>
@@ -99,12 +101,12 @@ export default function SellerOrdersPage() {
     },
     {
       key: 'status',
-      label: 'Statut',
+      label: t('products.status'),
       render: (val) => <StatusBadge status={val} type="order" />,
     },
     {
       key: 'actions',
-      label: 'Actions',
+      label: t('common.actions'),
       width: '120px',
       render: (_, row) => (
         <div className="flex gap-1">
@@ -120,7 +122,7 @@ export default function SellerOrdersPage() {
               {ORDER_STATUSES.filter((s) => s.value && s.value !== row.status).map((s) => (
                 <li key={s.value}>
                   <button onClick={() => handleStatusUpdate(row._id || row.id, s.value)}>
-                    Marquer comme {s.label}
+                    {t('orders.markAs')} {s.label}
                   </button>
                 </li>
               ))}
@@ -134,8 +136,8 @@ export default function SellerOrdersPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Mes commandes</h1>
-        <p className="text-base-content/60 text-sm">Gérez les commandes de votre boutique</p>
+        <h1 className="text-2xl font-bold">{t('seller.orderManagement')}</h1>
+        <p className="text-base-content/60 text-sm">{t('seller.orderManagementDescription')}</p>
       </div>
 
       {error && (
@@ -152,7 +154,7 @@ export default function SellerOrdersPage() {
               <Search size={16} className="opacity-50" />
               <input
                 type="text"
-                placeholder="Rechercher une commande..."
+                placeholder={t('orders.searchPlaceholder')}
                 className="grow"
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); goToPage(1) }}
@@ -173,7 +175,7 @@ export default function SellerOrdersPage() {
             columns={columns}
             data={orders}
             loading={loading}
-            emptyMessage="Aucune commande trouvée"
+            emptyMessage={t('orders.notFound')}
           />
 
           {totalPages > 1 && (

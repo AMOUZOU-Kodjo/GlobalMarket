@@ -2,3 +2,246 @@
 @plugin "daisyui" {
   themes: light --default, dark --prefers-dark;
 }
+
+/* ══════════════════════════════════════════════════════════════
+   GlobalMarket — Palette complète
+   Modifier uniquement ici pour changer les couleurs du site
+   ══════════════════════════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────────
+   THÈME CLAIR (Light)
+   ────────────────────────────────────────────── */
+
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  color-scheme: light;
+
+  /* ── Fond principal de la page ──
+     Usage : body, conteneurs principaux, fond des pages
+     #ffffff */
+  --color-base-100: oklch(1.0000 0.0000 0);
+
+  /* ── Fond secondaire (cartes, inputs, sections) ──
+     Usage : cartes produits, champs de formulaire, blocs alternés
+     #f3f4f6 */
+  --color-base-200: oklch(0.9650 0.0013 264.54);
+
+  /* ── Fond tertiaire (bordures, séparateurs) ──
+     Usage : bordures de cartes, séparateurs, états disabled
+     #e5e7eb */
+  --color-base-300: oklch(0.9250 0.0026 264.54);
+
+  /* ── Texte principal ──
+     Usage : titres, paragraphes, texte général
+     #1f2937 */
+  --color-base-content: oklch(0.1850 0.0070 264.54);
+
+  /* ── Couleur primaire (Indigo) ──
+     Usage : boutons principaux, liens, badges actifs, navbar active,
+             prix, icônes d'action, étoiles sélectionnées, accent global
+     #4f46e5 */
+  --color-primary: oklch(0.5461 0.2449 264.29);
+
+  /* ── Texte sur fond primaire ──
+     Usage : texte blanc sur boutons primaires, badges primaires
+     #ffffff */
+  --color-primary-content: oklch(1.0000 0.0000 0);
+
+  /* ── Couleur secondaire (Sky) ──
+     Usage : boutons secondaires, badges vendeur, avatar vendeur,
+             éléments complémentaires, lien hover
+     #0ea5e9 */
+  --color-secondary: oklch(0.6350 0.1800 235.00);
+
+  /* ── Texte sur fond secondaire ──
+     Usage : texte blanc sur boutons secondaires
+     #ffffff */
+  --color-secondary-content: oklch(1.0000 0.0000 0);
+
+  /* ── Couleur d'accent (Amber) ──
+     Usage : étoiles de notation, prix barrés, highlights,
+             badges promotion, alertes modérées
+     #f59e0b */
+  --color-accent: oklch(0.7950 0.1620 86.00);
+
+  /* ── Texte sur fond accent ──
+     Usage : texte sur badges amber, texte sombre sur fond clair
+     #3b3017 */
+  --color-accent-content: oklch(0.2200 0.0300 86.00);
+
+  /* ── Couleur neutre (Dark) ──
+     Usage : pied de page, sidebar admin, fond sombre, navigation latérale
+     #1f2937 */
+  --color-neutral: oklch(0.2200 0.0070 264.54);
+
+  /* ── Texte sur fond neutre ──
+     Usage : texte sur pied de page, texte sur sidebar
+     #f3f4f6 */
+  --color-neutral-content: oklch(0.9650 0.0013 264.54);
+
+  /* ── Info (Blue) ──
+     Usage : badges info, indicateurs "en cours", notifications neutres
+     #3b82f6 */
+  --color-info: oklch(0.6230 0.2100 250.00);
+
+  /* ── Texte sur fond info ──
+     Usage : texte sur badges info
+     #ffffff */
+  --color-info-content: oklch(1.0000 0.0000 0);
+
+  /* ── Succès (Green) ──
+     Usage : badges "livré", "confirmé", "en stock", checkmarks,
+             icônes de validation, statut succès
+     #22c55e */
+  --color-success: oklch(0.6960 0.1700 155.00);
+
+  /* ── Texte sur fond succès ──
+     Usage : texte sur badges succès
+     #052e16 */
+  --color-success-content: oklch(0.2000 0.0400 155.00);
+
+  /* ── Avertissement (Amber) ──
+     Usage : badges "en attente", stock faible, alertes,
+             états de commande en cours
+     #f59e0b */
+  --color-warning: oklch(0.7950 0.1620 86.00);
+
+  /* ── Texte sur fond avertissement ──
+     Usage : texte sur badges warning
+     #422006 */
+  --color-warning-content: oklch(0.2200 0.0600 86.00);
+
+  /* ── Erreur (Red) ──
+     Usage : boutons supprimer, messages d'erreur, alertes critiques,
+             "rupture de stock", "annulé", texte danger
+     #ef4444 */
+  --color-error: oklch(0.6370 0.2370 25.33);
+
+  /* ── Texte sur fond erreur ──
+     Usage : texte sur boutons supprimer, messages d'erreur
+     #ffffff */
+  --color-error-content: oklch(1.0000 0.0000 0);
+}
+
+/* ──────────────────────────────────────────────
+   THÈME SOMBRE (Dark)
+   ────────────────────────────────────────────── */
+
+@plugin "daisyui/theme" {
+  name: "dark";
+  default: false;
+  color-scheme: dark;
+
+  /* ── Fond principal sombre ──
+     Usage : body en mode sombre, conteneurs principaux
+     #1a1a2e */
+  --color-base-100: oklch(0.1750 0.0100 264.54);
+
+  /* ── Fond secondaire sombre ──
+     Usage : cartes, inputs, sections alternées en mode sombre
+     #252540 */
+  --color-base-200: oklch(0.2200 0.0120 264.54);
+
+  /* ── Fond tertiaire sombre ──
+     Usage : bordures, séparateurs en mode sombre
+     #374151 */
+  --color-base-300: oklch(0.2800 0.0140 264.54);
+
+  /* ── Texte principal sur fond sombre ──
+     Usage : titres, paragraphes en mode sombre
+     #e5e7eb */
+  --color-base-content: oklch(0.9300 0.0050 264.54);
+
+  /* ── Primaire sombre (Indigo clair) ──
+     Usage : mêmes usages que light, version plus claire pour contraste
+     #818cf8 */
+  --color-primary: oklch(0.7200 0.1900 264.29);
+
+  /* ── Texte sur fond primaire sombre ──
+     Usage : texte sur boutons primaires en mode sombre
+     #1c1940 */
+  --color-primary-content: oklch(0.1500 0.0250 264.29);
+
+  /* ── Secondaire sombre (Sky clair) ──
+     Usage : mêmes usages que light, version plus claire
+     #38bdf8 */
+  --color-secondary: oklch(0.7200 0.1500 235.00);
+
+  /* ── Texte sur fond secondaire sombre ──
+     Usage : texte sur badges vendeur en mode sombre
+     #0c1e35 */
+  --color-secondary-content: oklch(0.1500 0.0250 235.00);
+
+  /* ── Accent sombre (Amber clair) ──
+     Usage : étoiles, highlights en mode sombre
+     #fbbf24 */
+  --color-accent: oklch(0.8350 0.1400 86.00);
+
+  /* ── Texte sur fond accent sombre ──
+     Usage : texte sur badges amber en mode sombre
+     #2d2409 */
+  --color-accent-content: oklch(0.1800 0.0400 86.00);
+
+  /* ── Neutre sombre ──
+     Usage : pied de page, sidebar en mode sombre
+     #111827 */
+  --color-neutral: oklch(0.1500 0.0100 264.54);
+
+  /* ── Texte sur fond neutre sombre ──
+     Usage : texte sur sidebar/pied de page en mode sombre
+     #e5e7eb */
+  --color-neutral-content: oklch(0.9300 0.0050 264.54);
+
+  /* ── Info sombre ──
+     Usage : badges info en mode sombre
+     #60a5fa */
+  --color-info: oklch(0.7000 0.1700 250.00);
+
+  /* ── Texte sur fond info sombre ──
+     Usage : texte sur badges info en mode sombre
+     #1a2744 */
+  --color-info-content: oklch(0.1500 0.0250 250.00);
+
+  /* ── Succès sombre ──
+     Usage : badges "livré", "en stock" en mode sombre
+     #4ade80 */
+  --color-success: oklch(0.7500 0.1500 155.00);
+
+  /* ── Texte sur fond succès sombre ──
+     Usage : texte sur badges succès en mode sombre
+     #0a2e1a */
+  --color-success-content: oklch(0.1500 0.0300 155.00);
+
+  /* ── Avertissement sombre ──
+     Usage : badges "en attente" en mode sombre
+     #fbbf24 */
+  --color-warning: oklch(0.8350 0.1400 86.00);
+
+  /* ── Texte sur fond avertissement sombre ──
+     Usage : texte sur badges warning en mode sombre
+     #2d2409 */
+  --color-warning-content: oklch(0.1800 0.0400 86.00);
+
+  /* ── Erreur sombre ──
+     Usage : suppressions, erreurs en mode sombre
+     #f87171 */
+  --color-error: oklch(0.7200 0.1900 25.33);
+
+  /* ── Texte sur fond erreur sombre ──
+     Usage : texte sur boutons d'erreur en mode sombre
+     #2a0f0f */
+  --color-error-content: oklch(0.1500 0.0300 25.33);
+}
+
+/* ──────────────────────────────────────────────
+   POLICE & FONT
+   ────────────────────────────────────────────── */
+
+@theme {
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  font-family: "Poppins", ui-sans-serif, system-ui, sans-serif;
+}

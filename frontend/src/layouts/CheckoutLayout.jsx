@@ -1,7 +1,10 @@
 import { Outlet, Link } from 'react-router-dom'
 import { Store, Lock, ChevronLeft } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 export default function CheckoutLayout() {
+  const { t } = useTranslation()
+
   return (
     <div className="min-h-screen flex flex-col bg-base-200">
       <header className="bg-base-100 border-b border-base-300">
@@ -15,8 +18,8 @@ export default function CheckoutLayout() {
 
           <div className="flex items-center gap-2 text-sm text-base-content/60">
             <Lock size={14} className="text-success" />
-            <span className="hidden sm:inline">Paiement sécurisé</span>
-            <span className="sm:hidden">Sécurisé</span>
+            <span className="hidden sm:inline">{t('checkout.securePayment')}</span>
+            <span className="sm:hidden">{t('checkout.secure')}</span>
           </div>
         </div>
       </header>
@@ -25,7 +28,7 @@ export default function CheckoutLayout() {
         <div className="container mx-auto px-4 py-6">
           <Link to="/cart" className="btn btn-ghost btn-sm gap-1 mb-6">
             <ChevronLeft size={16} />
-            Retour au panier
+            {t('cart.backToShop')}
           </Link>
           <Outlet />
         </div>
@@ -35,7 +38,7 @@ export default function CheckoutLayout() {
         <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-base-content/50">
           <div className="flex items-center gap-2">
             <Lock size={12} />
-            <span>Vos données de paiement sont chiffrées et sécurisées</span>
+            <span>{t('checkout.secureMessage')}</span>
           </div>
           <span>© {new Date().getFullYear()} GlobalMarket</span>
         </div>

@@ -7,6 +7,9 @@ const ctrl = require('../controllers/seller.controller')
 
 const router = Router()
 
+router.get('/shop/:slug', ctrl.getPublicShop)
+router.get('/shop/:slug/products', ctrl.getPublicShopProducts)
+
 router.post('/register', auth, validate(sellerRegisterSchema), ctrl.register)
 router.get('/dashboard', auth, requireRole('seller'), ctrl.getDashboard)
 router.get('/shop', auth, requireRole('seller'), ctrl.getShop)

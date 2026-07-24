@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Tag, Trash2, ShoppingBag, Ticket } from "lucide-react";
 import formatCurrency from "../../utils/formatCurrency";
 
@@ -17,6 +18,7 @@ export function OrderSummary({
 }) {
   const [couponCode, setCouponCode] = useState("");
   const [couponLoading, setCouponLoading] = useState(false);
+  const { t } = useTranslation();
 
   const handleApply = async () => {
     if (!couponCode.trim()) return;
@@ -32,7 +34,7 @@ export function OrderSummary({
     <div className={`bg-base-100 border border-base-200 rounded-xl p-4 ${className}`}>
       <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
         <ShoppingBag size={20} />
-        Résumé de la commande
+        {t('checkout.orderSummary')}
       </h3>
 
       {items.length > 0 && (
@@ -63,7 +65,7 @@ export function OrderSummary({
       {items.length === 0 && (
         <div className="text-center py-6 opacity-50">
           <ShoppingBag size={24} className="mx-auto mb-1" />
-          <p className="text-sm">Votre panier est vide</p>
+          <p className="text-sm">{t('cart.empty')}</p>
         </div>
       )}
 
@@ -71,20 +73,20 @@ export function OrderSummary({
 
       <div className="flex flex-col gap-2 text-sm">
         <div className="flex justify-between">
-          <span className="opacity-60">Sous-total</span>
+          <span className="opacity-60">{t('checkout.subtotal')}</span>
           <span>{formatCurrency(subtotal)}</span>
         </div>
         <div className="flex justify-between">
-          <span className="opacity-60">Livraison</span>
+          <span className="opacity-60">{t('checkout.shipping')}</span>
           <span>
             {shipping === 0 || shipping === undefined
-              ? "Gratuit"
+              ? t('checkout.free')
               : formatCurrency(shipping)}
           </span>
         </div>
         {tax !== undefined && (
           <div className="flex justify-between">
-            <span className="opacity-60">Taxes</span>
+            <span className="opacity-60">{t('checkout.tax')}</span>
             <span>{formatCurrency(tax)}</span>
           </div>
         )}
@@ -92,7 +94,7 @@ export function OrderSummary({
           <div className="flex justify-between text-success">
             <span className="flex items-center gap-1">
               <Tag size={14} />
-              Réduction
+              {t('checkout.discount')}
             </span>
             <span>-{formatCurrency(discount)}</span>
           </div>
@@ -102,7 +104,7 @@ export function OrderSummary({
       <div className="divider my-2" />
 
       <div className="flex justify-between text-lg font-bold">
-        <span>Total</span>
+        <span>{t('checkout.total')}</span>
         <span className="text-primary">{formatCurrency(total)}</span>
       </div>
 
@@ -126,11 +128,11 @@ export function OrderSummary({
 
       {showCouponInput && !coupon && (
         <div className="mt-4">
-          <label className="text-sm font-medium mb-1 block">Code promo</label>
+          <label className="text-sm font-medium mb-1 block">{t('cart.promoCode')}</label>
           <div className="join w-full">
             <input
               type="text"
-              placeholder="Entrer un code promo"
+              placeholder={t('cart.promoCodePlaceholder')}
               className="input input-bordered input-sm join-item flex-1"
               value={couponCode}
               onChange={(e) => setCouponCode(e.target.value)}
@@ -145,7 +147,7 @@ export function OrderSummary({
               {couponLoading ? (
                 <span className="loading loading-spinner loading-xs" />
               ) : (
-                "Appliquer"
+                t('cart.apply')
               )}
             </button>
           </div>

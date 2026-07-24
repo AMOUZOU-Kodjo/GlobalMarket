@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Header } from '../../components/organisms/Header'
 import {
   BookOpen,
@@ -16,71 +17,73 @@ import {
   ExternalLink,
 } from 'lucide-react'
 
-const GUIDES = [
-  {
-    icon: Package,
-    title: 'Créer votre boutique',
-    desc: 'Un guide étape par étape pour configurer votre boutique et commencer à vendre rapidement.',
-    readTime: '10 min',
-  },
-  {
-    icon: Camera,
-    title: 'Photographier vos produits',
-    desc: 'Conseils pour prendre des photos attractives qui augmentent vos ventes.',
-    readTime: '8 min',
-  },
-  {
-    icon: TrendingUp,
-    title: 'Fixer les bons prix',
-    desc: 'Comment déterminer des prix compétitifs tout en maximisant votre marge.',
-    readTime: '12 min',
-  },
-  {
-    icon: MessageSquare,
-    title: 'Gérer la relation client',
-    desc: 'Bonnes pratiques pour fidéliser vos clients et obtenir de bonnes évaluations.',
-    readTime: '7 min',
-  },
-  {
-    icon: BarChart3,
-    title: 'Analyser vos performances',
-    desc: 'Comprendre vos statistiques pour optimiser vos ventes.',
-    readTime: '15 min',
-  },
-  {
-    icon: Users,
-    title: 'Promouvoir vos produits',
-    desc: 'Stratégies marketing pour augmenter la visibilité de vos produits.',
-    readTime: '11 min',
-  },
-]
-
-const TIPS = [
-  { icon: Star, title: 'Qualité avant tout', desc: 'Décrivez vos produits avec précision et incluez des photos de haute qualité.' },
-  { icon: Clock, title: 'Réactivité', desc: 'Répondez rapidement aux messages des clients (idéal : moins de 2 heures).' },
-  { icon: Target, title: 'SEO produit', desc: 'Utilisez des mots-clés pertinents dans les titres et descriptions de vos produits.' },
-  { icon: Lightbulb, title: 'Offres promotionnelles', desc: 'Proposez des réductions ponctuelles pour attirer de nouveaux clients.' },
-  { icon: MessageSquare, title: 'Avis clients', desc: 'Encouragez les clients à laisser des avis et répondez toujours aux commentaires.' },
-  { icon: Package, title: 'Emballage soigné', desc: 'Un emballage de qualité améliore l\'expérience client et réduit les retours.' },
-]
-
-const RESOURCES = [
-  { title: 'Blog vendeurs', desc: 'Articles et conseils réguliers pour réussir sur GlobalMarket.', url: '#', external: true },
-  { title: 'Webinaires', desc: 'Sessions de formation en ligne avec nos experts vendeurs.', url: '#', external: true },
-  { title: 'Communauté', desc: 'Rejoignez notre groupe de vendeurs pour échanger et partager.', url: '#', external: true },
-  { title: 'Support technique', desc: 'Assistance dédiée pour les questions techniques sur votre boutique.', url: '/contact', external: false },
-]
-
 export default function SellerResourcesPage() {
+  const { t } = useTranslation()
+
+  const GUIDES = [
+    {
+      icon: Package,
+      title: t('resources.guideShopTitle'),
+      desc: t('resources.guideShopDesc'),
+      readTime: t('resources.read10min'),
+    },
+    {
+      icon: Camera,
+      title: t('resources.guidePhotoTitle'),
+      desc: t('resources.guidePhotoDesc'),
+      readTime: t('resources.read8min'),
+    },
+    {
+      icon: TrendingUp,
+      title: t('resources.guidePriceTitle'),
+      desc: t('resources.guidePriceDesc'),
+      readTime: t('resources.read12min'),
+    },
+    {
+      icon: MessageSquare,
+      title: t('resources.guideRelationTitle'),
+      desc: t('resources.guideRelationDesc'),
+      readTime: t('resources.read7min'),
+    },
+    {
+      icon: BarChart3,
+      title: t('resources.guideAnalyticsTitle'),
+      desc: t('resources.guideAnalyticsDesc'),
+      readTime: t('resources.read15min'),
+    },
+    {
+      icon: Users,
+      title: t('resources.guidePromoteTitle'),
+      desc: t('resources.guidePromoteDesc'),
+      readTime: t('resources.read11min'),
+    },
+  ]
+
+  const TIPS = [
+    { icon: Star, title: t('resources.tipQualityTitle'), desc: t('resources.tipQualityDesc') },
+    { icon: Clock, title: t('resources.tipReactivityTitle'), desc: t('resources.tipReactivityDesc') },
+    { icon: Target, title: t('resources.tipSeoTitle'), desc: t('resources.tipSeoDesc') },
+    { icon: Lightbulb, title: t('resources.tipPromoTitle'), desc: t('resources.tipPromoDesc') },
+    { icon: MessageSquare, title: t('resources.tipReviewsTitle'), desc: t('resources.tipReviewsDesc') },
+    { icon: Package, title: t('resources.tipPackagingTitle'), desc: t('resources.tipPackagingDesc') },
+  ]
+
+  const RESOURCES = [
+    { title: t('resources.blogTitle'), desc: t('resources.blogDesc'), url: '#', external: true },
+    { title: t('resources.webinarsTitle'), desc: t('resources.webinarsDesc'), url: '#', external: true },
+    { title: t('resources.communityTitle'), desc: t('resources.communityDesc'), url: '#', external: true },
+    { title: t('resources.supportTitle'), desc: t('resources.supportDesc'), url: '/contact', external: false },
+  ]
+
   return (
     <div className="flex flex-col">
       <section className="hero min-h-[50vh] bg-gradient-to-br from-primary/10 to-secondary/10">
         <div className="hero-content text-center">
           <div className="max-w-3xl">
             <BookOpen size={48} className="text-primary mx-auto mb-4" />
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Ressources Vendeurs</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">{t('resources.title')}</h1>
             <p className="text-lg text-base-content/70">
-              Tout ce dont vous avez besoin pour réussir sur GlobalMarket.
+              {t('resources.subtitle')}
             </p>
           </div>
         </div>
@@ -88,9 +91,9 @@ export default function SellerResourcesPage() {
 
       <section className="py-16 px-4">
         <div className="container mx-auto max-w-5xl">
-          <h2 className="text-3xl font-bold text-center mb-4">Guide de Démarrage</h2>
+          <h2 className="text-3xl font-bold text-center mb-4">{t('resources.startingGuide')}</h2>
           <p className="text-center text-base-content/60 mb-12 max-w-xl mx-auto">
-            Suivez nos guides pour démarrer rapidement et optimiser vos ventes.
+            {t('resources.startingGuideDesc')}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {GUIDES.map((guide) => {
@@ -109,7 +112,7 @@ export default function SellerResourcesPage() {
                         {guide.readTime}
                       </span>
                       <span className="text-primary text-sm font-medium flex items-center gap-1">
-                        Lire <ArrowRight size={14} />
+                        {t('resources.read')} <ArrowRight size={14} />
                       </span>
                     </div>
                   </div>
@@ -122,7 +125,7 @@ export default function SellerResourcesPage() {
 
       <section className="py-16 px-4 bg-base-200">
         <div className="container mx-auto max-w-5xl">
-          <h2 className="text-3xl font-bold text-center mb-12">Conseils pour Vendre Mieux</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">{t('resources.tipsTitle')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {TIPS.map((tip) => {
               const Icon = tip.icon
@@ -144,7 +147,7 @@ export default function SellerResourcesPage() {
 
       <section className="py-16 px-4">
         <div className="container mx-auto max-w-5xl">
-          <h2 className="text-3xl font-bold text-center mb-12">Ressources Supplémentaires</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">{t('resources.additionalTitle')}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {RESOURCES.map((resource) => (
               <a
@@ -169,15 +172,15 @@ export default function SellerResourcesPage() {
 
       <section className="py-16 px-4 bg-primary text-primary-content">
         <div className="container mx-auto text-center max-w-2xl">
-          <h2 className="text-3xl font-bold mb-4">Prêt à commencer ?</h2>
-          <p className="mb-8 opacity-90">Ouvrez votre boutique et commencez à vendre dès aujourd'hui.</p>
+          <h2 className="text-3xl font-bold mb-4">{t('resources.ctaTitle')}</h2>
+          <p className="mb-8 opacity-90">{t('resources.ctaSubtitle')}</p>
           <div className="flex gap-4 justify-center flex-wrap">
             <Link to="/seller/register" className="btn btn-lg bg-base-100 text-base-content border-none hover:bg-base-200">
-              Ouvrir ma boutique
+              {t('resources.openShop')}
               <ArrowRight size={20} />
             </Link>
             <Link to="/seller/pricing" className="btn btn-lg btn-outline border-base-100 text-base-100 hover:bg-base-100 hover:text-base-content">
-              Voir les tarifs
+              {t('resources.viewPricing')}
             </Link>
           </div>
         </div>

@@ -22,20 +22,9 @@ import {
   HelpCircle,
   MessageCircle,
 } from 'lucide-react'
-import { useState, useEffect, useRef, useCallback } from 'react'
-
-const CATEGORIES = [
-  { id: 'electronique', label: 'Électronique', icon: '📱', href: '/products?category=electronique' },
-  { id: 'mode-vetements', label: 'Mode & Vêtements', icon: '👕', href: '/products?category=mode-vetements' },
-  { id: 'maison-jardin', label: 'Maison & Jardin', icon: '🏠', href: '/products?category=maison-jardin' },
-  { id: 'sports-loisirs', label: 'Sports & Loisirs', icon: '⚽', href: '/products?category=sports-loisirs' },
-  { id: 'beaute-sante', label: 'Beauté & Santé', icon: '💄', href: '/products?category=beaute-sante' },
-  { id: 'jouets-enfants', label: 'Jouets & Enfants', icon: '🧸', href: '/products?category=jouets-enfants' },
-  { id: 'automobile', label: 'Automobile', icon: '🚗', href: '/products?category=automobile' },
-  { id: 'livres-medias', label: 'Livres & Médias', icon: '📚', href: '/products?category=livres-medias' },
-  { id: 'alimentation', label: 'Alimentation', icon: '🍎', href: '/products?category=alimentation' },
-  { id: 'art-artisanat', label: 'Art & Artisanat', icon: '🎨', href: '/products?category=art-artisanat' },
-]
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { LanguageSwitcher } from './LanguageSwitcher'
 
 export default function Navbar() {
   const { user, logout } = useAuth()
@@ -49,6 +38,20 @@ export default function Navbar() {
   const [notifCount] = useState(0)
   const searchInputRef = useRef(null)
   const categoriesRef = useRef(null)
+  const { t } = useTranslation()
+
+  const CATEGORIES = useMemo(() => [
+    { id: 'electronique', label: t('cat.electronique'), icon: '📱', href: '/products?category=electronique' },
+    { id: 'mode-vetements', label: t('cat.modeVetements'), icon: '👕', href: '/products?category=mode-vetements' },
+    { id: 'maison-jardin', label: t('cat.maisonJardin'), icon: '🏠', href: '/products?category=maison-jardin' },
+    { id: 'sports-loisirs', label: t('cat.sportsLoisirs'), icon: '⚽', href: '/products?category=sports-loisirs' },
+    { id: 'beaute-sante', label: t('cat.beauteSante'), icon: '💄', href: '/products?category=beaute-sante' },
+    { id: 'jouets-enfants', label: t('cat.jouetsEnfants'), icon: '🧸', href: '/products?category=jouets-enfants' },
+    { id: 'automobile', label: t('cat.automobile'), icon: '🚗', href: '/products?category=automobile' },
+    { id: 'livres-medias', label: t('cat.livresMedias'), icon: '📚', href: '/products?category=livres-medias' },
+    { id: 'alimentation', label: t('cat.alimentation'), icon: '🍎', href: '/products?category=alimentation' },
+    { id: 'art-artisanat', label: t('cat.artArtisanat'), icon: '🎨', href: '/products?category=art-artisanat' },
+  ], [t])
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10)
@@ -135,7 +138,7 @@ export default function Navbar() {
             }
           >
             <Home size={16} />
-            Accueil
+            {t('nav.home')}
           </NavLink>
 
           <NavLink
@@ -145,7 +148,7 @@ export default function Navbar() {
             }
           >
             <Tag size={16} />
-            Produits
+            {t('nav.products')}
           </NavLink>
 
           <div className="relative" ref={categoriesRef}>
@@ -156,7 +159,7 @@ export default function Navbar() {
               aria-haspopup="true"
             >
               <Megaphone size={16} />
-              Catégories
+              {t('nav.categories')}
               <ChevronDown size={14} className={`transition-transform ${categoriesOpen ? 'rotate-180' : ''}`} />
             </button>
 
@@ -182,7 +185,7 @@ export default function Navbar() {
                   className="btn btn-primary btn-sm btn-block"
                   onClick={() => setCategoriesOpen(false)}
                 >
-                  Voir toutes les catégories
+                  {t('home.allCategories')}
                 </Link>
               </div>
             )}
@@ -196,12 +199,14 @@ export default function Navbar() {
               }
             >
               <LayoutDashboard size={16} />
-              Dashboard
+              {t('nav.admin')}
             </NavLink>
           )}
         </div>
 
         <div className="navbar-end gap-1 sm:gap-2">
+          <LanguageSwitcher />
+
           <button
             className="btn btn-ghost btn-circle lg:hidden"
             onClick={() => setSearchOpen(true)}
@@ -216,7 +221,7 @@ export default function Navbar() {
                 <Search size={16} className="opacity-50 shrink-0" />
                 <input
                   type="text"
-                  placeholder="Rechercher des produits, marques..."
+                  placeholder={t('home.searchPlaceholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="grow"
@@ -279,45 +284,45 @@ export default function Navbar() {
                 <li>
                   <Link to="/profile" className="gap-3">
                     <User size={16} />
-                    Mon profil
+                    {t('profile.title')}
                   </Link>
                 </li>
                 <li>
                   <Link to="/orders" className="gap-3">
                     <Package size={16} />
-                    Mes commandes
+                    {t('seller.orders')}
                   </Link>
                 </li>
                 <li>
                   <Link to="/wishlist" className="gap-3">
                     <Heart size={16} />
-                    Mes favoris
+                    {t('profile.wishlist')}
                   </Link>
                 </li>
                 <li>
                   <Link to="/messages" className="gap-3">
                     <MessageCircle size={16} />
-                    Messages
+                    {t('nav.messages')}
                   </Link>
                 </li>
                 <li>
                   <Link to="/settings" className="gap-3">
                     <Settings size={16} />
-                    Paramètres
+                    {t('seller.settings')}
                   </Link>
                 </li>
                 {user.role === 'seller' || user.role === 'admin' ? (
                   <li>
                     <Link to="/seller/shop" className="gap-3">
                       <ShoppingBag size={16} />
-                      Ma boutique
+                      {t('nav.shop')}
                     </Link>
                   </li>
                 ) : (
                   <li>
                     <Link to="/seller/register" className="gap-3">
                       <Store size={16} />
-                      Devenir vendeur
+                      {t('nav.seller')}
                     </Link>
                   </li>
                 )}
@@ -325,7 +330,7 @@ export default function Navbar() {
                 <li>
                   <button onClick={handleLogout} className="gap-3 text-error">
                     <LogOut size={16} />
-                    Déconnexion
+                    {t('nav.logout')}
                   </button>
                 </li>
               </ul>
@@ -333,10 +338,10 @@ export default function Navbar() {
           ) : (
             <div className="flex gap-1 sm:gap-2">
               <Link to="/login" className="btn btn-ghost btn-sm">
-                Connexion
+                {t('nav.login')}
               </Link>
               <Link to="/register" className="btn btn-primary btn-sm">
-                Inscription
+                {t('nav.register')}
               </Link>
             </div>
           )}
@@ -352,14 +357,14 @@ export default function Navbar() {
                 <input
                   ref={searchInputRef}
                   type="text"
-                  placeholder="Rechercher des produits, marques..."
+                  placeholder={t('home.searchPlaceholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="grow"
                 />
               </label>
               <button type="submit" className="btn btn-primary">
-                Rechercher
+                {t('nav.search')}
               </button>
               <button
                 type="button"
@@ -400,7 +405,7 @@ export default function Navbar() {
                   <Search size={16} className="opacity-50" />
                   <input
                     type="text"
-                    placeholder="Rechercher..."
+                    placeholder={t('nav.search')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="grow"
@@ -412,20 +417,20 @@ export default function Navbar() {
                 <li>
                   <NavLink to="/" end onClick={closeMobile} className={({ isActive }) => isActive ? 'active' : ''}>
                     <Home size={18} />
-                    Accueil
+                    {t('nav.home')}
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/products" onClick={closeMobile} className={({ isActive }) => isActive ? 'active' : ''}>
                     <Tag size={18} />
-                    Produits
+                    {t('nav.products')}
                   </NavLink>
                 </li>
                 <li>
                   <details>
                     <summary className="gap-3">
                       <Megaphone size={18} />
-                      Catégories
+                      {t('nav.categories')}
                     </summary>
                     <ul className="pl-8">
                       {CATEGORIES.map((cat) => (
@@ -443,7 +448,7 @@ export default function Navbar() {
                   <li>
                     <NavLink to="/admin" onClick={closeMobile} className={({ isActive }) => isActive ? 'active' : ''}>
                       <LayoutDashboard size={18} />
-                      Dashboard
+                      {t('nav.admin')}
                     </NavLink>
                   </li>
                 )}
@@ -468,37 +473,37 @@ export default function Navbar() {
                     <li>
                       <Link to="/profile" onClick={closeMobile}>
                         <User size={18} />
-                        Mon profil
+                        {t('profile.title')}
                       </Link>
                     </li>
                     <li>
                       <Link to="/orders" onClick={closeMobile}>
                         <Package size={18} />
-                        Mes commandes
+                        {t('seller.orders')}
                       </Link>
                     </li>
                     <li>
                       <Link to="/wishlist" onClick={closeMobile}>
                         <Heart size={18} />
-                        Mes favoris
+                        {t('profile.wishlist')}
                       </Link>
                     </li>
                     <li>
                       <Link to="/messages" onClick={closeMobile}>
                         <MessageCircle size={18} />
-                        Messages
+                        {t('nav.messages')}
                       </Link>
                     </li>
                     <li>
                       <Link to="/settings" onClick={closeMobile}>
                         <Settings size={18} />
-                        Paramètres
+                        {t('seller.settings')}
                       </Link>
                     </li>
                     <li>
                       <button onClick={handleLogout} className="text-error gap-3">
                         <LogOut size={18} />
-                        Déconnexion
+                        {t('nav.logout')}
                       </button>
                     </li>
                   </ul>
@@ -506,10 +511,10 @@ export default function Navbar() {
               ) : (
                 <div className="flex flex-col gap-2 px-2">
                   <Link to="/login" className="btn btn-outline btn-block" onClick={closeMobile}>
-                    Connexion
+                    {t('nav.login')}
                   </Link>
                   <Link to="/register" className="btn btn-primary btn-block" onClick={closeMobile}>
-                    Inscription
+                    {t('nav.register')}
                   </Link>
                 </div>
               )}

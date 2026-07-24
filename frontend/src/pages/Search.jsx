@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import { Search as SearchIcon, ArrowRight, PackageSearch } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import Breadcrumb from '../components/atoms/Breadcrumb'
 import ProductGrid from '../components/organisms/ProductGrid'
 import FilterSidebar from '../components/organisms/FilterSidebar'
@@ -13,28 +14,29 @@ import categoryService from '../services/category.service'
 import useDebounce from '../hooks/useDebounce'
 import MOCK_PRODUCTS from '../data/mockProducts'
 
-const SORT_OPTIONS = [
-  { value: 'newest', label: 'Plus récents' },
-  { value: 'price_asc', label: 'Prix croissant' },
-  { value: 'price_desc', label: 'Prix décroissant' },
-  { value: 'rating', label: 'Meilleures notes' },
-  { value: 'popularity', label: 'Popularité' },
-]
-
 const ITEMS_PER_PAGE = 12
 
-const SUGGESTIONS = [
-  'Téléphone',
-  'Ordinateur',
-  'Vêtements',
-  'Maison',
-  'Sport',
-  'Beauté',
-]
-
 export default function Search() {
+  const { t } = useTranslation()
   const { addItem } = useCart()
   const [searchParams, setSearchParams] = useSearchParams()
+
+  const SUGGESTIONS = useMemo(() => [
+    t('search.suggestionPhone'),
+    t('search.suggestionComputer'),
+    t('search.suggestionClothing'),
+    t('search.suggestionHome'),
+    t('search.suggestionSport'),
+    t('search.suggestionBeauty'),
+  ], [t])
+
+  const SORT_OPTIONS = [
+    { value: 'newest', label: t('common.newest') },
+    { value: 'price_asc', label: t('common.priceAsc') },
+    { value: 'price_desc', label: t('common.priceDesc') },
+    { value: 'rating', label: t('common.rating') },
+    { value: 'popularity', label: t('common.popular') },
+  ]
 
   const [products, setProducts] = useState([])
   const [totalProducts, setTotalProducts] = useState(0)
@@ -209,15 +211,15 @@ export default function Search() {
     <div className="container mx-auto px-4 py-6">
       <Breadcrumb
         items={[
-          { label: 'Accueil', href: '/' },
-          { label: 'Recherche' },
+          { label: t('nav.home'), href: '/' },
+          { label: t('nav.search') },
         ]}
         className="mb-4"
       />
 
       <div className="max-w-2xl mx-auto mb-8">
         <h1 className="text-2xl md:text-3xl font-bold text-center mb-6">
-          Rechercher un produit
+          {t('nav.search')}
         </h1>
         <SearchBar
           value={query}
@@ -230,7 +232,7 @@ export default function Search() {
             )
             setSuggestions(matched)
           }}
-          placeholder="Rechercher des produits..."
+          placeholder={t('search.placeholder')}
           loading={loading}
         />
       </div>
@@ -240,10 +242,10 @@ export default function Search() {
           <div>
             <p className="text-sm opacity-60">
               {loading ? (
-                'Recherche en cours...'
+                t('search.searching')
               ) : (
                 <>
-                  {totalProducts} résultat{totalProducts !== 1 ? 's' : ''} pour{' '}
+                  {t('search.resultsCount', { count: totalProducts })} pour{' '}
                   <span className="font-semibold text-base-content">"{query}"</span>
                 </>
               )}
@@ -287,14 +289,14 @@ export default function Search() {
             loading={loading}
             skeletonCount={ITEMS_PER_PAGE}
             onAddToCart={handleAddToCart}
-            emptyMessage={`Aucun résultat pour "${query}"`}
+            emptyMessage={t('search.noResultsFor', { query })}
           />
 
           {!loading && products.length === 0 && !error && (
             <EmptyState
               icon={PackageSearch}
-              title={`Aucun résultat pour "${query}"`}
-              description="Essayez avec des termes différents ou parcourez nos catégories."
+              title={t('search.noResultsFor', { query })}
+              description={t('search.tryDifferent')}
               action={
                 <div className="flex flex-col sm:flex-row gap-2">
                   <button
@@ -302,10 +304,10 @@ export default function Search() {
                     className="btn btn-outline btn-sm"
                     onClick={handleClearFilters}
                   >
-                    Effacer les filtres
+                    {t('common.resetFilters')}
                   </button>
                   <Link to="/products" className="btn btn-primary btn-sm gap-1">
-                    Voir tous les produits <ArrowRight size={14} />
+                    {t('search.viewAllProducts')} <ArrowRight size={14} />
                   </Link>
                 </div>
               }
@@ -314,7 +316,7 @@ export default function Search() {
 
           {!loading && products.length === 0 && !error && (
             <div className="mt-8 text-center">
-              <p className="text-sm opacity-50 mb-3">Suggestions :</p>
+              <p className="text-sm opacity-50 mb-3">{t('search.suggestions')} :</p>
               <div className="flex flex-wrap gap-2 justify-center">
                 {SUGGESTIONS.map((s) => (
                   <button
@@ -343,9 +345,9 @@ export default function Search() {
       ) : (
         <div className="text-center py-16">
           <SearchIcon size={64} className="text-base-content/20 mx-auto mb-4" />
-          <h2 className="text-xl font-bold mb-2">Que recherchez-vous ?</h2>
+          <h2 className="text-xl font-bold mb-2">{t('home.searchPlaceholder')}</h2>
           <p className="text-sm opacity-60 mb-6">
-            Tapez un terme de recherche pour trouver des produits.
+            {t('search.emptyDescription')}
           </p>
           <div className="flex flex-wrap gap-2 justify-center">
             {SUGGESTIONS.map((s) => (

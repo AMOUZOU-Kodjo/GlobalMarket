@@ -45,6 +45,8 @@ const SellerOrdersPage = lazy(() => import('../pages/Seller/SellerOrdersPage'))
 const SellerAnalyticsPage = lazy(() => import('../pages/Seller/SellerAnalyticsPage'))
 const SellerPayoutsPage = lazy(() => import('../pages/Seller/SellerPayoutsPage'))
 
+const SellerShopPage = lazy(() => import('../pages/Seller/SellerShopPage'))
+
 const AdminDashboardPage = lazy(() => import('../pages/Admin/AdminDashboardPage'))
 const AdminUsersPage = lazy(() => import('../pages/Admin/AdminUsersPage'))
 const AdminProductsPage = lazy(() => import('../pages/Admin/AdminProductsPage'))
@@ -111,6 +113,8 @@ export const router = createBrowserRouter([
       { path: 'orders', element: <SuspenseWrapper><ProtectedRoute><OrderHistoryPage /></ProtectedRoute></SuspenseWrapper> },
       { path: 'orders/:id', element: <SuspenseWrapper><ProtectedRoute><OrderDetailPage /></ProtectedRoute></SuspenseWrapper> },
       { path: 'order-confirmation/:id', element: <SuspenseWrapper><ProtectedRoute><OrderConfirmationPage /></ProtectedRoute></SuspenseWrapper> },
+
+      { path: 'shop/:slug', element: <SuspenseWrapper><SellerShopPage /></SuspenseWrapper> },
 
       { path: 'seller/register', element: <SuspenseWrapper><ProtectedRoute><SellerRegisterPage /></ProtectedRoute></SuspenseWrapper> },
       { path: 'seller/shop', element: <SuspenseWrapper><SellerRoute><SellerLayout /></SellerRoute></SuspenseWrapper>, children: [

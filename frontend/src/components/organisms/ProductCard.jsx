@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ShoppingCart, Star, Store } from "lucide-react";
 import { Badge } from "../atoms/Badge";
 import formatCurrency from "../../utils/formatCurrency";
 
 export function ProductCard({ product, onAddToCart, className = "" }) {
+  const { t } = useTranslation();
   const {
     _id,
     id,
@@ -129,7 +131,7 @@ export function ProductCard({ product, onAddToCart, className = "" }) {
             }}
           >
             <ShoppingCart size={16} />
-            {inStock ? "Ajouter au panier" : "Épuisé"}
+            {inStock ? t('products.addToCart') : t('products.outOfStock')}
           </button>
         </div>
       </div>

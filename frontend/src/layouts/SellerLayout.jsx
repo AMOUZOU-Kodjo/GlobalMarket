@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Outlet, NavLink, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useTranslation } from 'react-i18next'
 import {
   LayoutDashboard,
   Store,
@@ -17,19 +18,20 @@ import {
   Search,
 } from 'lucide-react'
 
-const NAV_ITEMS = [
-  { to: '/seller/shop', label: 'Dashboard', icon: LayoutDashboard, end: true },
-  { to: '/seller/shop/products', label: 'Produits', icon: Package },
-  { to: '/seller/shop/orders', label: 'Commandes', icon: ShoppingCart },
-  { to: '/seller/shop/analytics', label: 'Analyses', icon: BarChart3 },
-  { to: '/seller/shop/payouts', label: 'Virements', icon: Wallet },
-]
-
 export default function SellerLayout() {
   const { user, logout } = useAuth()
   const location = useLocation()
+  const { t } = useTranslation()
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+
+  const NAV_ITEMS = useMemo(() => [
+    { to: '/seller/shop', label: t('nav.admin'), icon: LayoutDashboard, end: true },
+    { to: '/seller/shop/products', label: t('nav.products'), icon: Package },
+    { to: '/seller/shop/orders', label: t('seller.orders'), icon: ShoppingCart },
+    { to: '/seller/shop/analytics', label: t('seller.statistics'), icon: BarChart3 },
+    { to: '/seller/shop/payouts', label: t('seller.payouts'), icon: Wallet },
+  ], [t])
 
   useEffect(() => {
     setMobileOpen(false)
@@ -102,10 +104,10 @@ export default function SellerLayout() {
         <button
           onClick={handleLogout}
           className={`btn btn-ghost btn-sm gap-3 w-full mt-2 text-error ${collapsed ? 'justify-center px-2' : ''}`}
-          title={collapsed ? 'Déconnexion' : undefined}
+          title={collapsed ? t('nav.logout') : undefined}
         >
           <LogOut size={18} />
-          {!collapsed && <span>Déconnexion</span>}
+          {!collapsed && <span>{t('nav.logout')}</span>}
         </button>
       </div>
     </div>
@@ -159,7 +161,7 @@ export default function SellerLayout() {
             <div className="flex-1 max-w-md hidden sm:block">
               <label className="input input-bordered flex items-center gap-2 w-full">
                 <Search size={16} className="opacity-50 shrink-0" />
-                <input type="text" placeholder="Rechercher..." className="grow" />
+                <input type="text" placeholder={t('nav.search')} className="grow" />
               </label>
             </div>
 
@@ -182,13 +184,13 @@ export default function SellerLayout() {
                   <li>
                     <Link to="/" className="gap-2">
                       <Store size={16} />
-                      Retour au site
+                      {t('common.back')}
                     </Link>
                   </li>
                   <li>
                     <button onClick={handleLogout} className="gap-2 text-error">
                       <LogOut size={16} />
-                      Déconnexion
+                      {t('nav.logout')}
                     </button>
                   </li>
                 </ul>

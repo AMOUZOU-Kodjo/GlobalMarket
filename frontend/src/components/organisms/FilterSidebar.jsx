@@ -1,4 +1,6 @@
 import { useState } from "react"
+import { Link } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 import {
   SlidersHorizontal,
   ChevronDown,
@@ -35,6 +37,7 @@ export function FilterSidebar({
   categories = [],
   className = "",
 }) {
+  const { t } = useTranslation()
   const [priceMin, setPriceMin] = useState(activeFilters.priceMin || "")
   const [priceMax, setPriceMax] = useState(activeFilters.priceMax || "")
   const [showMobile, setShowMobile] = useState(false)
@@ -79,7 +82,7 @@ export function FilterSidebar({
       <div className="flex items-center justify-between mb-5">
         <h3 className="font-bold text-base flex items-center gap-2">
           <SlidersHorizontal size={18} />
-          Filtres
+          {t('common.filter')}
           {activeCount > 0 && (
             <Badge variant="primary" size="xs">{activeCount}</Badge>
           )}
@@ -90,7 +93,7 @@ export function FilterSidebar({
             className="btn btn-ghost btn-xs text-error"
             onClick={handleClearAll}
           >
-            Tout effacer
+            {t('common.resetFilters')}
           </button>
         )}
       </div>
@@ -104,35 +107,30 @@ export function FilterSidebar({
       {!loading && (
         <>
           {categories.length > 0 && (
-            <FilterSection title="Catégories">
+            <FilterSection title={t('nav.categories')}>
               <div className="flex flex-col gap-0.5 max-h-64 overflow-y-auto pr-1">
                 {categories.map((cat) => {
                   const slug = cat.slug || cat.id
                   const name = cat.name || cat.label
                   const count = cat.productCount ?? cat.count
                   return (
-                    <label
+                    <Link
                       key={slug}
-                      className="flex items-center gap-2.5 cursor-pointer text-sm hover:bg-base-200/60 rounded-lg px-2.5 py-1.5 transition-colors"
+                      to={`/category/${slug}`}
+                      className="flex items-center gap-2.5 text-sm hover:bg-base-200/60 rounded-lg px-2.5 py-1.5 transition-colors"
                     >
-                      <input
-                        type="checkbox"
-                        className="checkbox checkbox-sm checkbox-primary"
-                        checked={(activeFilters.categories || []).includes(slug)}
-                        onChange={() => handleCategoryToggle(slug)}
-                      />
                       <span className="flex-1 truncate">{name}</span>
                       {count !== undefined && (
                         <span className="text-xs text-base-content/40 font-medium">({count})</span>
                       )}
-                    </label>
+                    </Link>
                   )
                 })}
               </div>
             </FilterSection>
           )}
 
-          <FilterSection title="Prix">
+          <FilterSection title={t('products.price')}>
             <div className="flex items-center gap-2">
               <input
                 type="number"
@@ -157,11 +155,11 @@ export function FilterSidebar({
               className="btn btn-primary btn-sm btn-block mt-3"
               onClick={handlePriceApply}
             >
-              Appliquer
+              {t('cart.apply')}
             </button>
           </FilterSection>
 
-          <FilterSection title="Note minimale">
+          <FilterSection title={t('common.rating')}>
             <div className="flex flex-col gap-1">
               {[4, 3, 2, 1].map((value) => (
                 <button
@@ -194,7 +192,7 @@ export function FilterSidebar({
           </FilterSection>
 
           {filters.brands && filters.brands.length > 0 && (
-            <FilterSection title="Marques">
+            <FilterSection title={t('products.brand')}>
               <div className="flex flex-col gap-0.5 max-h-60 overflow-y-auto pr-1">
                 {filters.brands.map((brand) => {
                   const value = typeof brand === "string" ? brand : brand.name || brand.slug
@@ -242,7 +240,7 @@ export function FilterSidebar({
           onClick={() => setShowMobile(true)}
         >
           <SlidersHorizontal size={16} />
-          Filtres
+          {t('common.filter')}
           {activeCount > 0 && (
             <Badge variant="primary" size="xs">{activeCount}</Badge>
           )}
@@ -256,7 +254,7 @@ export function FilterSidebar({
             />
             <div className="relative ml-auto w-full max-w-sm bg-base-100 h-full overflow-y-auto shadow-2xl">
               <div className="sticky top-0 bg-base-100 z-10 flex justify-between items-center px-5 py-4 border-b border-base-200">
-                <h3 className="font-bold text-lg">Filtres</h3>
+                <h3 className="font-bold text-lg">{t('common.filter')}</h3>
                 <button
                   type="button"
                   className="btn btn-ghost btn-sm btn-circle"
@@ -274,7 +272,7 @@ export function FilterSidebar({
                   className="btn btn-primary btn-block"
                   onClick={() => setShowMobile(false)}
                 >
-                  Voir les résultats
+                  {t('common.viewDetails')}
                 </button>
               </div>
             </div>

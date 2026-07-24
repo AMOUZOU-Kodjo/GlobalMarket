@@ -1,12 +1,14 @@
 import { useAuth } from '../context/AuthContext'
 import { User, Mail, Shield } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 export default function Profile() {
+  const { t } = useTranslation()
   const { user } = useAuth()
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
-      <h1 className="text-3xl font-bold mb-8">Mon Profil</h1>
+      <h1 className="text-3xl font-bold mb-8">{t('profile.title')}</h1>
 
       <div className="card bg-base-100 shadow-xl">
         <div className="card-body">
@@ -28,21 +30,21 @@ export default function Profile() {
             <div className="flex items-center gap-3">
               <User size={20} className="text-base-content/50" />
               <div>
-                <p className="text-sm text-base-content/50">Nom</p>
+                <p className="text-sm text-base-content/50">{t('admin.name')}</p>
                 <p className="font-medium">{user?.name}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Mail size={20} className="text-base-content/50" />
               <div>
-                <p className="text-sm text-base-content/50">Email</p>
+                <p className="text-sm text-base-content/50">{t('admin.email')}</p>
                 <p className="font-medium">{user?.email}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Shield size={20} className="text-base-content/50" />
               <div>
-                <p className="text-sm text-base-content/50">Rôle</p>
+                <p className="text-sm text-base-content/50">{t('admin.role')}</p>
                 <p className="font-medium capitalize">{user?.role}</p>
               </div>
             </div>

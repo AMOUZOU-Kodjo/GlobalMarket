@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import {
   Search, Package, AlertCircle, Eye, CheckCircle, XCircle, Ban,
@@ -12,15 +13,16 @@ import StatusBadge from '../../components/molecules/StatusBadge'
 import usePagination from '../../hooks/usePagination'
 import formatCurrency from '../../utils/formatCurrency'
 
-const STATUSES = [
-  { value: '', label: 'Tous les statuts' },
-  { value: 'active', label: 'Actif' },
-  { value: 'pending', label: 'En attente' },
-  { value: 'draft', label: 'Brouillon' },
-  { value: 'suspended', label: 'Suspendu' },
-]
-
 export default function AdminProductsPage() {
+  const { t } = useTranslation()
+
+  const STATUSES = [
+    { value: '', label: t('admin.allStatuses') },
+    { value: 'active', label: t('products.active') },
+    { value: 'pending', label: t('products.pending') },
+    { value: 'draft', label: t('products.draft') },
+    { value: 'suspended', label: t('products.suspended') },
+  ]
   const [products, setProducts] = useState([])
   const [totalItems, setTotalItems] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -46,7 +48,7 @@ export default function AdminProductsPage() {
       setProducts(list)
       setTotalItems(total)
     } catch (err) {
-      setError(err?.response?.data?.message || err?.message || 'Erreur lors du chargement des produits.')
+      setError(err?.response?.data?.message || err?.message || t('common.error'))
     } finally {
       setLoading(false)
     }
@@ -64,7 +66,7 @@ export default function AdminProductsPage() {
       setModerateTarget(null)
       fetchProducts()
     } catch (err) {
-      setError(err?.response?.data?.message || 'Erreur lors de la modération.')
+      setError(err?.response?.data?.message || t('common.error'))
     } finally {
       setModerating(false)
     }
@@ -93,7 +95,7 @@ export default function AdminProductsPage() {
     },
     {
       key: 'name',
-      label: 'Produit',
+      label: t('products.name'),
       sortable: true,
       render: (_, row) => (
         <div>
@@ -104,45 +106,45 @@ export default function AdminProductsPage() {
     },
     {
       key: 'sellerName',
-      label: 'Vendeur',
+      label: t('seller.customer'),
       render: (val, row) => (
         <span className="text-sm">{val || row.seller?.shopName || row.seller?.name || '—'}</span>
       ),
     },
     {
       key: 'price',
-      label: 'Prix',
+      label: t('products.price'),
       sortable: true,
       render: (val) => <span className="font-medium">{formatCurrency(val)}</span>,
     },
     {
       key: 'status',
-      label: 'Statut',
+      label: t('seller.status'),
       render: (val) => <StatusBadge status={val} type="product" />,
     },
     {
       key: 'actions',
-      label: 'Actions',
+      label: t('common.actions'),
       width: '100px',
       render: (_, row) => (
         <div className="flex gap-1">
           <button
             className="btn btn-ghost btn-xs text-success"
-            title="Approuver"
+            title={t('products.approve')}
             onClick={(e) => { e.stopPropagation(); setModerateTarget({ ...row, _action: 'approve' }) }}
           >
             <CheckCircle size={14} />
           </button>
           <button
             className="btn btn-ghost btn-xs text-error"
-            title="Rejeter"
+            title={t('products.reject')}
             onClick={(e) => { e.stopPropagation(); setModerateTarget({ ...row, _action: 'reject' }) }}
           >
             <XCircle size={14} />
           </button>
           <button
             className="btn btn-ghost btn-xs text-warning"
-            title="Suspendre"
+            title={t('products.suspend')}
             onClick={(e) => { e.stopPropagation(); setModerateTarget({ ...row, _action: 'suspend' }) }}
           >
             <Ban size={14} />
@@ -153,9 +155,9 @@ export default function AdminProductsPage() {
   ]
 
   const actionLabels = {
-    approve: { label: 'Approuver', color: 'btn-success', icon: CheckCircle },
-    reject: { label: 'Rejeter', color: 'btn-error', icon: XCircle },
-    suspend: { label: 'Suspendre', color: 'btn-warning', icon: Ban },
+    approve: { label: t('products.approve'), color: 'btn-success', icon: CheckCircle },
+    reject: { label: t('products.reject'), color: 'btn-error', icon: XCircle },
+    suspend: { label: t('products.suspend'), color: 'btn-warning', icon: Ban },
   }
 
   const currentAction = moderateTarget ? actionLabels[moderateTarget._action] : null
@@ -163,8 +165,8 @@ export default function AdminProductsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Produits</h1>
-        <p className="text-base-content/60 text-sm">Modérez et gérez les produits de la plateforme</p>
+        <h1 className="text-2xl font-bold">{t('admin.productManagement')}</h1>
+        <p className="text-base-content/60 text-sm">{t('admin.productsDescription')}</p>
       </div>
 
       {error && (
@@ -181,7 +183,7 @@ export default function AdminProductsPage() {
               <Search size={16} className="opacity-50" />
               <input
                 type="text"
-                placeholder="Rechercher un produit..."
+                placeholder={t('admin.searchProduct')}
                 className="grow"
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); goToPage(1) }}
@@ -202,7 +204,7 @@ export default function AdminProductsPage() {
             columns={columns}
             data={products}
             loading={loading}
-            emptyMessage="Aucun produit trouvé"
+            emptyMessage={t('admin.noProductsFound')}
           />
 
           {totalPages > 1 && (
@@ -220,11 +222,11 @@ export default function AdminProductsPage() {
       <Modal
         isOpen={!!moderateTarget}
         onClose={() => setModerateTarget(null)}
-        title={`${currentAction?.label || ''} le produit`}
+        title={`${currentAction?.label || ''} ${t('products.product')}`}
         actions={
           <>
             <button className="btn btn-ghost btn-sm" onClick={() => setModerateTarget(null)}>
-              Annuler
+              {t('common.cancel')}
             </button>
             <button
               className={`btn btn-sm ${currentAction?.color || ''}`}
@@ -242,7 +244,7 @@ export default function AdminProductsPage() {
         }
       >
         <p>
-          Voulez-vous vraiment <strong>{currentAction?.label?.toLowerCase()}</strong> le produit{' '}
+          {t('admin.confirmModerate')}{' '}{currentAction?.label?.toLowerCase()}{' '}{t('products.product')}{' '}
           <strong>{moderateTarget?.name}</strong> ?
         </p>
       </Modal>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   BarChart3, TrendingUp, DollarSign, ShoppingCart, Download,
   AlertCircle, Calendar, Users, Package,
@@ -12,6 +13,7 @@ import formatCurrency from '../../utils/formatCurrency'
 import formatNumber from '../../utils/formatNumber'
 
 export default function AdminReportsPage() {
+  const { t } = useTranslation()
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -29,7 +31,7 @@ export default function AdminReportsPage() {
         const res = await adminService.getReports('sales', params)
         setData(res.data || res)
       } catch (err) {
-        setError(err?.response?.data?.message || err?.message || 'Erreur lors du chargement des rapports.')
+        setError(err?.response?.data?.message || err?.message || t('admin.errorLoadingReports'))
       } finally {
         setLoading(false)
       }
@@ -40,7 +42,7 @@ export default function AdminReportsPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <Spinner size="lg" text="Chargement des rapports..." />
+        <Spinner size="lg" text={t('admin.loadingReports')} />
       </div>
     )
   }
@@ -58,25 +60,25 @@ export default function AdminReportsPage() {
 
   const kpis = [
     {
-      title: 'Revenus totaux',
+      title: t('admin.totalRevenue'),
       value: formatCurrency(data?.summary?.totalSales ?? data?.totalRevenue ?? 0),
       icon: DollarSign,
       color: 'success',
     },
     {
-      title: 'Commandes',
+      title: t('admin.totalOrders'),
       value: formatNumber(data?.summary?.totalOrders ?? data?.totalOrders ?? 0),
       icon: ShoppingCart,
       color: 'primary',
     },
     {
-      title: 'Utilisateurs',
+      title: t('admin.totalUsers'),
       value: formatNumber(data?.totalUsers ?? 0),
       icon: Users,
       color: 'accent',
     },
     {
-      title: 'Produits',
+      title: t('admin.totalProducts'),
       value: formatNumber(data?.totalProducts ?? 0),
       icon: Package,
       color: 'warning',
@@ -98,22 +100,22 @@ export default function AdminReportsPage() {
   const salesColumns = [
     {
       key: 'date',
-      label: 'Date',
+      label: t('common.date'),
       render: (val) => <span className="text-sm">{val}</span>,
     },
     {
       key: 'orders',
-      label: 'Commandes',
+      label: t('admin.orders'),
       render: (val) => formatNumber(val),
     },
     {
       key: 'revenue',
-      label: 'Revenus',
+      label: t('admin.revenue'),
       render: (val) => <span className="font-medium">{formatCurrency(val)}</span>,
     },
     {
       key: 'avgOrder',
-      label: 'Panier moyen',
+      label: t('admin.averageCart'),
       render: (val) => formatCurrency(val),
     },
   ]
@@ -127,17 +129,17 @@ export default function AdminReportsPage() {
     },
     {
       key: 'name',
-      label: 'Vendeur',
+      label: t('common.seller'),
       render: (val) => <span className="font-medium">{val}</span>,
     },
     {
       key: 'revenue',
-      label: 'Revenus',
+      label: t('admin.revenue'),
       render: (val) => formatCurrency(val),
     },
     {
       key: 'orders',
-      label: 'Commandes',
+      label: t('admin.orders'),
       render: (val) => formatNumber(val),
     },
   ]
@@ -151,17 +153,17 @@ export default function AdminReportsPage() {
     },
     {
       key: 'name',
-      label: 'Produit',
+      label: t('common.product'),
       render: (val) => <span className="font-medium">{val}</span>,
     },
     {
       key: 'revenue',
-      label: 'Revenus',
+      label: t('admin.revenue'),
       render: (val) => formatCurrency(val),
     },
     {
       key: 'unitsSold',
-      label: 'Vendus',
+      label: t('admin.unitsSold'),
       render: (val) => formatNumber(val),
     },
   ]
@@ -170,19 +172,19 @@ export default function AdminReportsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Rapports & Analytics</h1>
-          <p className="text-base-content/60 text-sm">Analysez les performances de la plateforme</p>
+          <h1 className="text-2xl font-bold">{t('admin.reportsAndAnalytics')}</h1>
+          <p className="text-base-content/60 text-sm">{t('admin.reportsDescription')}</p>
         </div>
         <button className="btn btn-outline btn-sm">
           <Download size={16} />
-          Exporter (CSV)
+          {t('admin.exportCSV')}
         </button>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 items-end">
         <div className="flex items-center gap-2">
           <Calendar size={16} className="text-base-content/50" />
-          <label className="text-sm">Du</label>
+          <label className="text-sm">{t('admin.from')}</label>
           <input
             type="date"
             className="input input-bordered input-sm"
@@ -191,7 +193,7 @@ export default function AdminReportsPage() {
           />
         </div>
         <div className="flex items-center gap-2">
-          <label className="text-sm">Au</label>
+          <label className="text-sm">{t('admin.to')}</label>
           <input
             type="date"
             className="input input-bordered input-sm"
@@ -203,7 +205,7 @@ export default function AdminReportsPage() {
           className="btn btn-ghost btn-sm"
           onClick={() => { setDateFrom(''); setDateTo('') }}
         >
-          Réinitialiser
+          {t('common.reset')}
         </button>
       </div>
 
@@ -215,12 +217,12 @@ export default function AdminReportsPage() {
 
       <div className="card bg-base-100 shadow-sm">
         <div className="card-body">
-          <h2 className="card-title text-base">Rapport des ventes</h2>
+          <h2 className="card-title text-base">{t('admin.salesReport')}</h2>
           {salesReport.length === 0 ? (
             <EmptyState
               icon={BarChart3}
-              title="Aucune donnée"
-              description="Aucune donnée de ventes pour la période sélectionnée."
+              title={t('common.noData')}
+              description={t('admin.noSalesData')}
             />
           ) : (
             <DataTable
@@ -235,9 +237,9 @@ export default function AdminReportsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="card bg-base-100 shadow-sm">
           <div className="card-body">
-            <h2 className="card-title text-base">Top vendeurs</h2>
+            <h2 className="card-title text-base">{t('admin.topSellers')}</h2>
             {topSellers.length === 0 ? (
-              <EmptyState icon={Users} title="Aucune donnée" />
+              <EmptyState icon={Users} title={t('common.noData')} />
             ) : (
               <DataTable
                 columns={topSellerColumns}
@@ -250,9 +252,9 @@ export default function AdminReportsPage() {
 
         <div className="card bg-base-100 shadow-sm">
           <div className="card-body">
-            <h2 className="card-title text-base">Top produits</h2>
+            <h2 className="card-title text-base">{t('admin.topProducts')}</h2>
             {topProducts.length === 0 ? (
-              <EmptyState icon={Package} title="Aucune donnée" />
+              <EmptyState icon={Package} title={t('common.noData')} />
             ) : (
               <DataTable
                 columns={topProductColumns}

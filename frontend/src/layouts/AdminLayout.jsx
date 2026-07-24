@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Outlet, NavLink, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useTranslation } from 'react-i18next'
 import {
   LayoutDashboard,
   Users,
@@ -19,21 +20,22 @@ import {
   Search,
 } from 'lucide-react'
 
-const NAV_ITEMS = [
-  { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
-  { to: '/admin/users', label: 'Utilisateurs', icon: Users },
-  { to: '/admin/products', label: 'Produits', icon: Package },
-  { to: '/admin/orders', label: 'Commandes', icon: ShoppingCart },
-  { to: '/admin/moderation', label: 'Modération', icon: Shield },
-  { to: '/admin/reports', label: 'Rapports', icon: BarChart3 },
-  { to: '/admin/settings', label: 'Paramètres', icon: Settings },
-]
-
 export default function AdminLayout() {
   const { user, logout } = useAuth()
   const location = useLocation()
+  const { t } = useTranslation()
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+
+  const NAV_ITEMS = useMemo(() => [
+    { to: '/admin', label: t('nav.admin'), icon: LayoutDashboard, end: true },
+    { to: '/admin/users', label: t('admin.userManagement'), icon: Users },
+    { to: '/admin/products', label: t('nav.products'), icon: Package },
+    { to: '/admin/orders', label: t('seller.orders'), icon: ShoppingCart },
+    { to: '/admin/moderation', label: t('admin.productModeration'), icon: Shield },
+    { to: '/admin/reports', label: t('admin.reports'), icon: BarChart3 },
+    { to: '/admin/settings', label: t('seller.settings'), icon: Settings },
+  ], [t])
 
   useEffect(() => {
     setMobileOpen(false)
@@ -106,10 +108,10 @@ export default function AdminLayout() {
         <button
           onClick={handleLogout}
           className={`btn btn-ghost btn-sm gap-3 w-full mt-2 text-error ${collapsed ? 'justify-center px-2' : ''}`}
-          title={collapsed ? 'Déconnexion' : undefined}
+          title={collapsed ? t('nav.logout') : undefined}
         >
           <LogOut size={18} />
-          {!collapsed && <span>Déconnexion</span>}
+          {!collapsed && <span>{t('nav.logout')}</span>}
         </button>
       </div>
     </div>
@@ -163,7 +165,7 @@ export default function AdminLayout() {
             <div className="flex-1 max-w-md hidden sm:block">
               <label className="input input-bordered flex items-center gap-2 w-full">
                 <Search size={16} className="opacity-50 shrink-0" />
-                <input type="text" placeholder="Rechercher..." className="grow" />
+                <input type="text" placeholder={t('nav.search')} className="grow" />
               </label>
             </div>
 
@@ -186,13 +188,13 @@ export default function AdminLayout() {
                   <li>
                     <Link to="/" className="gap-2">
                       <Store size={16} />
-                      Retour au site
+                      {t('common.back')}
                     </Link>
                   </li>
                   <li>
                     <button onClick={handleLogout} className="gap-2 text-error">
                       <LogOut size={16} />
-                      Déconnexion
+                      {t('nav.logout')}
                     </button>
                   </li>
                 </ul>

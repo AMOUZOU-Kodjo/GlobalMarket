@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ZoomIn, ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 
 export function ProductImageGallery({
@@ -7,6 +8,7 @@ export function ProductImageGallery({
   onImageChange,
   className = "",
 }) {
+  const { t } = useTranslation();
   const [internalIndex, setInternalIndex] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
@@ -47,7 +49,7 @@ export function ProductImageGallery({
   if (!images.length) {
     return (
       <div className={`bg-base-200 rounded-xl aspect-square flex items-center justify-center ${className}`}>
-        <span className="opacity-30 text-sm">Aucune image</span>
+        <span className="opacity-30 text-sm">{t('products.noImage')}</span>
       </div>
     );
   }
@@ -69,7 +71,7 @@ export function ProductImageGallery({
             >
               <img
                 src={img}
-                alt={`Vue ${index + 1}`}
+                alt={t('products.viewN', { n: index + 1 })}
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
@@ -87,7 +89,7 @@ export function ProductImageGallery({
         >
           <img
             src={currentImage}
-            alt="Produit principal"
+            alt={t('products.mainImage')}
             className={`w-full h-full object-cover transition-transform duration-200 ${
               isZoomed ? "scale-150" : "scale-100"
             }`}

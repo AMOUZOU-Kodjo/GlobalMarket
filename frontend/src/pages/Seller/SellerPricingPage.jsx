@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Header } from '../../components/organisms/Header'
 import {
   Check,
@@ -12,94 +13,95 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 
-const PLANS = [
-  {
-    name: 'Basic',
-    icon: Star,
-    price: '0',
-    period: '/mois',
-    commission: '12%',
-    color: 'primary',
-    description: 'Pour débuter sur GlobalMarket',
-    features: [
-      { text: 'Boutique personnalisée', included: true },
-      { text: 'Jusqu\'à 50 produits', included: true },
-      { text: 'Statistiques de base', included: true },
-      { text: 'Support par email', included: true },
-      { text: 'Photos produit (5 par article)', included: true },
-      { text: 'Promotions et réductions', included: false },
-      { text: 'Analytics avancés', included: false },
-      { text: 'Support prioritaire', included: false },
-      { text: 'Badge vendeur vérifié', included: false },
-      { text: 'API vendeur', included: false },
-    ],
-    popular: false,
-  },
-  {
-    name: 'Pro',
-    icon: Zap,
-    price: '29',
-    period: '/mois',
-    commission: '8%',
-    color: 'secondary',
-    description: 'Pour les vendeurs ambieux',
-    features: [
-      { text: 'Boutique personnalisée', included: true },
-      { text: 'Produits illimités', included: true },
-      { text: 'Statistiques de base', included: true },
-      { text: 'Support par email', included: true },
-      { text: 'Photos produit (10 par article)', included: true },
-      { text: 'Promotions et réductions', included: true },
-      { text: 'Analytics avancés', included: true },
-      { text: 'Support prioritaire', included: true },
-      { text: 'Badge vendeur vérifié', included: true },
-      { text: 'API vendeur', included: false },
-    ],
-    popular: true,
-  },
-  {
-    name: 'Enterprise',
-    icon: Crown,
-    price: '99',
-    period: '/mois',
-    commission: '5%',
-    color: 'accent',
-    description: 'Pour les grandes marques',
-    features: [
-      { text: 'Boutique personnalisée', included: true },
-      { text: 'Produits illimités', included: true },
-      { text: 'Statistiques de base', included: true },
-      { text: 'Support par email', included: true },
-      { text: 'Photos produit (illimitées)', included: true },
-      { text: 'Promotions et réductions', included: true },
-      { text: 'Analytics avancés', included: true },
-      { text: 'Support prioritaire', included: true },
-      { text: 'Badge vendeur vérifié', included: true },
-      { text: 'API vendeur', included: true },
-    ],
-    popular: false,
-  },
-]
-
-const FAQ_ITEMS = [
-  { q: 'Quand commence à payer la commission ?', a: 'La commission est prélevée uniquement sur chaque vente réalisée. Pas de vente, pas de commission.' },
-  { q: 'Puis-je changer de plan à tout moment ?', a: 'Oui, vous pouvez changer de plan à tout moment. Le changement prend effet immédiatement avec un prorata.' },
-  { q: 'Y a-t-il des frais d\'annulation ?', a: 'Non, vous pouvez annuler votre abonnement à tout moment sans frais.' },
-  { q: 'Comment sont calculés les frais de commission ?', a: 'La commission est calculée sur le montant total de la vente (produit + frais de livraison).' },
-  { q: 'Le plan Enterprise inclut-il un account manager ?', a: 'Oui, chaque compte Enterprise bénéficie d\'un account manager dédié.' },
-]
-
 export default function SellerPricingPage() {
+  const { t } = useTranslation()
   const [openFaq, setOpenFaq] = useState(null)
+
+  const PLANS = [
+    {
+      name: 'Basic',
+      icon: Star,
+      price: '0',
+      period: t('pricing.perMonth'),
+      commission: '12%',
+      color: 'primary',
+      description: t('pricing.basicDescription'),
+      features: [
+        { text: t('pricing.featureCustomShop'), included: true },
+        { text: t('pricing.featureUpTo50Products'), included: true },
+        { text: t('pricing.featureBasicStats'), included: true },
+        { text: t('pricing.featureEmailSupport'), included: true },
+        { text: t('pricing.featurePhotosPer5'), included: true },
+        { text: t('pricing.featurePromotions'), included: false },
+        { text: t('pricing.featureAdvancedAnalytics'), included: false },
+        { text: t('pricing.featurePrioritySupport'), included: false },
+        { text: t('pricing.featureVerifiedBadge'), included: false },
+        { text: t('pricing.featureSellerApi'), included: false },
+      ],
+      popular: false,
+    },
+    {
+      name: 'Pro',
+      icon: Zap,
+      price: '29',
+      period: t('pricing.perMonth'),
+      commission: '8%',
+      color: 'secondary',
+      description: t('pricing.proDescription'),
+      features: [
+        { text: t('pricing.featureCustomShop'), included: true },
+        { text: t('pricing.featureUnlimitedProducts'), included: true },
+        { text: t('pricing.featureBasicStats'), included: true },
+        { text: t('pricing.featureEmailSupport'), included: true },
+        { text: t('pricing.featurePhotosPer10'), included: true },
+        { text: t('pricing.featurePromotions'), included: true },
+        { text: t('pricing.featureAdvancedAnalytics'), included: true },
+        { text: t('pricing.featurePrioritySupport'), included: true },
+        { text: t('pricing.featureVerifiedBadge'), included: true },
+        { text: t('pricing.featureSellerApi'), included: false },
+      ],
+      popular: true,
+    },
+    {
+      name: 'Enterprise',
+      icon: Crown,
+      price: '99',
+      period: t('pricing.perMonth'),
+      commission: '5%',
+      color: 'accent',
+      description: t('pricing.enterpriseDescription'),
+      features: [
+        { text: t('pricing.featureCustomShop'), included: true },
+        { text: t('pricing.featureUnlimitedProducts'), included: true },
+        { text: t('pricing.featureBasicStats'), included: true },
+        { text: t('pricing.featureEmailSupport'), included: true },
+        { text: t('pricing.featurePhotosUnlimited'), included: true },
+        { text: t('pricing.featurePromotions'), included: true },
+        { text: t('pricing.featureAdvancedAnalytics'), included: true },
+        { text: t('pricing.featurePrioritySupport'), included: true },
+        { text: t('pricing.featureVerifiedBadge'), included: true },
+        { text: t('pricing.featureSellerApi'), included: true },
+      ],
+      popular: false,
+    },
+  ]
+
+  const FAQ_ITEMS = [
+    { q: t('pricing.faqCommissionWhen'), a: t('pricing.faqCommissionWhenAnswer') },
+    { q: t('pricing.faqChangePlan'), a: t('pricing.faqChangePlanAnswer') },
+    { q: t('pricing.faqCancellation'), a: t('pricing.faqCancellationAnswer') },
+    { q: t('pricing.faqCommissionCalc'), a: t('pricing.faqCommissionCalcAnswer') },
+    { q: t('pricing.faqEnterpriseManager'), a: t('pricing.faqEnterpriseManagerAnswer') },
+  ]
 
   return (
     <div className="flex flex-col">
       <section className="hero min-h-[50vh] bg-gradient-to-br from-primary/10 to-secondary/10">
         <div className="hero-content text-center">
           <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Tarifs & Commissions</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">{t('pricing.title')}</h1>
             <p className="text-lg text-base-content/70">
-              Choisissez le plan qui correspond à vos ambitions. Commencez gratuitement.
+              {t('pricing.subtitle')}
             </p>
           </div>
         </div>
@@ -117,7 +119,7 @@ export default function SellerPricingPage() {
                 >
                   {plan.popular && (
                     <div className="badge badge-secondary absolute -top-3 left-1/2 -translate-x-1/2 font-bold">
-                      Le plus populaire
+                      {t('pricing.mostPopular')}
                     </div>
                   )}
                   <div className="card-body">
@@ -129,7 +131,7 @@ export default function SellerPricingPage() {
                     <div className="mb-6">
                       <span className="text-4xl font-bold">{plan.price} €</span>
                       <span className="text-base-content/60">{plan.period}</span>
-                      <p className="text-sm text-primary font-medium mt-1">Commission : {plan.commission}</p>
+                      <p className="text-sm text-primary font-medium mt-1">{t('pricing.commissionLabel')} {plan.commission}</p>
                     </div>
                     <ul className="flex flex-col gap-2 mb-6">
                       {plan.features.map((feature) => (
@@ -149,7 +151,7 @@ export default function SellerPricingPage() {
                       to="/seller/register"
                       className={`btn ${plan.popular ? 'btn-secondary' : 'btn-outline'} w-full`}
                     >
-                      Commencer
+                      {t('pricing.getStarted')}
                       <ArrowRight size={16} />
                     </Link>
                   </div>
@@ -162,7 +164,7 @@ export default function SellerPricingPage() {
 
       <section className="py-16 px-4 bg-base-200">
         <div className="container mx-auto max-w-4xl">
-          <h2 className="text-3xl font-bold text-center mb-12">Questions Fréquentes</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">{t('pricing.faqTitle')}</h2>
           <div className="flex flex-col gap-3">
             {FAQ_ITEMS.map((item, i) => (
               <div key={i} className="collapse collapse-arrow bg-base-100 shadow-sm">
@@ -181,10 +183,10 @@ export default function SellerPricingPage() {
 
       <section className="py-16 px-4 bg-primary text-primary-content">
         <div className="container mx-auto text-center max-w-2xl">
-          <h2 className="text-3xl font-bold mb-4">Prêt à vendre ?</h2>
-          <p className="mb-8 opacity-90">Rejoignez des milliers de vendeurs qui font confiance à GlobalMarket.</p>
+          <h2 className="text-3xl font-bold mb-4">{t('pricing.ctaTitle')}</h2>
+          <p className="mb-8 opacity-90">{t('pricing.ctaSubtitle')}</p>
           <Link to="/seller/register" className="btn btn-lg bg-base-100 text-base-content border-none hover:bg-base-200">
-            Ouvrir votre boutique
+            {t('pricing.openShop')}
             <ArrowRight size={20} />
           </Link>
         </div>

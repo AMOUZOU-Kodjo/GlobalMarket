@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   ShoppingCart,
   Heart,
@@ -44,6 +45,8 @@ export default function ProductDetail() {
   const [reviewPage, setReviewPage] = useState(1)
   const [reviewTotalPages, setReviewTotalPages] = useState(1)
 
+  const { t } = useTranslation()
+
   const fetchProduct = useCallback(async () => {
     setLoading(true)
     setError(null)
@@ -69,7 +72,7 @@ export default function ProductDetail() {
         setProduct(mockProduct)
         setRelated(MOCK_PRODUCTS.all.filter(p => p.id !== mockProduct.id).slice(0, 4))
       } else {
-        setError(err.message || 'Produit non trouvé')
+        setError(err.message || t('common.productNotFound'))
         setProduct(null)
       }
     } finally {
@@ -132,7 +135,7 @@ export default function ProductDetail() {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-16 flex justify-center">
-        <Spinner size="lg" text="Chargement du produit..." />
+        <Spinner size="lg" text={t('common.loading')} />
       </div>
     )
   }
@@ -142,11 +145,11 @@ export default function ProductDetail() {
       <div className="container mx-auto px-4 py-16 text-center">
         <EmptyState
           icon={XCircle}
-          title="Produit non trouvé"
-          description={error || "Ce produit n'existe pas ou a été supprimé."}
+          title={t('common.productNotFound')}
+          description={error || t('common.productDeletedOrMissing')}
           action={
             <Link to="/products" className="btn btn-primary">
-              Retour aux produits
+              {t('common.back')}
             </Link>
           }
         />
@@ -168,8 +171,8 @@ export default function ProductDetail() {
     typeof product.category === 'string' ? product.category : product.category?.name || ''
 
   const breadcrumbItems = [
-    { label: 'Accueil', href: '/' },
-    { label: 'Produits', href: '/products' },
+    { label: t('nav.home'), href: '/' },
+    { label: t('nav.products'), href: '/products' },
   ]
   if (categoryName) {
     breadcrumbItems.push({
@@ -207,7 +210,7 @@ export default function ProductDetail() {
             </div>
             {(product.reviewCount ?? product._count?.reviews ?? 0) > 0 && (
               <span className="text-sm opacity-60">
-                ({product.reviewCount ?? product._count?.reviews ?? 0} avis)
+                ({product.reviewCount ?? product._count?.reviews ?? 0} {t('products.reviewsCount')})
               </span>
             )}
           </div>
@@ -230,17 +233,17 @@ export default function ProductDetail() {
             {inStock ? (
               <>
                 <CheckCircle size={16} className="text-success" />
-                <span className="text-sm text-success font-medium">En stock</span>
+                <span className="text-sm text-success font-medium">{t('products.inStock')}</span>
                 {product.stock !== undefined && product.stock <= 10 && (
                   <span className="text-xs opacity-60">
-                    (Plus que {product.stock} en stock)
+                    ({t('products.limitedStock', { count: product.stock })})
                   </span>
                 )}
               </>
             ) : (
               <>
                 <AlertTriangle size={16} className="text-error" />
-                <span className="text-sm text-error font-medium">Rupture de stock</span>
+                <span className="text-sm text-error font-medium">{t('products.outOfStock')}</span>
               </>
             )}
           </div>
@@ -252,7 +255,7 @@ export default function ProductDetail() {
           <div className="divider my-1" />
 
           <div className="flex items-center gap-4">
-            <span className="text-sm font-medium">Quantité</span>
+            <span className="text-sm font-medium">{t('products.quantity')}</span>
             <QuantitySelector
               value={quantity}
               onChange={setQuantity}
@@ -274,12 +277,12 @@ export default function ProductDetail() {
               {addedToCart ? (
                 <>
                   <CheckCircle size={20} />
-                  Ajouté au panier
+                  {t('home.productAdded')}
                 </>
               ) : (
                 <>
                   <ShoppingCart size={20} />
-                  Ajouter au panier
+                  {t('products.addToCart')}
                 </>
               )}
             </button>
@@ -290,7 +293,7 @@ export default function ProductDetail() {
                 wishlist ? 'btn-error text-error' : ''
               }`}
               onClick={() => setWishlist(!wishlist)}
-              aria-label={wishlist ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+              aria-label={wishlist ? t('profile.removeWishlist') : t('profile.addWishlist')}
             >
               <Heart size={20} fill={wishlist ? 'currentColor' : 'none'} />
             </button>
@@ -300,14 +303,14 @@ export default function ProductDetail() {
                 type="button"
                 className="btn btn-outline btn-lg btn-circle"
                 onClick={handleShare}
-                aria-label="Partager"
+                aria-label={t('common.share')}
               >
                 <Share2 size={20} />
               </button>
               {shareTooltip && (
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-base-content text-base-100 text-xs rounded-lg whitespace-nowrap">
                   <Copy size={12} className="inline mr-1" />
-                  Lien copié !
+                  {t('common.linkCopied')}
                 </div>
               )}
             </div>
@@ -320,8 +323,8 @@ export default function ProductDetail() {
       <div className="mb-8">
         <Tabs
           tabs={[
-            { id: 'description', label: 'Description' },
-            { id: 'reviews', label: 'Avis', badge: (product.reviewCount ?? product._count?.reviews) || reviews.length || undefined },
+            { id: 'description', label: t('products.description') },
+            { id: 'reviews', label: t('products.reviews'), badge: (product.reviewCount ?? product._count?.reviews) || reviews.length || undefined },
           ]}
           activeTab={activeTab}
           onTabChange={setActiveTab}
@@ -336,8 +339,8 @@ export default function ProductDetail() {
               </div>
             ) : (
               <EmptyState
-                title="Aucune description"
-                description="Le vendeur n'a pas encore ajouté de description pour ce produit."
+                title={t('products.noDescription')}
+                description={t('products.noDescriptionMessage')}
               />
             )}
           </div>

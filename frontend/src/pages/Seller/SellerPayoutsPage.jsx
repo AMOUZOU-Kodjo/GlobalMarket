@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   Wallet, CreditCard, AlertCircle, Save, Calendar, ArrowDownLeft,
 } from 'lucide-react'
@@ -10,37 +11,8 @@ import EmptyState from '../../components/atoms/EmptyState'
 import formatCurrency from '../../utils/formatCurrency'
 import { formatDate } from '../../utils/formatDate'
 
-const PAYOUT_COLUMNS = [
-  {
-    key: 'createdAt',
-    label: 'Date',
-    render: (val) => <span className="text-sm">{formatDate(val)}</span>,
-  },
-  {
-    key: 'amount',
-    label: 'Montant',
-    render: (val) => <span className="font-medium">{formatCurrency(val)}</span>,
-  },
-  {
-    key: 'status',
-    label: 'Statut',
-    render: (val) => {
-      const variants = { completed: 'badge-success', pending: 'badge-warning', processing: 'badge-info' }
-      return (
-        <span className={`badge badge-sm ${variants[val] || 'badge-ghost'}`}>
-          {val === 'completed' ? 'Effectué' : val === 'pending' ? 'En attente' : val === 'processing' ? 'En cours' : val}
-        </span>
-      )
-    },
-  },
-  {
-    key: 'method',
-    label: 'Méthode',
-    render: (val) => <span className="text-sm opacity-70">{val || 'Virement bancaire'}</span>,
-  },
-]
-
 export default function SellerPayoutsPage() {
+  const { t } = useTranslation()
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -48,6 +20,36 @@ export default function SellerPayoutsPage() {
   const [success, setSuccess] = useState(null)
   const [bankForm, setBankForm] = useState({ iban: '', bic: '', accountHolder: '' })
   const [bankErrors, setBankErrors] = useState({})
+
+  const PAYOUT_COLUMNS = [
+    {
+      key: 'createdAt',
+      label: t('common.date'),
+      render: (val) => <span className="text-sm">{formatDate(val)}</span>,
+    },
+    {
+      key: 'amount',
+      label: t('common.amount'),
+      render: (val) => <span className="font-medium">{formatCurrency(val)}</span>,
+    },
+    {
+      key: 'status',
+      label: t('products.status'),
+      render: (val) => {
+        const variants = { completed: 'badge-success', pending: 'badge-warning', processing: 'badge-info' }
+        return (
+          <span className={`badge badge-sm ${variants[val] || 'badge-ghost'}`}>
+            {val === 'completed' ? t('payouts.completed') : val === 'pending' ? t('payouts.pending') : val === 'processing' ? t('payouts.processing') : val}
+          </span>
+        )
+      },
+    },
+    {
+      key: 'method',
+      label: t('payouts.method'),
+      render: (val) => <span className="text-sm opacity-70">{val || t('payouts.bankTransfer')}</span>,
+    },
+  ]
 
   useEffect(() => {
     const fetchPayouts = async () => {
@@ -63,13 +65,13 @@ export default function SellerPayoutsPage() {
           })
         }
       } catch (err) {
-        setError(err?.response?.data?.message || err?.message || 'Erreur lors du chargement des virements.')
+        setError(err?.response?.data?.message || err?.message || t('errors.payoutsLoad'))
       } finally {
         setLoading(false)
       }
     }
     fetchPayouts()
-  }, [])
+  }, [t])
 
   const handleBankChange = (e) => {
     const { name, value } = e.target
@@ -79,9 +81,9 @@ export default function SellerPayoutsPage() {
 
   const validateBank = () => {
     const errs = {}
-    if (!bankForm.iban.trim()) errs.iban = 'L\'IBAN est requis'
-    if (!bankForm.bic.trim()) errs.bic = 'Le code BIC/SWIFT est requis'
-    if (!bankForm.accountHolder.trim()) errs.accountHolder = 'Le titulaire du compte est requis'
+    if (!bankForm.iban.trim()) errs.iban = t('validation.ibanRequired')
+    if (!bankForm.bic.trim()) errs.bic = t('validation.bicRequired')
+    if (!bankForm.accountHolder.trim()) errs.accountHolder = t('validation.accountHolderRequired')
     setBankErrors(errs)
     return Object.keys(errs).length === 0
   }
@@ -95,10 +97,10 @@ export default function SellerPayoutsPage() {
     setSuccess(null)
     try {
       await sellerService.updateBankAccount(bankForm)
-      setSuccess('Coordonnées bancaires enregistrées avec succès.')
+      setSuccess(t('payouts.bankSaved'))
       setTimeout(() => setSuccess(null), 3000)
     } catch (err) {
-      setError(err?.response?.data?.message || 'Erreur lors de l\'enregistrement.')
+      setError(err?.response?.data?.message || t('errors.payoutsSave'))
     } finally {
       setSaving(false)
     }
@@ -107,7 +109,7 @@ export default function SellerPayoutsPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <Spinner size="lg" text="Chargement des virements..." />
+        <Spinner size="lg" text={t('common.loadingPayouts')} />
       </div>
     )
   }
@@ -119,8 +121,8 @@ export default function SellerPayoutsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Virements</h1>
-        <p className="text-base-content/60 text-sm">Gérez vos revenus et coordonnées bancaires</p>
+        <h1 className="text-2xl font-bold">{t('payouts.title')}</h1>
+        <p className="text-base-content/60 text-sm">{t('payouts.subtitle')}</p>
       </div>
 
       {error && (
@@ -139,21 +141,21 @@ export default function SellerPayoutsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="card bg-base-100 shadow-sm border-l-4 border-l-success">
           <div className="card-body p-4">
-            <p className="text-sm opacity-60">Solde disponible</p>
+            <p className="text-sm opacity-60">{t('payouts.availableBalance')}</p>
             <p className="text-2xl font-bold">{formatCurrency(balance)}</p>
           </div>
         </div>
         <div className="card bg-base-100 shadow-sm border-l-4 border-l-primary">
           <div className="card-body p-4">
-            <p className="text-sm opacity-60">Prochain virement</p>
+            <p className="text-sm opacity-60">{t('payouts.nextPayout')}</p>
             <p className="text-lg font-bold">
-              {nextPayoutDate ? formatDate(nextPayoutDate) : 'Non défini'}
+              {nextPayoutDate ? formatDate(nextPayoutDate) : t('common.notDefined')}
             </p>
           </div>
         </div>
         <div className="card bg-base-100 shadow-sm border-l-4 border-l-accent">
           <div className="card-body p-4">
-            <p className="text-sm opacity-60">Total virements</p>
+            <p className="text-sm opacity-60">{t('payouts.totalPayouts')}</p>
             <p className="text-lg font-bold">{payouts.length}</p>
           </div>
         </div>
@@ -164,16 +166,16 @@ export default function SellerPayoutsPage() {
           <div className="card-body">
             <h2 className="card-title text-base">
               <CreditCard size={18} />
-              Coordonnées bancaires
+              {t('payouts.bankDetails')}
             </h2>
             <form onSubmit={handleBankSubmit} className="space-y-4">
-              <FormField label="Titulaire du compte" required error={bankErrors.accountHolder} htmlFor="accountHolder">
+              <FormField label={t('payouts.accountHolder')} required error={bankErrors.accountHolder} htmlFor="accountHolder">
                 <input
                   id="accountHolder"
                   name="accountHolder"
                   type="text"
                   className="input input-bordered w-full"
-                  placeholder="Jean Dupont"
+                  placeholder={t('payouts.accountHolderPlaceholder')}
                   value={bankForm.accountHolder}
                   onChange={handleBankChange}
                 />
@@ -213,7 +215,7 @@ export default function SellerPayoutsPage() {
                 ) : (
                   <Save size={14} />
                 )}
-                Enregistrer
+                {t('common.save')}
               </button>
             </form>
           </div>
@@ -223,13 +225,13 @@ export default function SellerPayoutsPage() {
           <div className="card-body">
             <h2 className="card-title text-base">
               <ArrowDownLeft size={18} />
-              Historique des virements
+              {t('payouts.history')}
             </h2>
             {payouts.length === 0 ? (
               <EmptyState
                 icon={Wallet}
-                title="Aucun virement"
-                description="Vous n'avez pas encore reçu de virement."
+                title={t('payouts.noPayouts')}
+                description={t('payouts.noPayoutsDescription')}
               />
             ) : (
               <DataTable

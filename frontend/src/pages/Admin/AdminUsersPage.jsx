@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   Search, Users, AlertCircle, UserCheck, UserX, Shield, Eye,
 } from 'lucide-react'
@@ -11,21 +12,8 @@ import StatusBadge from '../../components/molecules/StatusBadge'
 import usePagination from '../../hooks/usePagination'
 import { formatDate } from '../../utils/formatDate'
 
-const ROLES = [
-  { value: '', label: 'Tous les rôles' },
-  { value: 'user', label: 'Utilisateur' },
-  { value: 'seller', label: 'Vendeur' },
-  { value: 'admin', label: 'Admin' },
-]
-
-const STATUSES = [
-  { value: '', label: 'Tous les statuts' },
-  { value: 'active', label: 'Actif' },
-  { value: 'inactive', label: 'Inactif' },
-  { value: 'banned', label: 'Banni' },
-]
-
 export default function AdminUsersPage() {
+  const { t } = useTranslation()
   const [users, setUsers] = useState([])
   const [totalItems, setTotalItems] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -35,6 +23,20 @@ export default function AdminUsersPage() {
   const [statusFilter, setStatusFilter] = useState('')
   const [userDetail, setUserDetail] = useState(null)
   const [detailLoading, setDetailLoading] = useState(false)
+
+  const ROLES = [
+    { value: '', label: t('admin.allRoles') },
+    { value: 'user', label: t('common.buyer') },
+    { value: 'seller', label: t('common.seller') },
+    { value: 'admin', label: t('common.admin') },
+  ]
+
+  const STATUSES = [
+    { value: '', label: t('admin.allStatuses') },
+    { value: 'active', label: t('products.active') },
+    { value: 'inactive', label: t('products.inactiveStatus') },
+    { value: 'banned', label: t('admin.banned') },
+  ]
 
   const { page, totalPages, goToPage } = usePagination(totalItems, 10)
 
@@ -51,7 +53,7 @@ export default function AdminUsersPage() {
       setUsers(data.users || data || [])
       setTotalItems(data.total || (data.users || data || []).length)
     } catch (err) {
-      setError(err?.response?.data?.message || err?.message || 'Erreur lors du chargement des utilisateurs.')
+      setError(err?.response?.data?.message || err?.message || t('admin.errorLoadingUsers'))
     } finally {
       setLoading(false)
     }
@@ -67,7 +69,7 @@ export default function AdminUsersPage() {
       await adminService.updateUserStatus(userId, newStatus)
       fetchUsers()
     } catch (err) {
-      setError(err?.response?.data?.message || 'Erreur lors de la mise à jour du statut.')
+      setError(err?.response?.data?.message || t('admin.errorUpdatingStatus'))
     }
   }
 
@@ -76,7 +78,7 @@ export default function AdminUsersPage() {
       await adminService.updateUserRole(userId, newRole)
       fetchUsers()
     } catch (err) {
-      setError(err?.response?.data?.message || 'Erreur lors du changement de rôle.')
+      setError(err?.response?.data?.message || t('admin.errorChangingRole'))
     }
   }
 
@@ -110,7 +112,7 @@ export default function AdminUsersPage() {
     },
     {
       key: 'name',
-      label: 'Nom',
+      label: t('common.name'),
       sortable: true,
       render: (val, row) => (
         <div>
@@ -121,33 +123,33 @@ export default function AdminUsersPage() {
     },
     {
       key: 'role',
-      label: 'Rôle',
+      label: t('common.role'),
       render: (val, row) => (
         <select
           className="select select-bordered select-xs"
           value={val || 'user'}
           onChange={(e) => handleRoleChange(row._id || row.id, e.target.value)}
         >
-          <option value="user">Utilisateur</option>
-          <option value="seller">Vendeur</option>
-          <option value="admin">Admin</option>
+          <option value="user">{t('common.buyer')}</option>
+          <option value="seller">{t('common.seller')}</option>
+          <option value="admin">{t('common.admin')}</option>
         </select>
       ),
     },
     {
       key: 'status',
-      label: 'Statut',
+      label: t('common.status'),
       render: (val) => <StatusBadge status={val} type="user" />,
     },
     {
       key: 'createdAt',
-      label: 'Inscrit le',
+      label: t('admin.registeredAt'),
       sortable: true,
       render: (val) => <span className="text-sm">{formatDate(val)}</span>,
     },
     {
       key: 'actions',
-      label: 'Actions',
+      label: t('common.actions'),
       width: '100px',
       render: (_, row) => (
         <div className="flex gap-1">
@@ -160,7 +162,7 @@ export default function AdminUsersPage() {
           <button
             className={`btn btn-ghost btn-xs ${row.status === 'banned' ? 'text-success' : 'text-error'}`}
             onClick={(e) => { e.stopPropagation(); handleStatusToggle(row._id || row.id, row.status) }}
-            title={row.status === 'banned' ? 'Débannir' : 'Bannir'}
+            title={row.status === 'banned' ? t('admin.unban') : t('admin.ban')}
           >
             {row.status === 'banned' ? <UserCheck size={14} /> : <UserX size={14} />}
           </button>
@@ -172,8 +174,8 @@ export default function AdminUsersPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Utilisateurs</h1>
-        <p className="text-base-content/60 text-sm">Gérez les comptes utilisateurs de la plateforme</p>
+        <h1 className="text-2xl font-bold">{t('admin.userManagement')}</h1>
+        <p className="text-base-content/60 text-sm">{t('admin.usersDescription')}</p>
       </div>
 
       {error && (
@@ -190,7 +192,7 @@ export default function AdminUsersPage() {
               <Search size={16} className="opacity-50" />
               <input
                 type="text"
-                placeholder="Rechercher un utilisateur..."
+                placeholder={t('admin.searchUser')}
                 className="grow"
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); goToPage(1) }}
@@ -220,7 +222,7 @@ export default function AdminUsersPage() {
             columns={columns}
             data={users}
             loading={loading}
-            emptyMessage="Aucun utilisateur trouvé"
+            emptyMessage={t('admin.noUsersFound')}
           />
 
           {totalPages > 1 && (
@@ -238,7 +240,7 @@ export default function AdminUsersPage() {
       <Modal
         isOpen={!!userDetail}
         onClose={() => setUserDetail(null)}
-        title="Détails de l'utilisateur"
+        title={t('admin.userDetails')}
       >
         {detailLoading ? (
           <div className="flex justify-center py-8">
@@ -262,19 +264,19 @@ export default function AdminUsersPage() {
             <div className="divider my-1" />
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
-                <span className="text-base-content/50">Rôle</span>
+                <span className="text-base-content/50">{t('common.role')}</span>
                 <p className="font-medium capitalize">{userDetail.role || 'user'}</p>
               </div>
               <div>
-                <span className="text-base-content/50">Statut</span>
+                <span className="text-base-content/50">{t('common.status')}</span>
                 <p><StatusBadge status={userDetail.status} type="user" /></p>
               </div>
               <div>
-                <span className="text-base-content/50">Inscrit le</span>
+                <span className="text-base-content/50">{t('admin.registeredAt')}</span>
                 <p className="font-medium">{formatDate(userDetail.createdAt)}</p>
               </div>
               <div>
-                <span className="text-base-content/50">Téléphone</span>
+                <span className="text-base-content/50">{t('common.phone')}</span>
                 <p className="font-medium">{userDetail.phone || '—'}</p>
               </div>
             </div>

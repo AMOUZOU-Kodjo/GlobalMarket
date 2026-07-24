@@ -1,24 +1,15 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Store, User, Building2, Globe, Tag, FileText, AlertCircle, CheckCircle } from 'lucide-react'
 import sellerService from '../../services/seller.service'
 import FormField from '../../components/molecules/FormField'
 import Spinner from '../../components/atoms/Spinner'
 import Alert from '../../components/atoms/Alert'
 
-const CATEGORIES = [
-  'Électronique', 'Mode', 'Maison & Jardin', 'Beauté & Santé',
-  'Sports & Loisirs', 'Auto & Moto', 'Alimentation', 'Art & Artisanat',
-  'Livres & Médias', 'Jouets & Enfants', 'Animaux', 'Autre',
-]
-
-const COUNTRIES = [
-  'Sénégal', 'Côte d\'Ivoire', 'Mali', 'Burkina Faso', 'Guinée',
-  'Cameroun', 'Bénin', 'Togo', 'Niger', 'Congo', 'Gabon', 'France',
-]
-
 export default function SellerRegisterPage() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(false)
@@ -32,6 +23,20 @@ export default function SellerRegisterPage() {
   })
   const [errors, setErrors] = useState({})
 
+  const CATEGORIES = [
+    t('categories.electronics'), t('categories.fashion'), t('categories.homeGarden'),
+    t('categories.beautyHealth'), t('categories.sportsLeisure'), t('categories.autoMoto'),
+    t('categories.food'), t('categories.artCraft'), t('categories.booksMedia'),
+    t('categories.toysKids'), t('categories.animals'), t('categories.other'),
+  ]
+
+  const COUNTRIES = [
+    t('countries.senegal'), t('countries.ivoryCoast'), t('countries.mali'),
+    t('countries.burkinaFaso'), t('countries.guinea'), t('countries.cameroon'),
+    t('countries.benin'), t('countries.togo'), t('countries.niger'),
+    t('countries.congo'), t('countries.gabon'), t('countries.france'),
+  ]
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
     setForm((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }))
@@ -40,11 +45,11 @@ export default function SellerRegisterPage() {
 
   const validate = () => {
     const errs = {}
-    if (!form.shopName.trim()) errs.shopName = 'Le nom de la boutique est requis'
-    if (!form.description.trim()) errs.description = 'La description est requise'
-    if (!form.category) errs.category = 'La catégorie est requise'
-    if (!form.country) errs.country = 'Le pays est requis'
-    if (!form.acceptTerms) errs.acceptTerms = 'Vous devez accepter les conditions'
+    if (!form.shopName.trim()) errs.shopName = t('validation.shopNameRequired')
+    if (!form.description.trim()) errs.description = t('validation.descriptionRequired')
+    if (!form.category) errs.category = t('validation.categoryRequired')
+    if (!form.country) errs.country = t('validation.countryRequired')
+    if (!form.acceptTerms) errs.acceptTerms = t('validation.termsRequired')
     setErrors(errs)
     return Object.keys(errs).length === 0
   }
@@ -66,7 +71,7 @@ export default function SellerRegisterPage() {
       setSuccess(true)
       setTimeout(() => navigate('/seller/shop'), 1500)
     } catch (err) {
-      setError(err?.response?.data?.message || err?.message || 'Une erreur est survenue lors de l\'inscription.')
+      setError(err?.response?.data?.message || err?.message || t('errors.register'))
     } finally {
       setLoading(false)
     }
@@ -80,9 +85,9 @@ export default function SellerRegisterPage() {
             <div className="text-success mb-4">
               <CheckCircle size={64} strokeWidth={1.5} />
             </div>
-            <h2 className="card-title text-xl">Inscription réussie !</h2>
+            <h2 className="card-title text-xl">{t('sellerRegister.successTitle')}</h2>
             <p className="text-base-content/60 mt-2">
-              Votre compte vendeur a été créé. Vous allez être redirigé vers votre tableau de bord.
+              {t('sellerRegister.successMessage')}
             </p>
             <Spinner size="sm" className="mt-4" />
           </div>
@@ -96,9 +101,9 @@ export default function SellerRegisterPage() {
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8">
           <Store size={48} className="mx-auto text-primary mb-3" strokeWidth={1.5} />
-          <h1 className="text-3xl font-bold">Devenir vendeur</h1>
+          <h1 className="text-3xl font-bold">{t('sellerRegister.title')}</h1>
           <p className="text-base-content/60 mt-2">
-            Créez votre boutique et commencez à vendre sur GlobalMarket
+            {t('sellerRegister.subtitle')}
           </p>
         </div>
 
@@ -112,7 +117,7 @@ export default function SellerRegisterPage() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <FormField label="Nom de la boutique" required error={errors.shopName} htmlFor="shopName">
+              <FormField label={t('sellerRegister.shopName')} required error={errors.shopName} htmlFor="shopName">
                 <label className="input input-bordered flex items-center gap-2">
                   <Store size={16} className="opacity-50" />
                   <input
@@ -120,26 +125,26 @@ export default function SellerRegisterPage() {
                     name="shopName"
                     type="text"
                     className="grow"
-                    placeholder="Ma Super Boutique"
+                    placeholder={t('sellerRegister.shopNamePlaceholder')}
                     value={form.shopName}
                     onChange={handleChange}
                   />
                 </label>
               </FormField>
 
-              <FormField label="Description" required error={errors.description} htmlFor="description">
+              <FormField label={t('products.description')} required error={errors.description} htmlFor="description">
                 <textarea
                   id="description"
                   name="description"
                   className="textarea textarea-bordered w-full min-h-[100px]"
-                  placeholder="Décrivez votre boutique et vos produits..."
+                  placeholder={t('sellerRegister.descriptionPlaceholder')}
                   value={form.description}
                   onChange={handleChange}
                 />
               </FormField>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FormField label="Catégorie" required error={errors.category} htmlFor="category">
+                <FormField label={t('products.category')} required error={errors.category} htmlFor="category">
                   <select
                     id="category"
                     name="category"
@@ -147,14 +152,14 @@ export default function SellerRegisterPage() {
                     value={form.category}
                     onChange={handleChange}
                   >
-                    <option value="">Sélectionner</option>
+                    <option value="">{t('common.select')}</option>
                     {CATEGORIES.map((cat) => (
                       <option key={cat} value={cat}>{cat}</option>
                     ))}
                   </select>
                 </FormField>
 
-                <FormField label="Pays" required error={errors.country} htmlFor="country">
+                <FormField label={t('sellerRegister.country')} required error={errors.country} htmlFor="country">
                   <label className="input input-bordered flex items-center gap-2">
                     <Globe size={16} className="opacity-50" />
                     <select
@@ -164,7 +169,7 @@ export default function SellerRegisterPage() {
                       value={form.country}
                       onChange={handleChange}
                     >
-                      <option value="">Sélectionner</option>
+                      <option value="">{t('common.select')}</option>
                       {COUNTRIES.map((c) => (
                         <option key={c} value={c}>{c}</option>
                       ))}
@@ -173,7 +178,7 @@ export default function SellerRegisterPage() {
                 </FormField>
               </div>
 
-              <FormField label="Type d'entreprise" required htmlFor="businessType">
+              <FormField label={t('sellerRegister.businessType')} required htmlFor="businessType">
                 <div className="flex gap-4">
                   <label className="label cursor-pointer gap-2">
                     <input
@@ -185,7 +190,7 @@ export default function SellerRegisterPage() {
                       onChange={handleChange}
                     />
                     <span className="label-text flex items-center gap-1">
-                      <User size={16} /> Particulier
+                      <User size={16} /> {t('sellerRegister.individual')}
                     </span>
                   </label>
                   <label className="label cursor-pointer gap-2">
@@ -198,7 +203,7 @@ export default function SellerRegisterPage() {
                       onChange={handleChange}
                     />
                     <span className="label-text flex items-center gap-1">
-                      <Building2 size={16} /> Entreprise
+                      <Building2 size={16} /> {t('sellerRegister.company')}
                     </span>
                   </label>
                 </div>
@@ -214,7 +219,7 @@ export default function SellerRegisterPage() {
                     onChange={handleChange}
                   />
                   <span className="label-text">
-                    J'accepte les <a href="/terms" className="link link-primary" target="_blank">conditions générales</a> pour les vendeurs
+                    {t('sellerRegister.acceptTerms')} <a href="/terms" className="link link-primary" target="_blank">{t('sellerRegister.termsLink')}</a> {t('sellerRegister.forSellers')}
                   </span>
                 </label>
                 {errors.acceptTerms && (
@@ -230,12 +235,12 @@ export default function SellerRegisterPage() {
                 {loading ? (
                   <>
                     <span className="loading loading-spinner loading-sm" />
-                    Inscription en cours...
+                    {t('common.registering')}
                   </>
                 ) : (
                   <>
                     <Store size={18} />
-                    Créer ma boutique
+                    {t('sellerRegister.createShop')}
                   </>
                 )}
               </button>

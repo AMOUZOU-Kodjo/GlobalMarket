@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   Send,
   CreditCard,
@@ -48,74 +49,6 @@ function LinkedinIcon({ size = 18 }) {
   )
 }
 
-const FOOTER_COLUMNS = [
-  {
-    title: 'À propos',
-    links: [
-      { label: 'Qui sommes-nous', href: '/about' },
-      { label: 'Carrières', href: '/careers' },
-      { label: 'Presse', href: '/press' },
-      { label: 'Blog', href: '/blog' },
-      { label: 'Partenaires', href: '/partners' },
-    ],
-  },
-  {
-    title: 'Acheter',
-    links: [
-      { label: 'Comment ça marche', href: '/how-it-works' },
-      { label: 'Protection acheteur', href: '/buyer-protection' },
-      { label: 'Livraison', href: '/shipping' },
-      { label: 'Retours & Remboursements', href: '/returns' },
-      { label: 'FAQ', href: '/faq' },
-    ],
-  },
-  {
-    title: 'Vendre',
-    links: [
-      { label: 'Ouvrir une boutique', href: '/seller/register' },
-      { label: 'Tarifs & Commissions', href: '/seller/pricing' },
-      { label: 'Ressources vendeurs', href: '/seller/resources' },
-      { label: 'Succès vendeurs', href: '/seller/success-stories' },
-      { label: 'API Vendeurs', href: '/seller/api' },
-    ],
-  },
-  {
-    title: 'Aide',
-    links: [
-      { label: "Centre d'aide", href: '/help' },
-      { label: 'Nous contacter', href: '/contact' },
-      { label: 'Signaler un problème', href: '/report' },
-      { label: 'Accessibilité', href: '/accessibility' },
-    ],
-  },
-  {
-    title: 'Légal',
-    links: [
-      { label: 'Conditions Générales', href: '/terms' },
-      { label: 'Politique de confidentialité', href: '/privacy' },
-      { label: 'Politique de cookies', href: '/cookies' },
-      { label: 'Conformité RGPD', href: '/gdpr' },
-    ],
-  },
-]
-
-const PAYMENT_METHODS = [
-  { name: 'Visa', icon: '💳' },
-  { name: 'Mastercard', icon: '💳' },
-  { name: 'PayPal', icon: '🅿️' },
-  { name: 'Apple Pay', icon: '🍎' },
-  { name: 'Google Pay', icon: '🔵' },
-  { name: 'Stripe', icon: '💰' },
-]
-
-const SOCIAL_LINKS = [
-  { platform: 'Facebook', icon: FacebookIcon, url: 'https://facebook.com/globalmarket', color: 'hover:text-blue-500' },
-  { platform: 'Twitter', icon: TwitterIcon, url: 'https://twitter.com/globalmarket', color: 'hover:text-sky-500' },
-  { platform: 'Instagram', icon: InstagramIcon, url: 'https://instagram.com/globalmarket', color: 'hover:text-pink-500' },
-  { platform: 'YouTube', icon: YoutubeIcon, url: 'https://youtube.com/globalmarket', color: 'hover:text-red-500' },
-  { platform: 'LinkedIn', icon: LinkedinIcon, url: 'https://linkedin.com/company/globalmarket', color: 'hover:text-blue-600' },
-]
-
 const LANGUAGES = [
   { code: 'fr', label: 'Français' },
   { code: 'en', label: 'English' },
@@ -134,12 +67,82 @@ const CURRENCIES = [
   { code: 'MAD', label: 'MAD د.م.' },
 ]
 
+const SOCIAL_LINKS = [
+  { platform: 'Facebook', icon: FacebookIcon, url: 'https://facebook.com/globalmarket', color: 'hover:text-blue-500' },
+  { platform: 'Twitter', icon: TwitterIcon, url: 'https://twitter.com/globalmarket', color: 'hover:text-sky-500' },
+  { platform: 'Instagram', icon: InstagramIcon, url: 'https://instagram.com/globalmarket', color: 'hover:text-pink-500' },
+  { platform: 'YouTube', icon: YoutubeIcon, url: 'https://youtube.com/globalmarket', color: 'hover:text-red-500' },
+  { platform: 'LinkedIn', icon: LinkedinIcon, url: 'https://linkedin.com/company/globalmarket', color: 'hover:text-blue-600' },
+]
+
 export default function Footer() {
   const [email, setEmail] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [selectedLang, setSelectedLang] = useState('fr')
   const [selectedCurrency, setSelectedCurrency] = useState('EUR')
+
+  const { t } = useTranslation()
+
+  const FOOTER_COLUMNS = [
+    {
+      title: t('footer.about'),
+      links: [
+        { label: t('footer.whoAreWe'), href: '/about' },
+        { label: t('footer.careers'), href: '/careers' },
+        { label: t('footer.press'), href: '/press' },
+        { label: t('footer.blog'), href: '/blog' },
+        { label: t('footer.partners'), href: '/partners' },
+      ],
+    },
+    {
+      title: t('footer.buying'),
+      links: [
+        { label: t('footer.howItWorks'), href: '/how-it-works' },
+        { label: t('footer.buyerProtection'), href: '/buyer-protection' },
+        { label: t('footer.shipping'), href: '/shipping' },
+        { label: t('footer.returns'), href: '/returns' },
+        { label: t('footer.faq'), href: '/faq' },
+      ],
+    },
+    {
+      title: t('footer.selling'),
+      links: [
+        { label: t('footer.openShop'), href: '/seller/register' },
+        { label: t('footer.pricing'), href: '/seller/pricing' },
+        { label: t('footer.sellerResources'), href: '/seller/resources' },
+        { label: t('footer.sellerSuccess'), href: '/seller/success-stories' },
+        { label: t('footer.sellerApi'), href: '/seller/api' },
+      ],
+    },
+    {
+      title: t('footer.help'),
+      links: [
+        { label: t('footer.helpCenter'), href: '/help' },
+        { label: t('footer.contactUs'), href: '/contact' },
+        { label: t('footer.reportProblem'), href: '/report' },
+        { label: t('footer.accessibility'), href: '/accessibility' },
+      ],
+    },
+    {
+      title: t('footer.legal'),
+      links: [
+        { label: t('footer.terms'), href: '/terms' },
+        { label: t('footer.privacy'), href: '/privacy' },
+        { label: t('footer.cookies'), href: '/cookies' },
+        { label: t('footer.gdpr'), href: '/gdpr' },
+      ],
+    },
+  ]
+
+  const PAYMENT_METHODS = [
+    { name: 'Visa', icon: '💳' },
+    { name: 'Mastercard', icon: '💳' },
+    { name: 'PayPal', icon: '🅿️' },
+    { name: 'Apple Pay', icon: '🍎' },
+    { name: 'Google Pay', icon: '🔵' },
+    { name: 'Stripe', icon: '💰' },
+  ]
 
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault()
@@ -163,16 +166,16 @@ export default function Footer() {
         <div className="container mx-auto px-4 py-10">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
             <div className="text-center lg:text-left">
-              <h3 className="text-xl font-bold mb-2">Restez informé des meilleures offres</h3>
+              <h3 className="text-xl font-bold mb-2">{t('footer.newsletter')}</h3>
               <p className="text-base-content/60">
-                Inscrivez-vous à notre newsletter et recevez -10% sur votre première commande.
+                {t('footer.newsletterDesc')}
               </p>
             </div>
             <form onSubmit={handleNewsletterSubmit} className="flex gap-2 w-full lg:w-auto">
               {isSubscribed ? (
                 <div className="flex items-center gap-2 text-success font-medium">
                   <CheckCircle size={20} />
-                  <span>Merci ! Vous êtes inscrit(e).</span>
+                  <span>{t('footer.newsletterSuccess')}</span>
                 </div>
               ) : (
                 <>
@@ -180,7 +183,7 @@ export default function Footer() {
                     <Send size={16} className="opacity-50 shrink-0" />
                     <input
                       type="email"
-                      placeholder="Votre adresse email"
+                      placeholder={t('footer.newsletterEmail')}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
@@ -196,7 +199,7 @@ export default function Footer() {
                     {isSubmitting ? (
                       <span className="loading loading-spinner loading-sm"></span>
                     ) : (
-                      "S'abonner"
+                      t('footer.subscribe')
                     )}
                   </button>
                 </>
@@ -236,7 +239,7 @@ export default function Footer() {
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 mb-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
             <div>
-              <h4 className="font-semibold text-sm mb-2">Téléchargez l'application</h4>
+              <h4 className="font-semibold text-sm mb-2">{t('footer.downloadApp')}</h4>
               <div className="flex gap-2">
                 <a
                   href="#"
@@ -264,7 +267,7 @@ export default function Footer() {
             </div>
 
             <div>
-              <h4 className="font-semibold text-sm mb-2">Langue</h4>
+              <h4 className="font-semibold text-sm mb-2">{t('footer.language')}</h4>
               <select
                 className="select select-bordered select-sm w-40"
                 value={selectedLang}
@@ -278,7 +281,7 @@ export default function Footer() {
             </div>
 
             <div>
-              <h4 className="font-semibold text-sm mb-2">Devise</h4>
+              <h4 className="font-semibold text-sm mb-2">{t('common.currency')}</h4>
               <select
                 className="select select-bordered select-sm w-40"
                 value={selectedCurrency}
@@ -293,7 +296,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-sm mb-2">Suivez-nous</h4>
+            <h4 className="font-semibold text-sm mb-2">{t('footer.followUs')}</h4>
             <div className="flex gap-2">
               {SOCIAL_LINKS.map((social) => {
                 const Icon = social.icon
@@ -341,9 +344,9 @@ export default function Footer() {
           </div>
 
           <p className="text-sm text-base-content/50 flex items-center gap-1">
-            © {new Date().getFullYear()} GlobalMarket. Tous droits réservés.
+            © {new Date().getFullYear()} GlobalMarket. {t('footer.allRights')}
             <span className="inline-flex items-center gap-0.5">
-              Fait avec <Heart size={12} className="text-error fill-error" /> partout dans le monde
+              {t('footer.madeWith')} <Heart size={12} className="text-error fill-error" /> {t('footer.worldwide')}
             </span>
           </p>
         </div>

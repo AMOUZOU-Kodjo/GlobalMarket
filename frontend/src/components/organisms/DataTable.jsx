@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ArrowUpDown,
   ArrowUp,
@@ -32,13 +33,15 @@ export function DataTable({
   columns = [],
   data = [],
   loading = false,
-  emptyMessage = "Aucune donnée disponible",
+  emptyMessage,
   onRowClick,
   striped = false,
   hover = true,
   compact = false,
   className = "",
 }) {
+  const { t } = useTranslation();
+  const resolvedEmptyMessage = emptyMessage || t('common.noData');
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
   const handleSort = (key) => {
@@ -119,7 +122,7 @@ export function DataTable({
               <td colSpan={columns.length}>
                 <EmptyState
                   icon={Inbox}
-                  title={emptyMessage}
+                  title={resolvedEmptyMessage}
                 />
               </td>
             </tr>

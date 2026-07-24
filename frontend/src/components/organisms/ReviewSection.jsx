@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Star, ThumbsUp, MessageSquare } from "lucide-react";
 import { Pagination } from "../atoms/Pagination";
 import { EmptyState } from "../atoms/EmptyState";
@@ -22,6 +23,7 @@ function RatingBar({ stars, count, total }) {
 }
 
 function ReviewCard({ review }) {
+  const { t } = useTranslation();
   const renderStars = (value) =>
     Array.from({ length: 5 }).map((_, i) => (
       <Star
@@ -44,7 +46,7 @@ function ReviewCard({ review }) {
           </div>
           <div>
             <h4 className="font-medium text-sm">
-              {review.userName || review.author || "Anonyme"}
+              {review.userName || review.author || t('profile.anonymous')}
             </h4>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-0.5">
@@ -85,13 +87,13 @@ function ReviewCard({ review }) {
         {review.helpful !== undefined && (
           <button type="button" className="btn btn-ghost btn-xs gap-1">
             <ThumbsUp size={14} />
-            Utile ({review.helpful})
+            {t('products.helpful')} ({review.helpful})
           </button>
         )}
         {review.replies !== undefined && (
           <button type="button" className="btn btn-ghost btn-xs gap-1">
             <MessageSquare size={14} />
-            Réponses ({review.replies})
+            {t('products.answers')} ({review.replies})
           </button>
         )}
       </div>
@@ -128,16 +130,17 @@ export function ReviewSection({
   loading = false,
   className = "",
 }) {
+  const { t } = useTranslation();
   const ratingDistribution = [5, 4, 3, 2, 1].map((stars) => ({
     stars,
     count: reviews.filter((r) => Math.round(r.rating) === stars).length,
   }));
 
   const sortOptions = [
-    { value: "recent", label: "Plus récents" },
-    { value: "helpful", label: "Plus utiles" },
-    { value: "highest", label: "Meilleures notes" },
-    { value: "lowest", label: "Notes les plus basses" },
+    { value: "recent", label: t('common.newest') },
+    { value: "helpful", label: t('products.mostHelpful') },
+    { value: "highest", label: t('common.rating') },
+    { value: "lowest", label: t('products.lowestRated') },
   ];
 
   const renderStars = (value) =>
@@ -159,7 +162,7 @@ export function ReviewSection({
               {renderStars(rating)}
             </div>
             <p className="text-sm opacity-50">
-              {reviewCount} avis
+              {reviewCount} {t('products.reviews')}
             </p>
 
             <div className="flex flex-col gap-1.5 mt-4">
@@ -198,7 +201,7 @@ export function ReviewSection({
                 onClick={onWriteReview}
               >
                 <MessageSquare size={16} />
-                Écrire un avis
+                {t('products.writeReview')}
               </button>
             )}
           </div>
@@ -214,8 +217,8 @@ export function ReviewSection({
           {!loading && reviews.length === 0 && (
             <EmptyState
               icon={MessageSquare}
-              title="Aucun avis"
-              description="Soyez le premier à donner votre avis sur ce produit."
+              title={t('products.noReviews')}
+              description={t('products.beFirstReview')}
             />
           )}
 

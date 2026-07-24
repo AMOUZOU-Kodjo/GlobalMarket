@@ -460,6 +460,52 @@ async function updateBankAccount(userId, data) {
   })
 }
 
+async function getPublicShop(slug) {
+  const seller = await prisma.seller.findUnique({
+    where: { slug },
+    select: {
+      id: true, shopName: true, slug: true, description: true,
+      logo: true, banner: true, category: true, country: true,
+      rating: true, totalSales: true, totalRevenue: true,
+      verified: true, createdAt: true,
+      user: { select: { name: true, avatar: true } },
+      _count: { select: { products: { where: { status: 'active' } } } }
+    }
+  })
+  if (!seller) throw new Error('Boutique non trouvée')
+  return { ...seller, productCount: seller._count.products }
+}
+
+async function getPublicShopProducts(slug, query = {}) {
+  const seller = await prisma.seller.findUnique({ where: { slug }, select: { id: true } })
+  if (!seller) throw new Error('Boutique non trouvée')
+
+  const { page = 1, limit = 12, sort = 'newest' } = query
+  const where = { sellerId: seller.id, status: 'active' }
+
+  const orderBy = sort === 'price_asc' ? { price: 'asc' }
+    : sort === 'price_desc' ? { price: 'desc' }
+    : sort === 'popular' ? { salesCount: 'desc' }
+    : sort === 'rating' ? { averageRating: 'desc' }
+    : { createdAt: 'desc' }
+
+  const [products, total] = await Promise.all([
+    prisma.product.findMany({
+      where,
+      include: {
+        images: { orderBy: { sortOrder: 'asc' }, take: 1 },
+        category: { select: { id: true, name: true, slug: true } }
+      },
+      orderBy,
+      skip: (Number(page) - 1) * Number(limit),
+      take: Number(limit)
+    }),
+    prisma.product.count({ where })
+  ])
+
+  return { products, meta: { page: Number(page), limit: Number(limit), total, totalPages: Math.ceil(total / Number(limit)) } }
+}
+
 module.exports = {
   register,
   getDashboard,
@@ -474,5 +520,7 @@ module.exports = {
   updateOrderStatus,
   getAnalytics,
   getPayouts,
-  updateBankAccount
+  updateBankAccount,
+  getPublicShop,
+  getPublicShopProducts
 }

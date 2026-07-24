@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Heart, ShoppingCart, Trash2 } from 'lucide-react'
 import { useCart } from '../../context/CartContext'
@@ -23,6 +24,7 @@ function saveWishlist(products) {
 }
 
 export default function WishlistPage() {
+  const { t } = useTranslation()
   const { addItem } = useCart()
   const [wishlist, setWishlist] = useState([])
   const [loading, setLoading] = useState(true)
@@ -55,7 +57,7 @@ export default function WishlistPage() {
     return (
       <div className="container mx-auto px-4 py-16 max-w-4xl">
         <div className="flex justify-center">
-          <Spinner text="Chargement de la liste..." />
+          <Spinner text={t('common.loading')} />
         </div>
       </div>
     )
@@ -64,18 +66,18 @@ export default function WishlistPage() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
       <Header
-        title="Ma liste de souhaits"
-        subtitle={`${wishlist.length} article${wishlist.length !== 1 ? 's' : ''}`}
+        title={t('profile.wishlist')}
+        subtitle={`${wishlist.length} ${t('orders.articles')}`}
       />
 
       {wishlist.length === 0 ? (
         <EmptyState
           icon={Heart}
-          title="Votre liste de souhaits est vide"
-          description="Parcourez nos produits et ajoutez vos favoris."
+          title={t('profile.noWishlist')}
+          description={t('profile.addWishlist')}
           action={
             <Link to="/products" className="btn btn-primary btn-sm">
-              Découvrir les produits
+              {t('home.allProducts')}
             </Link>
           }
         />
@@ -87,7 +89,7 @@ export default function WishlistPage() {
               <button
                 type="button"
                 className="absolute top-3 right-3 z-10 btn btn-circle btn-sm btn-error opacity-0 group-hover:opacity-100 transition-opacity"
-                title="Retirer de la liste"
+                title={t('profile.removeWishlist')}
                 onClick={() => handleRemove(product._id || product.id)}
               >
                 <Trash2 size={14} />

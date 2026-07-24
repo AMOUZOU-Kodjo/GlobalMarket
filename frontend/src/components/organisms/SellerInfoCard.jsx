@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Star, Package, Calendar, ExternalLink } from "lucide-react";
 import { Badge } from "../atoms/Badge";
 import formatNumber from "../../utils/formatNumber";
 import { formatDate } from "../../utils/formatDate";
 
 export function SellerInfoCard({ seller, className = "" }) {
+  const { t } = useTranslation();
   if (!seller) return null;
 
   const {
@@ -56,7 +58,7 @@ export function SellerInfoCard({ seller, className = "" }) {
             {renderStars(rating)}
             {reviewCount > 0 && (
               <span className="text-xs opacity-50 ml-1">
-                ({formatNumber(reviewCount)} avis)
+                ({formatNumber(reviewCount)} {t('products.reviews')})
               </span>
             )}
           </div>
@@ -69,28 +71,28 @@ export function SellerInfoCard({ seller, className = "" }) {
         <div className="bg-base-200 rounded-lg p-2">
           <Package size={16} className="mx-auto mb-0.5 opacity-50" />
           <p className="font-bold text-sm">{formatNumber(productCount)}</p>
-          <p className="text-xs opacity-50">Produits</p>
+          <p className="text-xs opacity-50">{t('seller.myProducts')}</p>
         </div>
         <div className="bg-base-200 rounded-lg p-2">
           <Star size={16} className="mx-auto mb-0.5 opacity-50" />
           <p className="font-bold text-sm">{rating != null ? Number(rating).toFixed(1) : "N/A"}</p>
-          <p className="text-xs opacity-50">Note</p>
+          <p className="text-xs opacity-50">{t('common.rating')}</p>
         </div>
       </div>
 
       {memberSince && (
         <div className="flex items-center gap-1.5 text-xs opacity-50 mt-3 justify-center">
           <Calendar size={12} />
-          <span>Membre depuis {formatDate(memberSince, { style: "long" })}</span>
+          <span>{t('shop.memberSince')} {formatDate(memberSince, { style: "long" })}</span>
         </div>
       )}
 
       {shopSlug && (
         <Link
-          to={`/sellers/${shopSlug}`}
+          to={`/shop/${shopSlug}`}
           className="btn btn-outline btn-primary btn-block btn-sm mt-4 gap-1"
         >
-          Voir la boutique
+          {t('shop.title')}
           <ExternalLink size={14} />
         </Link>
       )}

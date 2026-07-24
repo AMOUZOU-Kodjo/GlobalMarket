@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   DollarSign, ShoppingCart, TrendingUp, BarChart3, AlertCircle,
   Calendar, Package,
@@ -13,6 +14,7 @@ import formatCurrency from '../../utils/formatCurrency'
 import formatNumber from '../../utils/formatNumber'
 
 export default function SellerAnalyticsPage() {
+  const { t } = useTranslation()
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -26,18 +28,18 @@ export default function SellerAnalyticsPage() {
         const res = await sellerService.getAnalytics({ period: dateRange })
         setData(res.data || res)
       } catch (err) {
-        setError(err?.response?.data?.message || err?.message || 'Erreur lors du chargement des analytics.')
+        setError(err?.response?.data?.message || err?.message || t('errors.analyticsLoad'))
       } finally {
         setLoading(false)
       }
     }
     fetchAnalytics()
-  }, [dateRange])
+  }, [dateRange, t])
 
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <Spinner size="lg" text="Chargement des statistiques..." />
+        <Spinner size="lg" text={t('common.loadingStats')} />
       </div>
     )
   }
@@ -55,7 +57,7 @@ export default function SellerAnalyticsPage() {
 
   const kpis = [
     {
-      title: 'Revenus totaux',
+      title: t('analytics.totalRevenue'),
       value: formatCurrency(data?.revenue ?? 0),
       icon: DollarSign,
       color: 'success',
@@ -63,7 +65,7 @@ export default function SellerAnalyticsPage() {
       trendValue: data?.revenueTrendValue,
     },
     {
-      title: 'Commandes',
+      title: t('seller.orders'),
       value: formatNumber(data?.totalOrders ?? 0),
       icon: ShoppingCart,
       color: 'primary',
@@ -71,13 +73,13 @@ export default function SellerAnalyticsPage() {
       trendValue: data?.ordersTrendValue,
     },
     {
-      title: 'Taux de conversion',
+      title: t('analytics.conversionRate'),
       value: data?.conversionRate ? `${Number(data.conversionRate).toFixed(1)}%` : '0%',
       icon: TrendingUp,
       color: 'accent',
     },
     {
-      title: 'Panier moyen',
+      title: t('analytics.averageCart'),
       value: formatCurrency(data?.averageOrderValue ?? 0),
       icon: BarChart3,
       color: 'warning',
@@ -96,17 +98,17 @@ export default function SellerAnalyticsPage() {
     },
     {
       key: 'name',
-      label: 'Produit',
+      label: t('products.name'),
       render: (val) => <span className="font-medium">{val}</span>,
     },
     {
       key: 'revenue',
-      label: 'Revenus',
+      label: t('analytics.revenue'),
       render: (val) => formatCurrency(val),
     },
     {
       key: 'unitsSold',
-      label: 'Vendus',
+      label: t('analytics.unitsSold'),
       render: (val) => formatNumber(val),
     },
   ]
@@ -114,17 +116,17 @@ export default function SellerAnalyticsPage() {
   const categoryColumns = [
     {
       key: 'category',
-      label: 'Catégorie',
+      label: t('products.category'),
       render: (val) => <span className="font-medium">{val}</span>,
     },
     {
       key: 'revenue',
-      label: 'Revenus',
+      label: t('analytics.revenue'),
       render: (val) => formatCurrency(val),
     },
     {
       key: 'percentage',
-      label: 'Part',
+      label: t('analytics.share'),
       render: (val) => `${Number(val || 0).toFixed(1)}%`,
     },
   ]
@@ -133,8 +135,8 @@ export default function SellerAnalyticsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Analytics</h1>
-          <p className="text-base-content/60 text-sm">Suivez les performances de votre boutique</p>
+          <h1 className="text-2xl font-bold">{t('analytics.title')}</h1>
+          <p className="text-base-content/60 text-sm">{t('analytics.subtitle')}</p>
         </div>
         <div className="flex items-center gap-2">
           <Calendar size={16} className="text-base-content/50" />
@@ -143,10 +145,10 @@ export default function SellerAnalyticsPage() {
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value)}
           >
-            <option value="7d">7 derniers jours</option>
-            <option value="30d">30 derniers jours</option>
-            <option value="90d">90 derniers jours</option>
-            <option value="12mo">12 derniers mois</option>
+            <option value="7d">{t('analytics.last7Days')}</option>
+            <option value="30d">{t('analytics.last30Days')}</option>
+            <option value="90d">{t('analytics.last90Days')}</option>
+            <option value="12mo">{t('analytics.last12Months')}</option>
           </select>
         </div>
       </div>
@@ -159,12 +161,12 @@ export default function SellerAnalyticsPage() {
 
       <div className="card bg-base-100 shadow-sm">
         <div className="card-body">
-          <h2 className="card-title text-base">Évolution des ventes</h2>
+          <h2 className="card-title text-base">{t('analytics.salesEvolution')}</h2>
           <div className="flex items-center justify-center h-64 bg-base-200/50 rounded-box">
             <div className="text-center text-base-content/40">
               <TrendingUp size={36} className="mx-auto mb-2" strokeWidth={1.5} />
-              <p className="text-sm font-medium">Graphique des ventes</p>
-              <p className="text-xs mt-1">Période : {dateRange === '7d' ? '7 jours' : dateRange === '30d' ? '30 jours' : dateRange === '90d' ? '90 jours' : '12 mois'}</p>
+              <p className="text-sm font-medium">{t('analytics.salesChart')}</p>
+              <p className="text-xs mt-1">{t('analytics.period')}: {dateRange === '7d' ? t('analytics.7days') : dateRange === '30d' ? t('analytics.30days') : dateRange === '90d' ? t('analytics.90days') : t('analytics.12months')}</p>
             </div>
           </div>
         </div>
@@ -173,9 +175,9 @@ export default function SellerAnalyticsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="card bg-base-100 shadow-sm">
           <div className="card-body">
-            <h2 className="card-title text-base">Top produits</h2>
+            <h2 className="card-title text-base">{t('analytics.topProducts')}</h2>
             {topProducts.length === 0 ? (
-              <EmptyState icon={Package} title="Aucune donnée" description="Pas encore de ventes enregistrées." />
+              <EmptyState icon={Package} title={t('analytics.noData')} description={t('analytics.noSalesYet')} />
             ) : (
               <DataTable
                 columns={topProductColumns}
@@ -188,9 +190,9 @@ export default function SellerAnalyticsPage() {
 
         <div className="card bg-base-100 shadow-sm">
           <div className="card-body">
-            <h2 className="card-title text-base">Ventes par catégorie</h2>
+            <h2 className="card-title text-base">{t('analytics.salesByCategory')}</h2>
             {categoryBreakdown.length === 0 ? (
-              <EmptyState icon={BarChart3} title="Aucune donnée" description="Pas encore de ventes par catégorie." />
+              <EmptyState icon={BarChart3} title={t('analytics.noData')} description={t('analytics.noCategorySales')} />
             ) : (
               <DataTable
                 columns={categoryColumns}

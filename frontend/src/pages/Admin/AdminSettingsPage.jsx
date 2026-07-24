@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   Settings, Save, AlertCircle, Globe, CreditCard, Truck, Bell,
   Upload,
@@ -8,14 +9,8 @@ import FormField from '../../components/molecules/FormField'
 import Tabs from '../../components/atoms/Tabs'
 import Spinner from '../../components/atoms/Spinner'
 
-const TAB_LIST = [
-  { id: 'general', label: 'Général', icon: Globe },
-  { id: 'payments', label: 'Paiements', icon: CreditCard },
-  { id: 'shipping', label: 'Expédition', icon: Truck },
-  { id: 'notifications', label: 'Notifications', icon: Bell },
-]
-
 export default function AdminSettingsPage() {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState('general')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -35,6 +30,13 @@ export default function AdminSettingsPage() {
     emailLowStock: true,
   })
 
+  const TAB_LIST = [
+    { id: 'general', label: t('admin.general'), icon: Globe },
+    { id: 'payments', label: t('admin.payments'), icon: CreditCard },
+    { id: 'shipping', label: t('admin.shipping'), icon: Truck },
+    { id: 'notifications', label: t('admin.notifications'), icon: Bell },
+  ]
+
   useEffect(() => {
     const fetchSettings = async () => {
       try {
@@ -42,7 +44,7 @@ export default function AdminSettingsPage() {
         const data = res.data || res
         setSettings((prev) => ({ ...prev, ...data }))
       } catch (err) {
-        setError(err?.response?.data?.message || err?.message || 'Erreur lors du chargement des paramètres.')
+        setError(err?.response?.data?.message || err?.message || t('admin.errorLoadingSettings'))
       } finally {
         setLoading(false)
       }
@@ -77,10 +79,10 @@ export default function AdminSettingsPage() {
     setSuccess(null)
     try {
       await adminService.updateSettings(settings)
-      setSuccess('Paramètres enregistrés avec succès.')
+      setSuccess(t('admin.settingsSaved'))
       setTimeout(() => setSuccess(null), 3000)
     } catch (err) {
-      setError(err?.response?.data?.message || 'Erreur lors de l\'enregistrement.')
+      setError(err?.response?.data?.message || t('admin.errorSavingSettings'))
     } finally {
       setSaving(false)
     }
@@ -89,23 +91,23 @@ export default function AdminSettingsPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <Spinner size="lg" text="Chargement des paramètres..." />
+        <Spinner size="lg" text={t('admin.loadingSettings')} />
       </div>
     )
   }
 
   const PAYMENT_METHODS = [
-    { id: 'card', label: 'Carte bancaire' },
-    { id: 'mobile_money', label: 'Mobile Money' },
-    { id: 'bank_transfer', label: 'Virement bancaire' },
-    { id: 'cod', label: 'Paiement à la livraison' },
+    { id: 'card', label: t('admin.cardPayment') },
+    { id: 'mobile_money', label: t('admin.mobileMoney') },
+    { id: 'bank_transfer', label: t('admin.bankTransfer') },
+    { id: 'cod', label: t('admin.cashOnDelivery') },
   ]
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Paramètres de la plateforme</h1>
-        <p className="text-base-content/60 text-sm">Configurez les paramètres globaux</p>
+        <h1 className="text-2xl font-bold">{t('admin.platformSettings')}</h1>
+        <p className="text-base-content/60 text-sm">{t('admin.settingsDescription')}</p>
       </div>
 
       {error && (
@@ -137,10 +139,10 @@ export default function AdminSettingsPage() {
             <div className="card-body space-y-4">
               <h2 className="card-title text-base">
                 <Globe size={18} />
-                Paramètres généraux
+                {t('admin.generalSettings')}
               </h2>
 
-              <FormField label="Nom du site" htmlFor="siteName">
+              <FormField label={t('admin.siteName')} htmlFor="siteName">
                 <input
                   id="siteName"
                   name="siteName"
@@ -152,31 +154,31 @@ export default function AdminSettingsPage() {
                 />
               </FormField>
 
-              <FormField label="Description du site" htmlFor="siteDescription">
+              <FormField label={t('admin.siteDescription')} htmlFor="siteDescription">
                 <textarea
                   id="siteDescription"
                   name="siteDescription"
                   className="textarea textarea-bordered w-full min-h-[80px]"
-                  placeholder="Description de la plateforme..."
+                  placeholder={t('admin.siteDescriptionPlaceholder')}
                   value={settings.siteDescription}
                   onChange={handleChange}
                 />
               </FormField>
 
-              <FormField label="Logo du site" htmlFor="siteLogo">
+              <FormField label={t('admin.siteLogo')} htmlFor="siteLogo">
                 <div className="flex items-center gap-4">
                   {settings.siteLogo && (
                     <div className="w-16 h-16 rounded-box overflow-hidden bg-base-200">
                       <img
                         src={settings.siteLogo}
-                        alt="Logo"
+                        alt={t('admin.siteLogo')}
                         className="w-full h-full object-contain"
                       />
                     </div>
                   )}
                   <label className="btn btn-outline btn-sm cursor-pointer">
                     <Upload size={14} />
-                    Choisir un logo
+                    {t('admin.chooseLogo')}
                     <input
                       type="file"
                       accept="image/*"
@@ -201,12 +203,12 @@ export default function AdminSettingsPage() {
             <div className="card-body space-y-4">
               <h2 className="card-title text-base">
                 <CreditCard size={18} />
-                Paramètres de paiement
+                {t('admin.paymentSettings')}
               </h2>
 
               <FormField
-                label="Taux de commission (%)"
-                hint="Pourcentage prélevé sur chaque vente"
+                label={t('admin.commissionRate')}
+                hint={t('admin.commissionHint')}
                 htmlFor="commissionRate"
               >
                 <input
@@ -223,7 +225,7 @@ export default function AdminSettingsPage() {
                 />
               </FormField>
 
-              <FormField label="Modes de paiement acceptés">
+              <FormField label={t('admin.acceptedPaymentMethods')}>
                 <div className="flex flex-wrap gap-3">
                   {PAYMENT_METHODS.map((method) => (
                     <label key={method.id} className="label cursor-pointer gap-2">
@@ -247,11 +249,11 @@ export default function AdminSettingsPage() {
             <div className="card-body space-y-4">
               <h2 className="card-title text-base">
                 <Truck size={18} />
-                Paramètres d'expédition
+                {t('admin.shippingSettings')}
               </h2>
 
               <FormField
-                label="Tarif d'expédition par défaut (XOF)"
+                label={t('admin.defaultShippingRate')}
                 htmlFor="defaultShippingRate"
               >
                 <input
@@ -267,8 +269,8 @@ export default function AdminSettingsPage() {
               </FormField>
 
               <FormField
-                label="Seuil de livraison gratuite (XOF)"
-                hint="Montant minimum pour la livraison gratuite"
+                label={t('admin.freeShippingThreshold')}
+                hint={t('admin.freeShippingHint')}
                 htmlFor="shippingFreeThreshold"
               >
                 <input
@@ -291,15 +293,15 @@ export default function AdminSettingsPage() {
             <div className="card-body space-y-4">
               <h2 className="card-title text-base">
                 <Bell size={18} />
-                Templates de notifications
+                {t('admin.notificationTemplates')}
               </h2>
 
               <div className="space-y-3">
                 {[
-                  { key: 'emailOrderConfirmation', label: 'Confirmation de commande' },
-                  { key: 'emailOrderShipped', label: 'Commande expédiée' },
-                  { key: 'emailNewSeller', label: 'Nouveau vendeur inscrit' },
-                  { key: 'emailLowStock', label: 'Stock faible' },
+                  { key: 'emailOrderConfirmation', label: t('admin.orderConfirmation') },
+                  { key: 'emailOrderShipped', label: t('admin.orderShipped') },
+                  { key: 'emailNewSeller', label: t('admin.newSellerRegistered') },
+                  { key: 'emailLowStock', label: t('admin.lowStock') },
                 ].map((item) => (
                   <label key={item.key} className="flex items-center justify-between p-3 rounded-box bg-base-200/50">
                     <span className="text-sm font-medium">{item.label}</span>
@@ -326,12 +328,12 @@ export default function AdminSettingsPage() {
             {saving ? (
               <>
                 <span className="loading loading-spinner loading-sm" />
-                Enregistrement...
+                {t('admin.saving')}
               </>
             ) : (
               <>
                 <Save size={16} />
-                Enregistrer les paramètres
+                {t('admin.saveSettings')}
               </>
             )}
           </button>

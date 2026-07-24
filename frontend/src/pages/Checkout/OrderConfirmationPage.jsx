@@ -1,4 +1,5 @@
 import { Link, useParams, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { CheckCircle, ShoppingBag, Eye, Calendar } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import formatCurrency from '../../utils/formatCurrency'
@@ -6,6 +7,7 @@ import { formatDate } from '../../utils/formatDate'
 import orderService from '../../services/order.service'
 
 export default function OrderConfirmationPage() {
+  const { t } = useTranslation()
   const { orderId } = useParams()
   const { state } = useLocation()
   const [order, setOrder] = useState(state?.order || null)
@@ -43,10 +45,10 @@ export default function OrderConfirmationPage() {
           <CheckCircle size={48} className="text-success" />
         </div>
         <h1 className="text-2xl md:text-3xl font-bold mb-2">
-          Merci pour votre commande!
+          {t('checkout.orderSuccess')}
         </h1>
         <p className="text-base-content/60">
-          Votre commande a été confirmée et est en cours de traitement.
+          {t('checkout.orderConfirmed')}
         </p>
       </div>
 
@@ -55,11 +57,11 @@ export default function OrderConfirmationPage() {
           <div className="card-body p-6">
             <div className="flex flex-col sm:flex-row justify-between gap-4 mb-4">
               <div>
-                <p className="text-sm text-base-content/50">Numéro de commande</p>
+                <p className="text-sm text-base-content/50">{t('checkout.orderNumber')}</p>
                 <p className="font-bold text-lg">#{order._id?.slice(-8) || orderId}</p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-base-content/50">Date</p>
+                <p className="text-sm text-base-content/50">{t('checkout.date')}</p>
                 <p className="font-medium">{formatDate(order.createdAt)}</p>
               </div>
             </div>
@@ -94,7 +96,7 @@ export default function OrderConfirmationPage() {
             <div className="divider my-2" />
 
             <div className="flex justify-between text-lg font-bold">
-              <span>Total</span>
+              <span>{t('checkout.total')}</span>
               <span className="text-primary">
                 {formatCurrency(order.totalAmount || order.total)}
               </span>
@@ -103,7 +105,7 @@ export default function OrderConfirmationPage() {
             <div className="flex items-center gap-2 mt-4 p-3 bg-base-200 rounded-lg">
               <Calendar size={16} className="text-base-content/50" />
               <span className="text-sm">
-                Livraison estimée le{' '}
+                {t('checkout.estimatedDelivery')}{' '}
                 <span className="font-medium">{estimatedDelivery()}</span>
               </span>
             </div>
@@ -114,11 +116,11 @@ export default function OrderConfirmationPage() {
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
         <Link to={`/orders/${orderId}`} className="btn btn-primary">
           <Eye size={16} />
-          Voir la commande
+          {t('checkout.viewOrder')}
         </Link>
         <Link to="/products" className="btn btn-ghost">
           <ShoppingBag size={16} />
-          Continuer les achats
+          {t('checkout.continueShopping')}
         </Link>
       </div>
     </div>

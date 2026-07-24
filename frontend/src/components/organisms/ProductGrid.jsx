@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { LayoutGrid, List, PackageSearch } from "lucide-react";
 import { Skeleton } from "../atoms/Skeleton";
 import { EmptyState } from "../atoms/EmptyState";
@@ -34,6 +35,7 @@ function ProductListItemSkeleton() {
 }
 
 function ProductListItem({ product, onAddToCart }) {
+  const { t } = useTranslation();
   const {
     _id,
     id,
@@ -104,7 +106,7 @@ function ProductListItem({ product, onAddToCart }) {
             disabled={!inStock}
             onClick={() => onAddToCart?.(product)}
           >
-            {inStock ? "Ajouter au panier" : "Épuisé"}
+            {inStock ? t('products.addToCart') : t('products.outOfStock')}
           </button>
         </div>
       </div>
@@ -117,10 +119,12 @@ export function ProductGrid({
   loading = false,
   skeletonCount = 8,
   layout = "grid",
-  emptyMessage = "Aucun produit trouvé",
+  emptyMessage,
   onAddToCart,
   className = "",
 }) {
+  const { t } = useTranslation();
+  const resolvedEmptyMessage = emptyMessage || t('products.noneFound');
   if (loading) {
     return (
       <div
@@ -145,8 +149,8 @@ export function ProductGrid({
     return (
       <EmptyState
         icon={PackageSearch}
-        title={emptyMessage}
-        description="Essayez de modifier vos filtres ou recherchez autre chose."
+        title={resolvedEmptyMessage}
+        description={t('common.tryModifyFilters')}
       />
     );
   }

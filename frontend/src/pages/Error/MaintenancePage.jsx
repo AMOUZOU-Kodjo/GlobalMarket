@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Wrench, Clock, ExternalLink } from 'lucide-react'
 
 const SOCIAL_LINKS = [
@@ -8,6 +9,7 @@ const SOCIAL_LINKS = [
 ]
 
 export default function MaintenancePage() {
+  const { t } = useTranslation()
   const [timeLeft, setTimeLeft] = useState({ hours: 2, minutes: 45, seconds: 30 })
 
   useEffect(() => {
@@ -43,24 +45,24 @@ export default function MaintenancePage() {
           <Wrench size={48} className="text-warning animate-spin" style={{ animationDuration: '4s' }} />
         </div>
 
-        <h1 className="text-4xl md:text-5xl font-bold mb-3">Site en maintenance</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-3">{t('maintenance.title')}</h1>
         <p className="text-base-content/60 text-lg mb-8">
-          Nous effectuons une mise à jour pour améliorer votre expérience.
+          {t('maintenance.description')}
           <br />
-          Nous serons de retour très rapidement !
+          {t('maintenance.backSoon')}
         </p>
 
         <div className="flex gap-4 justify-center mb-10">
           <div className="stat bg-base-200 rounded-box shadow-sm px-6 py-3">
-            <div className="stat-title text-xs">Heures</div>
+            <div className="stat-title text-xs">{t('maintenance.hours')}</div>
             <div className="stat-value text-3xl text-primary">{pad(timeLeft.hours)}</div>
           </div>
           <div className="stat bg-base-200 rounded-box shadow-sm px-6 py-3">
-            <div className="stat-title text-xs">Minutes</div>
+            <div className="stat-title text-xs">{t('maintenance.minutes')}</div>
             <div className="stat-value text-3xl text-primary">{pad(timeLeft.minutes)}</div>
           </div>
           <div className="stat bg-base-200 rounded-box shadow-sm px-6 py-3">
-            <div className="stat-title text-xs">Secondes</div>
+            <div className="stat-title text-xs">{t('maintenance.seconds')}</div>
             <div className="stat-value text-3xl text-primary">{pad(timeLeft.seconds)}</div>
           </div>
         </div>
@@ -68,7 +70,7 @@ export default function MaintenancePage() {
         <div className="flex flex-col items-center gap-4">
           <div className="flex items-center gap-2 text-sm text-base-content/50">
             <Clock size={16} />
-            <span>Nous estimons la reprise à environ {timeLeft.hours}h{pad(timeLeft.minutes)}</span>
+            <span>{t('maintenance.estimatedResume', { hours: timeLeft.hours, minutes: pad(timeLeft.minutes) })}</span>
           </div>
 
           <div className="flex gap-3 justify-center">

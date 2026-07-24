@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import {
   DollarSign, ShoppingCart, Users, Shield, TrendingUp,
@@ -13,6 +14,7 @@ import { formatDate } from '../../utils/formatDate'
 import formatCurrency from '../../utils/formatCurrency'
 
 export default function AdminDashboardPage() {
+  const { t } = useTranslation()
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -23,7 +25,7 @@ export default function AdminDashboardPage() {
         const res = await adminService.getDashboard()
         setData(res.data || res)
       } catch (err) {
-        setError(err?.response?.data?.message || err?.message || 'Erreur lors du chargement du tableau de bord.')
+        setError(err?.response?.data?.message || err?.message || t('common.error'))
       } finally {
         setLoading(false)
       }
@@ -34,7 +36,7 @@ export default function AdminDashboardPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <Spinner size="lg" text="Chargement du tableau de bord..." />
+        <Spinner size="lg" text={t('common.loading')} />
       </div>
     )
   }
@@ -52,25 +54,25 @@ export default function AdminDashboardPage() {
 
   const kpis = [
     {
-      title: 'Revenus totaux',
+      title: t('admin.totalRevenue'),
       value: formatCurrency(data?.stats?.totalRevenue ?? 0),
       icon: DollarSign,
       color: 'success',
     },
     {
-      title: 'Commandes totales',
+      title: t('admin.totalOrders'),
       value: data?.stats?.totalOrders ?? 0,
       icon: ShoppingCart,
       color: 'primary',
     },
     {
-      title: 'Utilisateurs',
+      title: t('admin.totalUsers'),
       value: data?.stats?.totalUsers ?? 0,
       icon: Users,
       color: 'accent',
     },
     {
-      title: 'En attente de modération',
+      title: t('admin.pendingModeration'),
       value: (data?.stats?.pendingOrders ?? 0) + (data?.stats?.pendingProducts ?? 0),
       icon: Shield,
       color: 'warning',
@@ -79,18 +81,18 @@ export default function AdminDashboardPage() {
 
   const recentActivity = data?.recentOrders || []
   const quickLinks = [
-    { label: 'Utilisateurs', to: '/admin/users', icon: Users, color: 'btn-primary' },
-    { label: 'Produits', to: '/admin/products', icon: Package, color: 'btn-secondary' },
-    { label: 'Commandes', to: '/admin/orders', icon: ShoppingCart, color: 'btn-accent' },
-    { label: 'Rapports', to: '/admin/reports', icon: TrendingUp, color: 'btn-success' },
-    { label: 'Paramètres', to: '/admin/settings', icon: Activity, color: 'btn-warning' },
+    { label: t('admin.totalUsers'), to: '/admin/users', icon: Users, color: 'btn-primary' },
+    { label: t('admin.totalProducts'), to: '/admin/products', icon: Package, color: 'btn-secondary' },
+    { label: t('admin.totalOrders'), to: '/admin/orders', icon: ShoppingCart, color: 'btn-accent' },
+    { label: t('admin.reports'), to: '/admin/reports', icon: TrendingUp, color: 'btn-success' },
+    { label: t('admin.settings'), to: '/admin/settings', icon: Activity, color: 'btn-warning' },
   ]
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Administration</h1>
-        <p className="text-base-content/60 text-sm">Vue d'ensemble de la plateforme</p>
+        <h1 className="text-2xl font-bold">{t('admin.dashboard')}</h1>
+        <p className="text-base-content/60 text-sm">{t('admin.platformStats')}</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -104,13 +106,13 @@ export default function AdminDashboardPage() {
           <div className="card-body">
             <h2 className="card-title text-base">
               <Activity size={18} />
-              Activité récente
+              {t('admin.recentActivity')}
             </h2>
             {recentActivity.length === 0 ? (
               <EmptyState
                 icon={Clock}
-                title="Aucune activité"
-                description="Aucune activité récente à afficher."
+                title={t('admin.noActivity')}
+                description={t('admin.noRecentActivity')}
               />
             ) : (
               <div className="space-y-3">
@@ -118,7 +120,7 @@ export default function AdminDashboardPage() {
                   <div key={item.id || i} className="flex items-start gap-3 p-3 rounded-box bg-base-200/50">
                     <div className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm">{item.message || item.description || `Commande #${(item.orderNumber || item.id || '').slice(-6)} - ${item.buyer?.name || ''}`}</p>
+                      <p className="text-sm">{item.message || item.description || `${t('common.order')} #${(item.orderNumber || item.id || '').slice(-6)} - ${item.buyer?.name || ''}`}</p>
                       <p className="text-xs text-base-content/50 mt-0.5">
                         {formatDate(item.createdAt, { style: 'relative' })}
                       </p>
@@ -132,7 +134,7 @@ export default function AdminDashboardPage() {
 
         <div className="card bg-base-100 shadow-sm">
           <div className="card-body">
-            <h2 className="card-title text-base">Accès rapides</h2>
+            <h2 className="card-title text-base">{t('admin.quickLinks')}</h2>
             <div className="space-y-2">
               {quickLinks.map((link) => {
                 const Icon = link.icon
@@ -155,12 +157,12 @@ export default function AdminDashboardPage() {
 
       <div className="card bg-base-100 shadow-sm">
         <div className="card-body">
-          <h2 className="card-title text-base">Graphique des ventes</h2>
+          <h2 className="card-title text-base">{t('admin.salesChart')}</h2>
           <div className="flex items-center justify-center h-48 bg-base-200/50 rounded-box">
             <div className="text-center text-base-content/40">
               <TrendingUp size={32} className="mx-auto mb-2" strokeWidth={1.5} />
-              <p className="text-sm font-medium">Graphique des ventes globales</p>
-              <p className="text-xs mt-1">Vue d'ensemble des revenus de la plateforme</p>
+              <p className="text-sm font-medium">{t('admin.globalSalesChart')}</p>
+              <p className="text-xs mt-1">{t('admin.platformRevenueOverview')}</p>
             </div>
           </div>
         </div>

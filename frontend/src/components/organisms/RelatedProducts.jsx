@@ -1,13 +1,15 @@
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ProductCard } from "./ProductCard";
 
 export function RelatedProducts({
   products = [],
-  title = "Produits similaires",
+  title,
   onAddToCart,
   className = "",
 }) {
+  const { t } = useTranslation();
   const scrollRef = useRef(null);
 
   const scroll = (direction) => {
@@ -24,7 +26,7 @@ export function RelatedProducts({
   return (
     <div className={className}>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold">{title}</h2>
+        <h2 className="text-xl font-bold">{title || t('home.similarProducts')}</h2>
         <div className="flex gap-1">
           <button
             type="button"

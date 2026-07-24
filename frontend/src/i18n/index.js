@@ -1,0 +1,28 @@
+import i18n from 'i18next'
+import { initReactI18next } from 'react-i18next'
+import fr from './locales/fr.json'
+import en from './locales/en.json'
+import de from './locales/de.json'
+
+const savedLang = typeof window !== 'undefined' ? localStorage.getItem('gm-lang') || 'fr' : 'fr'
+
+i18n
+  .use(initReactI18next)
+  .init({
+    resources: {
+      fr: { translation: fr },
+      en: { translation: en },
+      de: { translation: de },
+    },
+    lng: savedLang,
+    fallbackLng: 'fr',
+    interpolation: { escapeValue: false },
+    react: { useSuspense: false },
+  })
+
+i18n.on('languageChanged', (lng) => {
+  localStorage.setItem('gm-lang', lng)
+  document.documentElement.lang = lng
+})
+
+export default i18n

@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Truck, CreditCard, ClipboardCheck } from 'lucide-react'
 import { useCart } from '../../context/CartContext'
 import { useAuth } from '../../context/AuthContext'
@@ -13,16 +14,17 @@ import ShippingStep from './ShippingStep'
 import PaymentStep from './PaymentStep'
 import ConfirmationStep from './ConfirmationStep'
 
-const STEPS = [
-  { id: 'shipping', label: 'Livraison', icon: Truck },
-  { id: 'payment', label: 'Paiement', icon: CreditCard },
-  { id: 'confirmation', label: 'Confirmation', icon: ClipboardCheck },
-]
-
 export default function CheckoutPage() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const { items, subtotal, coupon, total, removeCoupon, clearCart } = useCart()
   const { user } = useAuth()
+
+  const STEPS = [
+    { id: 'shipping', label: t('checkout.shipping'), icon: Truck },
+    { id: 'payment', label: t('checkout.paymentMethod'), icon: CreditCard },
+    { id: 'confirmation', label: t('checkout.confirmOrder'), icon: ClipboardCheck },
+  ]
 
   const [currentStep, setCurrentStep] = useState('shipping')
   const [shippingData, setShippingData] = useState({
@@ -82,11 +84,11 @@ export default function CheckoutPage() {
 
   const handleConfirmOrder = async () => {
     if (!shippingData.address) {
-      setError('Veuillez sélectionner une adresse de livraison.')
+      setError(t('checkout.selectAddress'))
       return
     }
     if (!paymentData.method) {
-      setError('Veuillez sélectionner un moyen de paiement.')
+      setError(t('checkout.selectPayment'))
       return
     }
 
@@ -121,7 +123,7 @@ export default function CheckoutPage() {
       setError(
         err?.response?.data?.message ||
           err.message ||
-          'Une erreur est survenue lors de la création de la commande.'
+          t('common.error')
       )
     } finally {
       setSubmitting(false)
@@ -135,7 +137,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
-      <h1 className="text-2xl md:text-3xl font-bold mb-6">Paiement</h1>
+      <h1 className="text-2xl md:text-3xl font-bold mb-6">{t('checkout.title')}</h1>
 
       {error && (
         <Alert type="error" closable onClose={() => setError(null)} className="mb-6">

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ChevronRight, ArrowLeft } from "lucide-react";
 
 export function Header({
@@ -6,10 +7,12 @@ export function Header({
   subtitle,
   breadcrumbs = [],
   backLink,
-  backLabel = "Retour",
+  backLabel,
   actions,
   className = "",
 }) {
+  const { t } = useTranslation();
+  const resolvedBackLabel = backLabel || t('common.back');
   return (
     <div className={`mb-6 ${className}`}>
       {breadcrumbs.length > 0 && (
@@ -49,7 +52,7 @@ export function Header({
               className="inline-flex items-center gap-1.5 text-sm opacity-60 hover:opacity-100 mb-2 transition-opacity"
             >
               <ArrowLeft size={16} />
-              {backLabel}
+              {resolvedBackLabel}
             </Link>
           )}
           {title && (

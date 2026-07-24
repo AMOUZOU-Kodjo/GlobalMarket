@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import {
   DollarSign, ShoppingCart, Package, Star, Plus, Eye,
@@ -16,6 +17,7 @@ export default function SellerDashboardPage() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const { t } = useTranslation()
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -23,7 +25,7 @@ export default function SellerDashboardPage() {
         const res = await sellerService.getDashboard()
         setData(res.data || res)
       } catch (err) {
-        setError(err?.response?.data?.message || err?.message || 'Erreur lors du chargement du tableau de bord.')
+        setError(err?.response?.data?.message || err?.message || t('errors.dashboardLoad'))
       } finally {
         setLoading(false)
       }
@@ -34,7 +36,7 @@ export default function SellerDashboardPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <Spinner size="lg" text="Chargement du tableau de bord..." />
+        <Spinner size="lg" text={t('common.loadingDashboard')} />
       </div>
     )
   }
@@ -52,25 +54,25 @@ export default function SellerDashboardPage() {
 
   const kpis = [
     {
-      title: 'Revenus ce mois',
+      title: t('seller.monthRevenue'),
       value: formatCurrency(data?.stats?.monthlyRevenue ?? 0),
       icon: DollarSign,
       color: 'success',
     },
     {
-      title: 'Commandes ce mois',
+      title: t('seller.orders'),
       value: data?.stats?.monthlyOrders ?? 0,
       icon: ShoppingCart,
       color: 'primary',
     },
     {
-      title: 'Produits actifs',
+      title: t('seller.myProducts'),
       value: data?.stats?.activeProducts ?? 0,
       icon: Package,
       color: 'accent',
     },
     {
-      title: 'Commandes en attente',
+      title: t('seller.pendingOrders'),
       value: data?.stats?.pendingOrders ?? 0,
       icon: AlertCircle,
       color: 'warning',
@@ -83,17 +85,17 @@ export default function SellerDashboardPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Tableau de bord</h1>
-          <p className="text-base-content/60 text-sm">Vue d'ensemble de votre boutique</p>
+          <h1 className="text-2xl font-bold">{t('seller.dashboard')}</h1>
+          <p className="text-base-content/60 text-sm">{t('seller.dashboardDescription')}</p>
         </div>
         <div className="flex gap-2">
           <Link to="/seller/shop/products/create" className="btn btn-primary btn-sm">
             <Plus size={16} />
-            Ajouter un produit
+            {t('seller.addProduct')}
           </Link>
           <Link to="/seller/shop/orders" className="btn btn-outline btn-sm">
             <Eye size={16} />
-            Voir les commandes
+            {t('seller.viewAllOrders')}
           </Link>
         </div>
       </div>
@@ -107,12 +109,12 @@ export default function SellerDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 card bg-base-100 shadow-sm">
           <div className="card-body">
-            <h2 className="card-title text-base">Commandes récentes</h2>
+            <h2 className="card-title text-base">{t('seller.recentOrders')}</h2>
             {recentOrders.length === 0 ? (
               <EmptyState
                 icon={ShoppingCart}
-                title="Aucune commande"
-                description="Vous n'avez pas encore reçu de commande."
+                title={t('seller.noOrders')}
+                description={t('seller.noOrdersDescription')}
               />
             ) : (
               <div className="overflow-x-auto">
@@ -120,10 +122,10 @@ export default function SellerDashboardPage() {
                   <thead>
                     <tr>
                       <th>ID</th>
-                      <th>Client</th>
-                      <th>Date</th>
-                      <th>Total</th>
-                      <th>Statut</th>
+                      <th>{t('seller.client')}</th>
+                      <th>{t('common.date')}</th>
+                      <th>{t('seller.total')}</th>
+                      <th>{t('products.status')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -152,12 +154,12 @@ export default function SellerDashboardPage() {
 
         <div className="card bg-base-100 shadow-sm">
           <div className="card-body">
-            <h2 className="card-title text-base">Graphique des ventes</h2>
+            <h2 className="card-title text-base">{t('seller.revenue')}</h2>
             <div className="flex items-center justify-center h-48 bg-base-200/50 rounded-box">
               <div className="text-center text-base-content/40">
                 <TrendingUp size={32} className="mx-auto mb-2" strokeWidth={1.5} />
-                <p className="text-sm font-medium">Graphique des ventes</p>
-                <p className="text-xs mt-1">Statistiques des 30 derniers jours</p>
+                <p className="text-sm font-medium">{t('seller.revenue')}</p>
+                <p className="text-xs mt-1">{t('seller.statistics')}</p>
               </div>
             </div>
           </div>

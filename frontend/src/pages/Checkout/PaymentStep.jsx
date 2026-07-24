@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { CreditCard, Plus, CheckCircle, ArrowLeft } from 'lucide-react'
 import PaymentMethodCard from '../../components/molecules/PaymentMethodCard'
 import FormField from '../../components/molecules/FormField'
@@ -7,6 +8,7 @@ import EmptyState from '../../components/atoms/EmptyState'
 import paymentService from '../../services/payment.service'
 
 export default function PaymentStep({ paymentData, onNext, onBack }) {
+  const { t } = useTranslation()
   const [methods, setMethods] = useState([])
   const [selectedMethod, setSelectedMethod] = useState(paymentData.method)
   const [showForm, setShowForm] = useState(false)
@@ -37,20 +39,20 @@ export default function PaymentStep({ paymentData, onNext, onBack }) {
   const validateCardForm = () => {
     const errors = {}
     if (!cardForm.number.trim()) {
-      errors.number = 'Le numéro de carte est requis.'
+      errors.number = t('checkout.cardNumberRequired')
     } else if (cardForm.number.replace(/\s/g, '').length < 16) {
-      errors.number = 'Le numéro de carte doit contenir 16 chiffres.'
+      errors.number = t('checkout.cardNumberDigits')
     }
     if (!cardForm.expiry.trim()) {
-      errors.expiry = 'La date d\'expiration est requise.'
+      errors.expiry = t('checkout.expiryRequired')
     }
     if (!cardForm.cvc.trim()) {
-      errors.cvc = 'Le code CVC est requis.'
+      errors.cvc = t('checkout.cvcRequired')
     } else if (cardForm.cvc.length < 3) {
-      errors.cvc = 'Le CVC doit contenir 3 chiffres.'
+      errors.cvc = t('checkout.cvcDigits')
     }
     if (!cardForm.name.trim()) {
-      errors.name = 'Le nom du titulaire est requis.'
+      errors.name = t('checkout.nameRequired')
     }
     setFormErrors(errors)
     return Object.keys(errors).length === 0
@@ -95,7 +97,7 @@ export default function PaymentStep({ paymentData, onNext, onBack }) {
   if (loading) {
     return (
       <div className="flex justify-center py-16">
-        <Spinner text="Chargement des moyens de paiement..." />
+        <Spinner text={t('common.loading')} />
       </div>
     )
   }
@@ -106,7 +108,7 @@ export default function PaymentStep({ paymentData, onNext, onBack }) {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold flex items-center gap-2">
             <CreditCard size={20} />
-            Moyen de paiement
+            {t('checkout.paymentMethod')}
           </h2>
           <button
             type="button"
@@ -114,17 +116,17 @@ export default function PaymentStep({ paymentData, onNext, onBack }) {
             onClick={() => setShowForm(true)}
           >
             <Plus size={16} />
-            Nouvelle carte
+            {t('checkout.addCard')}
           </button>
         </div>
 
         {showForm && (
           <div className="card bg-base-100 border border-base-200 mb-4">
             <div className="card-body">
-              <h3 className="card-title text-sm mb-4">Nouvelle carte bancaire</h3>
+              <h3 className="card-title text-sm mb-4">{t('checkout.newCreditCard')}</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField
-                  label="Numéro de carte"
+                  label={t('checkout.cardNumber')}
                   error={formErrors.number}
                   className="sm:col-span-2"
                   htmlFor="card-number"
@@ -146,7 +148,7 @@ export default function PaymentStep({ paymentData, onNext, onBack }) {
                   />
                 </FormField>
                 <FormField
-                  label="Date d'expiration"
+                  label={t('checkout.expiryDate')}
                   error={formErrors.expiry}
                   htmlFor="card-expiry"
                   required
@@ -166,7 +168,7 @@ export default function PaymentStep({ paymentData, onNext, onBack }) {
                   />
                 </FormField>
                 <FormField
-                  label="CVC"
+                  label={t('checkout.cvc')}
                   error={formErrors.cvc}
                   htmlFor="card-cvc"
                   required
@@ -187,7 +189,7 @@ export default function PaymentStep({ paymentData, onNext, onBack }) {
                   />
                 </FormField>
                 <FormField
-                  label="Nom du titulaire"
+                  label={t('checkout.holderName')}
                   error={formErrors.name}
                   className="sm:col-span-2"
                   htmlFor="card-name"
@@ -214,14 +216,14 @@ export default function PaymentStep({ paymentData, onNext, onBack }) {
                     setFormErrors({})
                   }}
                 >
-                  Annuler
+                  {t('common.cancel')}
                 </button>
                 <button
                   type="button"
                   className="btn btn-primary btn-sm"
                   onClick={handleNewCardSubmit}
                 >
-                  Enregistrer la carte
+                  {t('common.save')}
                 </button>
               </div>
             </div>
@@ -231,8 +233,8 @@ export default function PaymentStep({ paymentData, onNext, onBack }) {
         {methods.length === 0 && !showForm ? (
           <EmptyState
             icon={CreditCard}
-            title="Aucun moyen de paiement"
-            description="Ajoutez une carte bancaire pour continuer."
+            title={t('checkout.noPaymentMethod')}
+            description={t('checkout.addCardToContinue')}
             action={
               <button
                 type="button"
@@ -240,7 +242,7 @@ export default function PaymentStep({ paymentData, onNext, onBack }) {
                 onClick={() => setShowForm(true)}
               >
                 <Plus size={16} />
-                Ajouter une carte
+                {t('checkout.addCard')}
               </button>
             }
           />
@@ -265,7 +267,7 @@ export default function PaymentStep({ paymentData, onNext, onBack }) {
           onClick={onBack}
         >
           <ArrowLeft size={16} />
-          Retour
+          {t('common.back')}
         </button>
         <button
           type="button"
@@ -273,7 +275,7 @@ export default function PaymentStep({ paymentData, onNext, onBack }) {
           disabled={!selectedMethod}
           onClick={handleSubmit}
         >
-          Vérifier la commande
+          {t('checkout.reviewOrder')}
         </button>
       </div>
     </div>

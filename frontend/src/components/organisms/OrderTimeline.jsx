@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import {
   CheckCircle,
   Clock,
@@ -32,11 +33,12 @@ export function OrderTimeline({
   timeline = [],
   className = "",
 }) {
+  const { t } = useTranslation();
   if (!timeline.length) {
     return (
       <div className={`text-center py-8 opacity-50 ${className}`}>
         <Clock size={32} className="mx-auto mb-2" />
-        <p className="text-sm">Aucune information de suivi disponible</p>
+        <p className="text-sm">{t('orders.noTracking')}</p>
       </div>
     );
   }
@@ -90,7 +92,7 @@ export function OrderTimeline({
                       </h4>
                       {isCurrent && (
                         <span className="badge badge-primary badge-sm">
-                          Actuel
+                          {t('orders.current')}
                         </span>
                       )}
                       {isCompleted && !isCurrent && (

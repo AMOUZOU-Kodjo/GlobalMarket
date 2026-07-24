@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../context/AuthContext'
 import authService from '../../services/auth.service'
 import { Mail, Lock, User, UserPlus } from 'lucide-react'
@@ -18,6 +19,7 @@ const strengthColors = ['error', 'error', 'warning', 'info', 'success', 'success
 const strengthLabels = ['Très faible', 'Faible', 'Moyen', 'Bon', 'Fort', 'Excellent']
 
 export default function RegisterPage() {
+  const { t } = useTranslation()
   const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' })
   const [acceptTerms, setAcceptTerms] = useState(false)
   const [error, setError] = useState('')
@@ -49,7 +51,7 @@ export default function RegisterPage() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-center mb-6">Inscription</h2>
+      <h2 className="text-2xl font-bold text-center mb-6">{t('auth.registerTitle')}</h2>
       {error && (
         <div className="alert alert-error mb-4">
           <span>{error}</span>
@@ -61,7 +63,7 @@ export default function RegisterPage() {
           <input
             type="text"
             name="name"
-            placeholder="Nom complet"
+            placeholder={t('auth.fullName')}
             value={form.name}
             onChange={handleChange}
             required
@@ -73,7 +75,7 @@ export default function RegisterPage() {
           <input
             type="email"
             name="email"
-            placeholder="Email"
+            placeholder={t('auth.email')}
             value={form.email}
             onChange={handleChange}
             required
@@ -86,7 +88,7 @@ export default function RegisterPage() {
             <input
               type="password"
               name="password"
-              placeholder="Mot de passe"
+              placeholder={t('auth.password')}
               value={form.password}
               onChange={handleChange}
               required
@@ -112,7 +114,7 @@ export default function RegisterPage() {
           <input
             type="password"
             name="confirmPassword"
-            placeholder="Confirmer le mot de passe"
+            placeholder={t('auth.confirmPassword')}
             value={form.confirmPassword}
             onChange={handleChange}
             required
@@ -146,7 +148,7 @@ export default function RegisterPage() {
             <span className="loading loading-spinner loading-sm"></span>
           ) : (
             <>
-              <UserPlus size={18} /> Créer mon compte
+              <UserPlus size={18} /> {t('auth.createAccount')}
             </>
           )}
         </button>
@@ -161,10 +163,10 @@ export default function RegisterPage() {
         </button>
       </div>
       <p className="text-center mt-4 text-sm">
-         <span className="mx-6">Déjà un compte ?</span>
+         <span className="mx-6">{t('auth.hasAccount')}</span>
         
         <Link to="/login" className="link link-primary no-underline">
-           Se connecter 
+           {t('nav.signIn')} 
         </Link>
         
       </p>

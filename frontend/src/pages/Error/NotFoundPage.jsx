@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Search, Home, Package, MessageSquare, ArrowLeft, ArrowRight } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 export default function NotFoundPage() {
+  const { t } = useTranslation()
   const [search, setSearch] = useState('')
   const navigate = useNavigate()
 
@@ -28,16 +30,16 @@ export default function NotFoundPage() {
           </div>
         </div>
 
-        <h2 className="text-2xl md:text-3xl font-bold mb-3">Page non trouvée</h2>
+        <h2 className="text-2xl md:text-3xl font-bold mb-3">{t('common.pageNotFound')}</h2>
         <p className="text-base-content/60 mb-8">
-          Oups ! La page que vous recherchez n'existe pas ou a été déplacée.
+          {t('common.oopsError')}
         </p>
 
         <form onSubmit={handleSearch} className="mb-8">
           <div className="join w-full max-w-md">
             <input
               type="text"
-              placeholder="Rechercher un produit..."
+              placeholder={t('nav.search') + '...'}
               className="input input-bordered join-item flex-1"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -51,15 +53,15 @@ export default function NotFoundPage() {
         <div className="flex flex-wrap gap-3 justify-center">
           <Link to="/" className="btn btn-primary gap-2">
             <Home size={18} />
-            Accueil
+            {t('nav.home')}
           </Link>
           <Link to="/products" className="btn btn-outline gap-2">
             <Package size={18} />
-            Produits
+            {t('nav.products')}
           </Link>
           <Link to="/contact" className="btn btn-outline gap-2">
             <MessageSquare size={18} />
-            Contact
+            {t('nav.contact')}
           </Link>
         </div>
 
@@ -69,7 +71,7 @@ export default function NotFoundPage() {
             className="btn btn-ghost btn-sm gap-2"
           >
             <ArrowLeft size={16} />
-            Retour à la page précédente
+            {t('common.back')}
           </button>
         </div>
       </div>

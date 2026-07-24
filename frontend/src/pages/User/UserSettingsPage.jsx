@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../context/AuthContext'
 import {
   Bell,
@@ -18,13 +19,6 @@ import Tabs from '../../components/atoms/Tabs'
 import AddressCard from '../../components/molecules/AddressCard'
 import Alert from '../../components/atoms/Alert'
 import Spinner from '../../components/atoms/Spinner'
-
-const TABS = [
-  { id: 'notifications', label: 'Notifications', icon: Bell },
-  { id: 'addresses', label: 'Adresses', icon: MapPin },
-  { id: 'privacy', label: 'Confidentialité', icon: Eye },
-  { id: 'account', label: 'Compte', icon: Shield },
-]
 
 function Toggle({ checked, onChange, disabled, label, description }) {
   return (
@@ -47,8 +41,16 @@ function Toggle({ checked, onChange, disabled, label, description }) {
 }
 
 export default function UserSettingsPage() {
+  const { t } = useTranslation()
   const { user, updateUser, logout } = useAuth()
   const [activeTab, setActiveTab] = useState('notifications')
+
+  const TABS = [
+    { id: 'notifications', label: t('settings.notifications'), icon: Bell },
+    { id: 'addresses', label: t('profile.addresses'), icon: MapPin },
+    { id: 'privacy', label: t('settings.privacy'), icon: Eye },
+    { id: 'account', label: t('settings.account'), icon: Shield },
+  ]
 
   const [notifications, setNotifications] = useState({
     emailOrders: true,
@@ -106,8 +108,8 @@ export default function UserSettingsPage() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <Header
-        title="Paramètres"
-        subtitle="Gérez vos préférences et votre compte"
+        title={t('settings.title')}
+        subtitle={t('settings.managePreferences')}
       />
 
       <Tabs
@@ -119,7 +121,7 @@ export default function UserSettingsPage() {
 
       {settingsSaved && (
         <Alert type="success" className="mb-6" closable onClose={() => setSettingsSaved(false)}>
-          Paramètres enregistrés avec succès.
+          {t('settings.saved')}
         </Alert>
       )}
 
@@ -129,24 +131,24 @@ export default function UserSettingsPage() {
             <div className="card-body p-6">
               <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
                 <Mail size={20} />
-                Notifications par email
+                {t('settings.emailNotifications')}
               </h3>
               <div className="divide-y divide-base-200">
                 <Toggle
-                  label="Commandes"
-                  description="Recevoir des notifications pour vos commandes"
+                  label={t('cart.orders')}
+                  description={t('settings.emailOrdersDesc')}
                   checked={notifications.emailOrders}
                   onChange={() => handleNotificationToggle('emailOrders')}
                 />
                 <Toggle
-                  label="Promotions"
-                  description="Offres spéciales et réductions"
+                  label={t('common.promotions')}
+                  description={t('settings.emailPromotionsDesc')}
                   checked={notifications.emailPromotions}
                   onChange={() => handleNotificationToggle('emailPromotions')}
                 />
                 <Toggle
-                  label="Newsletter"
-                  description="Actualités et nouveautés"
+                  label={t('settings.newsletter')}
+                  description={t('settings.emailNewsletterDesc')}
                   checked={notifications.emailNewsletter}
                   onChange={() => handleNotificationToggle('emailNewsletter')}
                 />
@@ -158,18 +160,18 @@ export default function UserSettingsPage() {
             <div className="card-body p-6">
               <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
                 <Smartphone size={20} />
-                Notifications push
+                {t('settings.pushNotifications')}
               </h3>
               <div className="divide-y divide-base-200">
                 <Toggle
-                  label="Commandes"
-                  description="Notifications push pour vos commandes"
+                  label={t('cart.orders')}
+                  description={t('settings.pushOrdersDesc')}
                   checked={notifications.pushOrders}
                   onChange={() => handleNotificationToggle('pushOrders')}
                 />
                 <Toggle
-                  label="Promotions"
-                  description="Notifications push pour les offres"
+                  label={t('common.promotions')}
+                  description={t('settings.pushPromotionsDesc')}
                   checked={notifications.pushPromotions}
                   onChange={() => handleNotificationToggle('pushPromotions')}
                 />
@@ -181,18 +183,18 @@ export default function UserSettingsPage() {
             <div className="card-body p-6">
               <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
                 <MessageSquare size={20} />
-                Notifications SMS
+                {t('settings.smsNotifications')}
               </h3>
               <div className="divide-y divide-base-200">
                 <Toggle
-                  label="Commandes"
-                  description="SMS pour le suivi de vos commandes"
+                  label={t('cart.orders')}
+                  description={t('settings.smsOrdersDesc')}
                   checked={notifications.smsOrders}
                   onChange={() => handleNotificationToggle('smsOrders')}
                 />
                 <Toggle
-                  label="Promotions"
-                  description="SMS promotionnels"
+                  label={t('common.promotions')}
+                  description={t('settings.smsPromotionsDesc')}
                   checked={notifications.smsPromotions}
                   onChange={() => handleNotificationToggle('smsPromotions')}
                 />
@@ -206,7 +208,7 @@ export default function UserSettingsPage() {
               className="btn btn-primary"
               onClick={handleSaveSettings}
             >
-              Enregistrer
+              {t('common.save')}
             </button>
           </div>
         </div>
@@ -224,7 +226,7 @@ export default function UserSettingsPage() {
               }}
             >
               <Plus size={16} />
-              Ajouter une adresse
+              {t('profile.addAddress')}
             </button>
           </div>
 
@@ -232,7 +234,7 @@ export default function UserSettingsPage() {
             <div className="card bg-base-100 border border-base-200">
               <div className="card-body">
                 <h3 className="card-title text-sm mb-2">
-                  {editingAddress ? 'Modifier l\'adresse' : 'Nouvelle adresse'}
+                  {editingAddress ? t('profile.editAddress') : t('profile.newAddress')}
                 </h3>
                 <AddressForm
                   initialData={editingAddress}
@@ -265,9 +267,9 @@ export default function UserSettingsPage() {
             <div className="card bg-base-100 border border-base-200">
               <div className="card-body items-center text-center py-12">
                 <MapPin size={48} className="text-base-content/20 mb-3" />
-                <h3 className="font-semibold">Aucune adresse</h3>
+                <h3 className="font-semibold">{t('profile.noAddresses')}</h3>
                 <p className="text-sm text-base-content/50">
-                  Ajoutez une adresse de livraison.
+                  {t('profile.addAddressHint')}
                 </p>
               </div>
             </div>
@@ -299,30 +301,30 @@ export default function UserSettingsPage() {
             <div className="card-body p-6">
               <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
                 <Eye size={20} />
-                Paramètres de confidentialité
+                {t('settings.privacySettings')}
               </h3>
               <div className="divide-y divide-base-200">
                 <Toggle
-                  label="Afficher l'email"
-                  description="Rendre votre email visible sur votre profil public"
+                  label={t('settings.showEmail')}
+                  description={t('settings.showEmailDesc')}
                   checked={privacy.showEmail}
                   onChange={() => handlePrivacyToggle('showEmail')}
                 />
                 <Toggle
-                  label="Afficher le téléphone"
-                  description="Rendre votre numéro visible sur votre profil"
+                  label={t('settings.showPhone')}
+                  description={t('settings.showPhoneDesc')}
                   checked={privacy.showPhone}
                   onChange={() => handlePrivacyToggle('showPhone')}
                 />
                 <Toggle
-                  label="Profil visible"
-                  description="Votre profil est visible par les autres utilisateurs"
+                  label={t('settings.profileVisible')}
+                  description={t('settings.profileVisibleDesc')}
                   checked={privacy.profileVisible}
                   onChange={() => handlePrivacyToggle('profileVisible')}
                 />
                 <Toggle
-                  label="Activité visible"
-                  description="Afficher votre activité récente aux autres"
+                  label={t('settings.activityVisible')}
+                  description={t('settings.activityVisibleDesc')}
                   checked={privacy.activityVisible}
                   onChange={() => handlePrivacyToggle('activityVisible')}
                 />
@@ -336,7 +338,7 @@ export default function UserSettingsPage() {
               className="btn btn-primary"
               onClick={handleSaveSettings}
             >
-              Enregistrer
+              {t('common.save')}
             </button>
           </div>
         </div>
@@ -348,20 +350,18 @@ export default function UserSettingsPage() {
             <div className="card-body p-6">
               <h3 className="font-bold text-lg mb-2 flex items-center gap-2 text-error">
                 <AlertTriangle size={20} />
-                Zone dangereuse
+                {t('settings.dangerZone')}
               </h3>
               <p className="text-sm text-base-content/70 mb-4">
-                La suppression de votre compte est irréversible. Toutes vos
-                données seront définitivement supprimées.
+                {t('settings.deleteAccountWarning')}
               </p>
 
               <div className="bg-base-100 rounded-box p-4 border border-base-300">
                 <h4 className="font-semibold text-sm mb-3">
-                  Confirmer la suppression
+                  {t('settings.confirmDeletion')}
                 </h4>
                 <p className="text-xs text-base-content/60 mb-3">
-                  Tapez <span className="font-mono font-bold">SUPPRIMER</span> pour
-                  confirmer.
+                  {t('settings.typeDeleteConfirm')}
                 </p>
                 <input
                   type="text"
@@ -381,7 +381,7 @@ export default function UserSettingsPage() {
                   ) : (
                     <>
                       <Trash2 size={14} />
-                      Supprimer mon compte
+                      {t('settings.deleteAccount')}
                     </>
                   )}
                 </button>

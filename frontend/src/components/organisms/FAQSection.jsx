@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ChevronDown, HelpCircle } from "lucide-react";
 import { EmptyState } from "../atoms/EmptyState";
 
@@ -26,6 +27,7 @@ export function FAQSection({
   categories,
   className = "",
 }) {
+  const { t } = useTranslation();
   const [openIndices, setOpenIndices] = useState(new Set());
   const [activeCategory, setActiveCategory] = useState(null);
 
@@ -68,8 +70,8 @@ export function FAQSection({
     return (
       <EmptyState
         icon={HelpCircle}
-        title="Aucune question"
-        description="Il n'y a pas de questions pour le moment."
+        title={t('faq.noQuestions')}
+        description={t('faq.noQuestionsDescription')}
         className={className}
       />
     );
@@ -78,13 +80,13 @@ export function FAQSection({
   return (
     <div className={className}>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold">Questions fréquentes</h2>
+        <h2 className="text-xl font-bold">{t('faq.title')}</h2>
         <button
           type="button"
           className="btn btn-ghost btn-sm"
           onClick={toggleAll}
         >
-          {openIndices.size === items.length ? "Tout replier" : "Tout déplier"}
+          {openIndices.size === items.length ? t('faq.collapseAll') : t('faq.expandAll')}
         </button>
       </div>
 
@@ -95,7 +97,7 @@ export function FAQSection({
             className={`btn btn-sm ${activeCategory === null ? "btn-primary" : "btn-outline"}`}
             onClick={() => setActiveCategory(null)}
           >
-            Toutes
+            {t('faq.all')}
           </button>
           {itemCategories.map((cat) => (
             <button

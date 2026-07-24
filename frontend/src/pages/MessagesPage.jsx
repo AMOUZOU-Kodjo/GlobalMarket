@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Header } from '../components/organisms/Header'
 import { MessageCircle, Send, Search, User, Package } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
@@ -43,6 +44,7 @@ const MOCK_MESSAGES = [
 
 export default function MessagesPage() {
   const { user } = useAuth()
+  const { t } = useTranslation()
   const [selectedConvo, setSelectedConvo] = useState(null)
   const [newMessage, setNewMessage] = useState('')
   const [messages, setMessages] = useState(MOCK_MESSAGES)
@@ -64,8 +66,8 @@ export default function MessagesPage() {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
         <MessageCircle size={48} className="mx-auto mb-4 text-base-content/30" />
-        <h2 className="text-xl font-bold mb-2">Connectez-vous pour accéder à vos messages</h2>
-        <Link to="/login" className="btn btn-primary mt-4">Se connecter</Link>
+        <h2 className="text-xl font-bold mb-2">{t('messages.loginRequired')}</h2>
+        <Link to="/login" className="btn btn-primary mt-4">{t('nav.signIn')}</Link>
       </div>
     )
   }
@@ -77,9 +79,9 @@ export default function MessagesPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <Header
-        title="Messages"
-        subtitle="Échangez avec vos vendeurs et le support"
-        breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Messages' }]}
+        title={t('messages.title')}
+        subtitle={t('messages.subtitle')}
+        breadcrumbs={[{ label: t('nav.home'), href: '/' }, { label: t('messages.title') }]}
       />
 
       <div className="bg-base-100 rounded-xl shadow-sm border border-base-200 overflow-hidden" style={{ height: '600px' }}>
@@ -91,7 +93,7 @@ export default function MessagesPage() {
                 <Search size={16} className="opacity-50" />
                 <input
                   type="text"
-                  placeholder="Rechercher..."
+                  placeholder={t('messages.searchPlaceholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="grow text-sm"
@@ -133,7 +135,7 @@ export default function MessagesPage() {
               ))}
               {filteredConvos.length === 0 && (
                 <div className="p-8 text-center text-sm text-base-content/50">
-                  Aucune conversation trouvée
+                  {t('messages.noConversations')}
                 </div>
               )}
             </div>
@@ -155,7 +157,7 @@ export default function MessagesPage() {
                   <div>
                     <p className="font-medium text-sm">{selectedConvo.name}</p>
                     {selectedConvo.orderId && (
-                      <p className="text-xs text-base-content/50">Commande {selectedConvo.orderId}</p>
+                      <p className="text-xs text-base-content/50">{t('messages.order')} {selectedConvo.orderId}</p>
                     )}
                   </div>
                 </div>
@@ -180,7 +182,7 @@ export default function MessagesPage() {
                 <form onSubmit={handleSend} className="p-3 border-t border-base-200 flex gap-2">
                   <input
                     type="text"
-                    placeholder="Écrire un message..."
+                    placeholder={t('messages.writeMessage')}
                     className="input input-bordered flex-1"
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
@@ -194,7 +196,7 @@ export default function MessagesPage() {
               <div className="flex-1 flex items-center justify-center text-base-content/40">
                 <div className="text-center">
                   <MessageCircle size={48} className="mx-auto mb-3 opacity-30" />
-                  <p className="text-sm">Sélectionnez une conversation</p>
+                  <p className="text-sm">{t('messages.selectConversation')}</p>
                 </div>
               </div>
             )}

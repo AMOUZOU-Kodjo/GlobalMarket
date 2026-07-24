@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ordersAPI } from '../services/api'
 import { Package } from 'lucide-react'
 import formatCurrency from '../utils/formatCurrency'
 
 export default function Orders() {
+  const { t } = useTranslation()
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -42,15 +44,15 @@ export default function Orders() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
-      <h1 className="text-3xl font-bold mb-8">Mes commandes</h1>
+      <h1 className="text-3xl font-bold mb-8">{t('orders.title')}</h1>
 
       {orders.length === 0 ? (
         <div className="card bg-base-100 shadow-xl">
           <div className="card-body items-center text-center py-16">
             <Package size={64} className="text-base-content/20 mb-4" />
-            <h3 className="text-xl font-semibold">Aucune commande</h3>
+            <h3 className="text-xl font-semibold">{t('orders.none')}</h3>
             <p className="text-base-content/50">
-              Vous n'avez pas encore passé de commande.
+              {t('orders.noneYet')}
             </p>
           </div>
         </div>
@@ -62,7 +64,7 @@ export default function Orders() {
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-bold">
-                      Commande #{order._id?.slice(-8)}
+                      {t('orders.orderNumber', { id: order._id?.slice(-8) })}
                     </h3>
                     <p className="text-sm text-base-content/50">
                       {new Date(order.createdAt).toLocaleDateString('fr-FR')}
@@ -75,7 +77,7 @@ export default function Orders() {
                 <div className="divider my-1"></div>
                 <div className="flex justify-between">
                   <span className="text-base-content/70">
-                    {order.items?.length || 0} article(s)
+                    {t('orders.articles', { count: order.items?.length || 0 })}
                   </span>
                   <span className="font-bold text-primary">
                     {formatCurrency(order.total || order.totalAmount)}

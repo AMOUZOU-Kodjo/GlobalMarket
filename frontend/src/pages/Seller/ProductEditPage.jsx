@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   Package, ArrowLeft, Save, AlertCircle, X,
 } from 'lucide-react'
@@ -12,6 +13,7 @@ import Spinner from '../../components/atoms/Spinner'
 export default function ProductEditPage() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
@@ -46,7 +48,7 @@ export default function ProductEditPage() {
       const data = res?.data || res || {}
       const allProducts = data?.products || (Array.isArray(data) ? data : [])
       const product = allProducts.find((p) => (p._id || p.id) === id)
-      if (!product) throw new Error('Produit introuvable')
+      if (!product) throw new Error(t('common.productNotFound'))
       setForm({
         name: product.name || '',
         description: product.description || '',
@@ -64,9 +66,9 @@ export default function ProductEditPage() {
       const imgs = (product.images || []).map((img) => (typeof img === 'string' ? img : img.url)).filter(Boolean)
       setExistingImages(imgs)
     }).catch((err) => {
-      setError(err?.response?.data?.message || err?.message || 'Erreur lors du chargement du produit.')
+      setError(err?.response?.data?.message || err?.message || t('errors.productLoad'))
     }).finally(() => setLoading(false))
-  }, [id])
+  }, [id, t])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -76,11 +78,11 @@ export default function ProductEditPage() {
 
   const validate = () => {
     const errs = {}
-    if (!form.name.trim()) errs.name = 'Le nom est requis'
-    if (!form.description.trim()) errs.description = 'La description est requise'
-    if (!form.categoryId) errs.categoryId = 'La catégorie est requise'
-    if (!form.price || isNaN(Number(form.price)) || Number(form.price) <= 0) errs.price = 'Un prix valide est requis'
-    if (form.stock === '' || isNaN(Number(form.stock)) || Number(form.stock) < 0) errs.stock = 'Le stock est requis'
+    if (!form.name.trim()) errs.name = t('validation.nameRequired')
+    if (!form.description.trim()) errs.description = t('validation.descriptionRequired')
+    if (!form.categoryId) errs.categoryId = t('validation.categoryRequired')
+    if (!form.price || isNaN(Number(form.price)) || Number(form.price) <= 0) errs.price = t('validation.priceRequired')
+    if (form.stock === '' || isNaN(Number(form.stock)) || Number(form.stock) < 0) errs.stock = t('validation.stockRequired')
     setErrors(errs)
     return Object.keys(errs).length === 0
   }
@@ -134,7 +136,7 @@ export default function ProductEditPage() {
 
       navigate('/seller/shop/products')
     } catch (err) {
-      setError(err?.response?.data?.message || err?.message || 'Erreur lors de la mise à jour du produit.')
+      setError(err?.response?.data?.message || err?.message || t('errors.productUpdate'))
     } finally {
       setSaving(false)
     }
@@ -143,7 +145,7 @@ export default function ProductEditPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <Spinner size="lg" text="Chargement du produit..." />
+        <Spinner size="lg" text={t('common.loading')} />
       </div>
     )
   }
@@ -166,8 +168,8 @@ export default function ProductEditPage() {
           <ArrowLeft size={18} />
         </button>
         <div>
-          <h1 className="text-2xl font-bold">Modifier le produit</h1>
-          <p className="text-base-content/60 text-sm">Mettez à jour les informations de votre produit</p>
+          <h1 className="text-2xl font-bold">{t('productEdit.title')}</h1>
+          <p className="text-base-content/60 text-sm">{t('productEdit.subtitle')}</p>
         </div>
       </div>
 
@@ -181,9 +183,9 @@ export default function ProductEditPage() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="card bg-base-100 shadow-sm">
           <div className="card-body">
-            <h2 className="card-title text-base">Informations générales</h2>
+            <h2 className="card-title text-base">{t('productForm.basicInfo')}</h2>
 
-            <FormField label="Nom du produit" required error={errors.name} htmlFor="name">
+            <FormField label={t('products.name')} required error={errors.name} htmlFor="name">
               <label className="input input-bordered flex items-center gap-2">
                 <Package size={16} className="opacity-50" />
                 <input
@@ -191,25 +193,25 @@ export default function ProductEditPage() {
                   name="name"
                   type="text"
                   className="grow"
-                  placeholder="Nom du produit"
+                  placeholder={t('products.name')}
                   value={form.name}
                   onChange={handleChange}
                 />
               </label>
             </FormField>
 
-            <FormField label="Description" required error={errors.description} htmlFor="description">
+            <FormField label={t('products.description')} required error={errors.description} htmlFor="description">
               <textarea
                 id="description"
                 name="description"
                 className="textarea textarea-bordered w-full min-h-[120px]"
-                placeholder="Décrivez votre produit en détail..."
+                placeholder={t('productCreate.descriptionPlaceholder')}
                 value={form.description}
                 onChange={handleChange}
               />
             </FormField>
 
-            <FormField label="Catégorie" required error={errors.categoryId} htmlFor="categoryId">
+            <FormField label={t('products.category')} required error={errors.categoryId} htmlFor="categoryId">
               <select
                 id="categoryId"
                 name="categoryId"
@@ -217,7 +219,7 @@ export default function ProductEditPage() {
                 value={form.categoryId}
                 onChange={handleChange}
               >
-                <option value="">Sélectionner une catégorie</option>
+                <option value="">{t('productCreate.selectCategory')}</option>
                 {categories.map((cat) => (
                   <option key={cat.id || cat.slug} value={cat.id}>{cat.name}</option>
                 ))}
@@ -228,13 +230,13 @@ export default function ProductEditPage() {
 
         <div className="card bg-base-100 shadow-sm">
           <div className="card-body">
-            <h2 className="card-title text-base">Images</h2>
+            <h2 className="card-title text-base">{t('products.images')}</h2>
 
             {existingImages.length > 0 && (
               <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-4">
                 {existingImages.map((img, i) => (
                   <div key={i} className="relative group aspect-square rounded-box overflow-hidden bg-base-200">
-                    <img src={img} alt={`Image ${i + 1}`} className="w-full h-full object-cover" />
+                    <img src={img} alt={`${t('products.image')} ${i + 1}`} className="w-full h-full object-cover" />
                     <button
                       type="button"
                       className="absolute top-1 right-1 btn btn-circle btn-xs btn-error opacity-0 group-hover:opacity-100 transition-opacity"
@@ -260,9 +262,9 @@ export default function ProductEditPage() {
 
         <div className="card bg-base-100 shadow-sm">
           <div className="card-body">
-            <h2 className="card-title text-base">Prix et stock</h2>
+            <h2 className="card-title text-base">{t('productForm.priceAndStock')}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormField label="Prix (XOF)" required error={errors.price} htmlFor="price">
+              <FormField label={t('products.price')} required error={errors.price} htmlFor="price">
                 <input
                   id="price"
                   name="price"
@@ -276,7 +278,7 @@ export default function ProductEditPage() {
                 />
               </FormField>
 
-              <FormField label="Prix barré (XOF)" hint="Optionnel" htmlFor="compareAtPrice">
+              <FormField label={t('products.originalPrice')} hint={t('common.optional')} htmlFor="compareAtPrice">
                 <input
                   id="compareAtPrice"
                   name="compareAtPrice"
@@ -290,7 +292,7 @@ export default function ProductEditPage() {
                 />
               </FormField>
 
-              <FormField label="Stock" required error={errors.stock} htmlFor="stock">
+              <FormField label={t('products.stock')} required error={errors.stock} htmlFor="stock">
                 <input
                   id="stock"
                   name="stock"
@@ -303,7 +305,7 @@ export default function ProductEditPage() {
                 />
               </FormField>
 
-              <FormField label="SKU" htmlFor="sku">
+              <FormField label={t('products.sku')} htmlFor="sku">
                 <input
                   id="sku"
                   name="sku"
@@ -320,9 +322,9 @@ export default function ProductEditPage() {
 
         <div className="card bg-base-100 shadow-sm">
           <div className="card-body">
-            <h2 className="card-title text-base">Dimensions et expédition</h2>
+            <h2 className="card-title text-base">{t('productForm.dimensions')}</h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <FormField label="Poids (kg)" htmlFor="weight">
+              <FormField label={t('products.weight')} htmlFor="weight">
                 <input
                   id="weight"
                   name="weight"
@@ -335,7 +337,7 @@ export default function ProductEditPage() {
                   onChange={handleChange}
                 />
               </FormField>
-              <FormField label="Longueur (cm)" htmlFor="length">
+              <FormField label={t('products.length')} htmlFor="length">
                 <input
                   id="length"
                   name="length"
@@ -347,7 +349,7 @@ export default function ProductEditPage() {
                   onChange={handleChange}
                 />
               </FormField>
-              <FormField label="Largeur (cm)" htmlFor="width">
+              <FormField label={t('products.width')} htmlFor="width">
                 <input
                   id="width"
                   name="width"
@@ -359,7 +361,7 @@ export default function ProductEditPage() {
                   onChange={handleChange}
                 />
               </FormField>
-              <FormField label="Hauteur (cm)" htmlFor="height">
+              <FormField label={t('products.height')} htmlFor="height">
                 <input
                   id="height"
                   name="height"
@@ -377,7 +379,7 @@ export default function ProductEditPage() {
 
         <div className="card bg-base-100 shadow-sm">
           <div className="card-body">
-            <h2 className="card-title text-base">Statut</h2>
+            <h2 className="card-title text-base">{t('products.status')}</h2>
             <FormField htmlFor="status">
               <select
                 id="status"
@@ -386,8 +388,8 @@ export default function ProductEditPage() {
                 value={form.status}
                 onChange={handleChange}
               >
-                <option value="draft">Brouillon</option>
-                <option value="active">Actif</option>
+                <option value="draft">{t('products.draft')}</option>
+                <option value="active">{t('products.active')}</option>
               </select>
             </FormField>
           </div>
@@ -399,7 +401,7 @@ export default function ProductEditPage() {
             className="btn btn-ghost"
             onClick={() => navigate(-1)}
           >
-            Annuler
+            {t('common.cancel')}
           </button>
           <button
             type="submit"
@@ -409,12 +411,12 @@ export default function ProductEditPage() {
             {saving ? (
               <>
                 <span className="loading loading-spinner loading-sm" />
-                Enregistrement...
+                {t('common.saving')}
               </>
             ) : (
               <>
                 <Save size={16} />
-                Enregistrer les modifications
+                {t('products.saveChanges')}
               </>
             )}
           </button>

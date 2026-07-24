@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import {
   Plus, Pencil, Trash2, Search, Package, AlertCircle, Filter,
@@ -24,6 +25,7 @@ export default function SellerProductsPage() {
   const [deleting, setDeleting] = useState(false)
 
   const { page, totalPages, goToPage } = usePagination(totalItems, 10)
+  const { t } = useTranslation()
 
   const fetchProducts = useCallback(async () => {
     setLoading(true)
@@ -92,7 +94,7 @@ export default function SellerProductsPage() {
     },
     {
       key: 'price',
-      label: 'Prix',
+      label: t('products.price'),
       sortable: true,
       render: (val) => (
         <span className="font-medium">{formatCurrency(val)}</span>
@@ -120,7 +122,7 @@ export default function SellerProductsPage() {
       render: (_, row) => (
         <div className="flex gap-1">
           <Link
-            to={`/seller/products/${row._id || row.id}/edit`}
+            to={`/seller/shop/products/${row._id || row.id}/edit`}
             className="btn btn-ghost btn-xs"
             onClick={(e) => e.stopPropagation()}
           >
@@ -143,14 +145,14 @@ export default function SellerProductsPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">Mes produits</h1>
-          <p className="text-base-content/60 text-sm">{totalItems} produit{totalItems !== 1 ? 's' : ''} au total</p>
-        </div>
-        <Link to="/seller/shop/products/create" className="btn btn-primary btn-sm">
-          <Plus size={16} />
-          Ajouter un produit
-        </Link>
+          <div>
+            <h1 className="text-2xl font-bold">{t('seller.productManagement')}</h1>
+            <p className="text-base-content/60 text-sm">{totalItems} produit{totalItems !== 1 ? 's' : ''} au total</p>
+          </div>
+          <Link to="/seller/shop/products/create" className="btn btn-primary btn-sm">
+            <Plus size={16} />
+            {t('seller.addProduct')}
+          </Link>
       </div>
 
       {error && (
@@ -189,8 +191,8 @@ export default function SellerProductsPage() {
             columns={columns}
             data={products}
             loading={loading}
-            emptyMessage="Aucun produit trouvé"
-            onRowClick={(row) => window.location.href = `/seller/products/${row._id || row.id}/edit`}
+            emptyMessage={t('seller.noProducts')}
+            onRowClick={(row) => window.location.href = `/seller/shop/products/${row._id || row.id}/edit`}
           />
 
           {totalPages > 1 && (
@@ -220,7 +222,7 @@ export default function SellerProductsPage() {
               disabled={deleting}
             >
               {deleting ? <span className="loading loading-spinner loading-sm" /> : <Trash2 size={14} />}
-              Supprimer
+              {t('common.delete')}
             </button>
           </>
         }

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import {
   MessageCircle,
   X,
@@ -11,12 +12,13 @@ import {
 import { formatDate } from "../../utils/formatDate";
 
 function ConversationList({ conversations, onSelect }) {
+  const { t } = useTranslation();
   return (
     <div className="flex-1 overflow-y-auto">
       {conversations.length === 0 && (
         <div className="text-center py-8 opacity-50">
           <MessageCircle size={24} className="mx-auto mb-2" />
-          <p className="text-sm">Aucune conversation</p>
+          <p className="text-sm">{t('chat.noConversations')}</p>
         </div>
       )}
       {conversations.map((conv) => (
@@ -35,7 +37,7 @@ function ConversationList({ conversations, onSelect }) {
           </div>
           <div className="flex-1 min-w-0">
             <h4 className="font-medium text-sm truncate">
-              {conv.name || conv.subject || "Conversation"}
+              {conv.name || conv.subject || t('chat.conversation')}
             </h4>
             {conv.lastMessage && (
               <p className="text-xs opacity-50 truncate">
@@ -53,6 +55,7 @@ function ConversationList({ conversations, onSelect }) {
 }
 
 function MessageList({ messages = [] }) {
+  const { t } = useTranslation();
   const endRef = useRef(null);
 
   useEffect(() => {
@@ -64,7 +67,7 @@ function MessageList({ messages = [] }) {
       <div className="flex-1 flex items-center justify-center opacity-50 py-8">
         <div className="text-center">
           <MessageCircle size={32} className="mx-auto mb-2" />
-          <p className="text-sm">Envoyez un message pour démarrer la conversation</p>
+          <p className="text-sm">{t('chat.startConversation')}</p>
         </div>
       </div>
     );
@@ -132,6 +135,7 @@ export function ChatWidget({
   const [view, setView] = useState("list");
   const [activeConversation, setActiveConversation] = useState(null);
   const inputRef = useRef(null);
+  const { t } = useTranslation();
 
   const handleSend = () => {
     const text = input.trim();
@@ -175,8 +179,8 @@ export function ChatWidget({
             )}
             <h3 className="font-bold text-sm flex-1 truncate">
               {view === "chat"
-                ? activeConversation?.name || activeConversation?.subject || "Chat"
-                : "Messages"}
+                ? activeConversation?.name || activeConversation?.subject || t('chat.title')
+                : t('chat.messages')}
             </h3>
             <button
               type="button"
@@ -202,7 +206,7 @@ export function ChatWidget({
                   <input
                     ref={inputRef}
                     type="text"
-                    placeholder="Tapez un message..."
+                    placeholder={t('chat.placeholder')}
                     className="input input-sm join-item flex-1"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}

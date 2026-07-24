@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Mail, CheckCircle, Loader2 } from "lucide-react";
 
 export function NewsletterForm({
@@ -9,6 +10,7 @@ export function NewsletterForm({
 }) {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const { t } = useTranslation();
 
   const validateEmail = (value) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -20,12 +22,12 @@ export function NewsletterForm({
     setError("");
 
     if (!email.trim()) {
-      setError("Veuillez entrer votre adresse email.");
+      setError(t('newsletter.enterEmail'));
       return;
     }
 
     if (!validateEmail(email)) {
-      setError("Veuillez entrer une adresse email valide.");
+      setError(t('newsletter.invalidEmail'));
       return;
     }
 
@@ -36,9 +38,9 @@ export function NewsletterForm({
     return (
       <div className={`text-center py-6 ${className}`}>
         <CheckCircle size={48} className="text-success mx-auto mb-3" />
-        <h3 className="text-lg font-bold mb-1">Merci de votre inscription !</h3>
+        <h3 className="text-lg font-bold mb-1">{t('newsletter.thanks')}</h3>
         <p className="text-sm opacity-60">
-          Vous recevrez nos prochaines newsletters dans votre boîte email.
+          {t('newsletter.description')}
         </p>
       </div>
     );
@@ -48,9 +50,9 @@ export function NewsletterForm({
     <div className={className}>
       <div className="text-center mb-4">
         <Mail size={32} className="mx-auto mb-2 opacity-50" />
-        <h3 className="text-lg font-bold mb-1">Restez informé</h3>
+        <h3 className="text-lg font-bold mb-1">{t('newsletter.title')}</h3>
         <p className="text-sm opacity-60">
-          Inscrivez-vous à notre newsletter pour recevoir les dernières offres et nouveautés.
+          {t('newsletter.subtitle')}
         </p>
       </div>
 
@@ -58,7 +60,7 @@ export function NewsletterForm({
         <div className="join w-full max-w-md mx-auto">
           <input
             type="email"
-            placeholder="Votre adresse email"
+            placeholder={t('newsletter.emailPlaceholder')}
             className={`input input-bordered join-item flex-1 ${
               error ? "input-error" : ""
             }`}
@@ -77,7 +79,7 @@ export function NewsletterForm({
             {loading ? (
               <span className="loading loading-spinner loading-sm" />
             ) : (
-              "S'inscrire"
+              t('newsletter.subscribe')
             )}
           </button>
         </div>

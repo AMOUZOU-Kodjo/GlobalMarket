@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { ArrowUpDown, Grid3X3, List, PackageSearch } from 'lucide-react'
 import Breadcrumb from '../components/atoms/Breadcrumb'
 import ProductGrid from '../components/organisms/ProductGrid'
@@ -10,14 +11,6 @@ import { useCart } from '../context/CartContext'
 import productService from '../services/product.service'
 import categoryService from '../services/category.service'
 import MOCK_PRODUCTS from '../data/mockProducts'
-
-const SORT_OPTIONS = [
-  { value: 'newest', label: 'Plus récents' },
-  { value: 'price_asc', label: 'Prix croissant' },
-  { value: 'price_desc', label: 'Prix décroissant' },
-  { value: 'rating', label: 'Meilleures notes' },
-  { value: 'popularity', label: 'Popularité' },
-]
 
 const ITEMS_PER_PAGE = 12
 
@@ -32,6 +25,16 @@ export default function Products() {
   const [loadingCategories, setLoadingCategories] = useState(true)
   const [error, setError] = useState(null)
   const [layout, setLayout] = useState('grid')
+
+  const { t } = useTranslation()
+
+  const SORT_OPTIONS = [
+    { value: 'newest', label: t('common.newest') },
+    { value: 'price_asc', label: t('common.priceAsc') },
+    { value: 'price_desc', label: t('common.priceDesc') },
+    { value: 'rating', label: t('common.rating') },
+    { value: 'popularity', label: t('common.popular') },
+  ]
 
   const currentPage = parseInt(searchParams.get('page') || '1', 10)
   const currentSort = searchParams.get('sort') || 'newest'
@@ -170,17 +173,17 @@ export default function Products() {
     <div className="container mx-auto px-4 py-6">
       <Breadcrumb
         items={[
-          { label: 'Accueil', href: '/' },
-          { label: 'Produits' },
+          { label: t('nav.home'), href: '/' },
+          { label: t('nav.products') },
         ]}
         className="mb-4"
       />
 
       <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold">Produits</h1>
+        <h1 className="text-2xl md:text-3xl font-bold">{t('nav.products')}</h1>
         {!loading && (
           <p className="text-sm text-base-content/50 mt-1">
-            {totalProducts} produit{totalProducts !== 1 ? 's' : ''} trouvé{totalProducts !== 1 ? 's' : ''}
+            {t('common.productsFound', { count: totalProducts })}
           </p>
         )}
       </div>
@@ -193,13 +196,13 @@ export default function Products() {
             className="btn btn-ghost btn-sm"
             onClick={() => window.location.reload()}
           >
-            Réessayer
+            {t('common.retry')}
           </button>
         </div>
       )}
 
       <div className="flex gap-6 items-start">
-        <aside className="hidden lg:block w-64 shrink-0">
+        <aside className="hidden lg:block w-64 shrink-0 sticky top-24">
           <FilterSidebar
             categories={categories}
             activeFilters={activeFilters}
@@ -264,21 +267,21 @@ export default function Products() {
             layout={layout}
             skeletonCount={ITEMS_PER_PAGE}
             onAddToCart={handleAddToCart}
-            emptyMessage="Aucun produit trouvé avec ces filtres"
+            emptyMessage={t('products.noneFound')}
           />
 
           {!loading && products.length === 0 && !error && (
             <EmptyState
               icon={PackageSearch}
-              title="Aucun produit trouvé"
-              description="Essayez de modifier vos filtres ou votre recherche."
+              title={t('products.noneFound')}
+              description={t('common.tryModifyFilters')}
               action={
                 <button
                   type="button"
                   className="btn btn-primary btn-sm"
                   onClick={handleClearFilters}
                 >
-                  Effacer les filtres
+                  {t('common.resetFilters')}
                 </button>
               }
             />

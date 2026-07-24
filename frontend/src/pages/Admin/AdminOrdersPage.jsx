@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   Search, ShoppingCart, AlertCircle, ChevronDown, RotateCcw,
 } from 'lucide-react'
@@ -13,25 +14,8 @@ import usePagination from '../../hooks/usePagination'
 import formatCurrency from '../../utils/formatCurrency'
 import { formatDate } from '../../utils/formatDate'
 
-const STATUSES = [
-  { value: '', label: 'Tous les statuts' },
-  { value: 'pending', label: 'En attente' },
-  { value: 'confirmed', label: 'Confirmée' },
-  { value: 'shipped', label: 'Expédiée' },
-  { value: 'delivered', label: 'Livrée' },
-  { value: 'cancelled', label: 'Annulée' },
-  { value: 'refunded', label: 'Remboursée' },
-]
-
-const STATUS_OPTIONS = [
-  { value: 'pending', label: 'En attente' },
-  { value: 'confirmed', label: 'Confirmée' },
-  { value: 'shipped', label: 'Expédiée' },
-  { value: 'delivered', label: 'Livrée' },
-  { value: 'cancelled', label: 'Annulée' },
-]
-
 export default function AdminOrdersPage() {
+  const { t } = useTranslation()
   const [orders, setOrders] = useState([])
   const [totalItems, setTotalItems] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -41,6 +25,24 @@ export default function AdminOrdersPage() {
   const [refundTarget, setRefundTarget] = useState(null)
   const [refundReason, setRefundReason] = useState('')
   const [refunding, setRefunding] = useState(false)
+
+  const STATUSES = [
+    { value: '', label: t('admin.allStatuses') },
+    { value: 'pending', label: t('orders.pending') },
+    { value: 'confirmed', label: t('orders.confirmed') },
+    { value: 'shipped', label: t('orders.shipped') },
+    { value: 'delivered', label: t('orders.delivered') },
+    { value: 'cancelled', label: t('orders.cancelled') },
+    { value: 'refunded', label: t('orders.refunded') },
+  ]
+
+  const STATUS_OPTIONS = [
+    { value: 'pending', label: t('orders.pending') },
+    { value: 'confirmed', label: t('orders.confirmed') },
+    { value: 'shipped', label: t('orders.shipped') },
+    { value: 'delivered', label: t('orders.delivered') },
+    { value: 'cancelled', label: t('orders.cancelled') },
+  ]
 
   const { page, totalPages, goToPage } = usePagination(totalItems, 10)
 
@@ -56,7 +58,7 @@ export default function AdminOrdersPage() {
       setOrders(data.orders || data || [])
       setTotalItems(data.total || (data.orders || data || []).length)
     } catch (err) {
-      setError(err?.response?.data?.message || err?.message || 'Erreur lors du chargement des commandes.')
+        setError(err?.response?.data?.message || err?.message || t('common.error'))
     } finally {
       setLoading(false)
     }
@@ -71,7 +73,7 @@ export default function AdminOrdersPage() {
       await adminService.updateOrderStatus(orderId, newStatus)
       fetchOrders()
     } catch (err) {
-      setError(err?.response?.data?.message || 'Erreur lors de la mise à jour.')
+      setError(err?.response?.data?.message || t('common.error'))
     }
   }
 
@@ -84,7 +86,7 @@ export default function AdminOrdersPage() {
       setRefundReason('')
       fetchOrders()
     } catch (err) {
-      setError(err?.response?.data?.message || 'Erreur lors du remboursement.')
+      setError(err?.response?.data?.message || t('common.error'))
     } finally {
       setRefunding(false)
     }
@@ -100,34 +102,34 @@ export default function AdminOrdersPage() {
     },
     {
       key: 'buyerName',
-      label: 'Acheteur',
+      label: t('common.buyer'),
       render: (val, row) => <span className="text-sm">{val || row.buyer?.name || '—'}</span>,
     },
     {
       key: 'sellerName',
-      label: 'Vendeur',
+      label: t('common.seller'),
       render: (val, row) => <span className="text-sm">{val || row.seller?.name || '—'}</span>,
     },
     {
       key: 'createdAt',
-      label: 'Date',
+      label: t('common.date'),
       sortable: true,
       render: (val) => <span className="text-sm">{formatDate(val)}</span>,
     },
     {
       key: 'totalAmount',
-      label: 'Total',
+      label: t('common.total'),
       sortable: true,
       render: (val) => <span className="font-medium">{formatCurrency(val)}</span>,
     },
     {
       key: 'status',
-      label: 'Statut',
+      label: t('common.status'),
       render: (val) => <StatusBadge status={val} type="order" />,
     },
     {
       key: 'actions',
-      label: 'Actions',
+      label: t('common.actions'),
       width: '120px',
       render: (_, row) => (
         <div className="flex gap-1">
@@ -154,7 +156,7 @@ export default function AdminOrdersPage() {
                   onClick={(e) => { e.stopPropagation(); setRefundTarget(row) }}
                 >
                   <RotateCcw size={14} />
-                  Rembourser
+                  {t('common.refund')}
                 </button>
               </li>
             </ul>
@@ -167,8 +169,8 @@ export default function AdminOrdersPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Commandes</h1>
-        <p className="text-base-content/60 text-sm">Gérez toutes les commandes de la plateforme</p>
+        <h1 className="text-2xl font-bold">{t('admin.title')}</h1>
+        <p className="text-base-content/60 text-sm">{t('admin.ordersDescription')}</p>
       </div>
 
       {error && (
@@ -185,7 +187,7 @@ export default function AdminOrdersPage() {
               <Search size={16} className="opacity-50" />
               <input
                 type="text"
-                placeholder="Rechercher une commande..."
+                placeholder={t('admin.searchOrder')}
                 className="grow"
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); goToPage(1) }}
@@ -206,7 +208,7 @@ export default function AdminOrdersPage() {
             columns={columns}
             data={orders}
             loading={loading}
-            emptyMessage="Aucune commande trouvée"
+            emptyMessage={t('admin.noOrdersFound')}
           />
 
           {totalPages > 1 && (
@@ -224,11 +226,11 @@ export default function AdminOrdersPage() {
       <Modal
         isOpen={!!refundTarget}
         onClose={() => { setRefundTarget(null); setRefundReason('') }}
-        title="Rembourser la commande"
+        title={t('admin.refundOrder')}
         actions={
           <>
             <button className="btn btn-ghost btn-sm" onClick={() => { setRefundTarget(null); setRefundReason('') }}>
-              Annuler
+              {t('common.cancel')}
             </button>
             <button
               className="btn btn-warning btn-sm"
@@ -236,20 +238,20 @@ export default function AdminOrdersPage() {
               disabled={refunding || !refundReason.trim()}
             >
               {refunding ? <span className="loading loading-spinner loading-sm" /> : <RotateCcw size={14} />}
-              Rembourser
+              {t('common.refund')}
             </button>
           </>
         }
       >
         <div className="space-y-3">
           <p>
-            Commande <strong>#{(refundTarget?.id || refundTarget?._id || '').slice(-6).toUpperCase()}</strong> —{' '}
+            {t('common.order')} <strong>#{(refundTarget?.id || refundTarget?._id || '').slice(-6).toUpperCase()}</strong> —{' '}
             <strong>{formatCurrency(refundTarget?.totalAmount || refundTarget?.total)}</strong>
           </p>
-          <FormField label="Raison du remboursement" required>
+          <FormField label={t('admin.refundReason')} required>
             <textarea
               className="textarea textarea-bordered w-full"
-              placeholder="Indiquez la raison du remboursement..."
+              placeholder={t('admin.refundReasonPlaceholder')}
               value={refundReason}
               onChange={(e) => setRefundReason(e.target.value)}
             />

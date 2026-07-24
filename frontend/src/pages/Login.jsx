@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import { authAPI } from '../services/api'
 import { Mail, Lock, LogIn } from 'lucide-react'
 
 export default function Login() {
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -31,7 +33,7 @@ export default function Login() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-center mb-6">Connexion</h2>
+      <h2 className="text-2xl font-bold text-center mb-6">{t('auth.loginTitle')}</h2>
 
       {error && (
         <div className="alert alert-error mb-4">
@@ -44,7 +46,7 @@ export default function Login() {
           <Mail size={16} className="opacity-50" />
           <input
             type="email"
-            placeholder="Email"
+            placeholder={t('auth.email')}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -56,7 +58,7 @@ export default function Login() {
           <Lock size={16} className="opacity-50" />
           <input
             type="password"
-            placeholder="Mot de passe"
+            placeholder={t('auth.password')}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -74,16 +76,16 @@ export default function Login() {
           ) : (
             <>
               <LogIn size={18} />
-              Se connecter
+              {t('nav.signIn')}
             </>
           )}
         </button>
       </form>
 
       <p className="text-center mt-4 text-sm">
-        <span className="mx-6">Pas encore de compte ?</span>
+        <span className="mx-6">{t('auth.noAccount')}</span>
         <Link to="/register" className="link link-primary no-underline">
-          S'inscrire
+          {t('auth.register')}
         </Link>
       </p>
   

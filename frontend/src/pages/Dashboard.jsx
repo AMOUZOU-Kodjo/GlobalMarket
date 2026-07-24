@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { productsAPI } from '../services/api'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 import formatCurrency from '../utils/formatCurrency'
 
 export default function Dashboard() {
+  const { t } = useTranslation()
   const [stats, setStats] = useState({ products: 0, orders: 0, users: 0 })
   const [recentProducts, setRecentProducts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -39,38 +41,38 @@ export default function Dashboard() {
         <h1 className="text-3xl font-bold">Dashboard</h1>
         <Link to="/dashboard/products/new" className="btn btn-primary btn-sm">
           <Plus size={16} />
-          Nouveau produit
+          {t('seller.addProduct')}
         </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="stat bg-base-100 rounded-box shadow">
-          <div className="stat-title">Produits</div>
+          <div className="stat-title">{t('seller.myProducts')}</div>
           <div className="stat-value text-primary">{stats.products}</div>
-          <div className="stat-desc">Total en catalogue</div>
+          <div className="stat-desc">{t('admin.totalProducts')}</div>
         </div>
         <div className="stat bg-base-100 rounded-box shadow">
-          <div className="stat-title">Commandes</div>
+          <div className="stat-title">{t('seller.orders')}</div>
           <div className="stat-value text-secondary">{stats.orders}</div>
           <div className="stat-desc">Total</div>
         </div>
         <div className="stat bg-base-100 rounded-box shadow">
-          <div className="stat-title">Utilisateurs</div>
+          <div className="stat-title">{t('admin.totalUsers')}</div>
           <div className="stat-value text-accent">{stats.users}</div>
-          <div className="stat-desc">Inscrits</div>
+          <div className="stat-desc">{t('admin.registeredAt')}</div>
         </div>
       </div>
 
       <div className="card bg-base-100 shadow-xl">
         <div className="card-body">
-          <h2 className="card-title">Produits récents</h2>
+          <h2 className="card-title">{t('seller.recentOrders')}</h2>
           <div className="overflow-x-auto">
             <table className="table">
               <thead>
                 <tr>
-                  <th>Nom</th>
-                  <th>Prix</th>
-                  <th>Catégorie</th>
+                  <th>{t('admin.name')}</th>
+                  <th>{t('products.price')}</th>
+                  <th>{t('products.category')}</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -100,7 +102,7 @@ export default function Dashboard() {
                 {recentProducts.length === 0 && (
                   <tr>
                     <td colSpan={4} className="text-center text-base-content/50">
-                      Aucun produit
+                      {t('products.none')}
                     </td>
                   </tr>
                 )}

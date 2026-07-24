@@ -128,6 +128,24 @@ async function updateBankAccount(req, res, next) {
   }
 }
 
+async function getPublicShop(req, res, next) {
+  try {
+    const data = await sellerService.getPublicShop(req.params.slug)
+    res.json({ data })
+  } catch (err) {
+    next(err)
+  }
+}
+
+async function getPublicShopProducts(req, res, next) {
+  try {
+    const data = await sellerService.getPublicShopProducts(req.params.slug, req.query)
+    res.json({ data })
+  } catch (err) {
+    next(err)
+  }
+}
+
 module.exports = {
   register,
   getDashboard,
@@ -142,5 +160,7 @@ module.exports = {
   updateOrderStatus,
   getAnalytics,
   getPayouts,
-  updateBankAccount
+  updateBankAccount,
+  getPublicShop,
+  getPublicShopProducts
 }

@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ChevronLeft, ChevronRight, Sparkles, TrendingUp, Zap } from 'lucide-react'
 import HeroCarousel from '../components/organisms/HeroCarousel'
@@ -10,30 +11,6 @@ import { useCart } from '../context/CartContext'
 import productService from '../services/product.service'
 import categoryService from '../services/category.service'
 import MOCK_PRODUCTS from '../data/mockProducts'
-
-const HERO_SLIDES = [
-  {
-    image: 'https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1400&q=80',
-    title: 'Trouvez tout ce dont vous avez besoin',
-    subtitle: 'Des milliers de produits à portée de clic, livrés chez vous.',
-    ctaText: 'Explorer le catalogue',
-    ctaLink: '/products',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=80',
-    title: 'Offres exclusives de la semaine',
-    subtitle: 'Jusqu\'à -50% sur une sélection de produits tendance.',
-    ctaText: 'Voir les offres',
-    ctaLink: '/products?sort=newest',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1400&q=80',
-    title: 'Devenez vendeur sur GlobalMarket',
-    subtitle: 'Ouvrez votre boutique en ligne et touchez des millions de clients.',
-    ctaText: 'Commencer à vendre',
-    ctaLink: '/register',
-  },
-]
 
 function ProductRowSkeleton() {
   return (
@@ -140,6 +117,31 @@ export default function Home() {
   const [loadingCategories, setLoadingCategories] = useState(true)
   const [newsletterSuccess, setNewsletterSuccess] = useState(false)
   const [newsletterLoading, setNewsletterLoading] = useState(false)
+  const { t } = useTranslation()
+
+  const HERO_SLIDES = useMemo(() => [
+    {
+      image: 'https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1400&q=80',
+      title: t('home.hero.title'),
+      subtitle: t('home.hero.subtitle'),
+      ctaText: t('home.hero.cta'),
+      ctaLink: '/products',
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=80',
+      title: t('home.hero.offers'),
+      subtitle: t('home.hero.offersDesc'),
+      ctaText: t('home.hero.viewOffers'),
+      ctaLink: '/products?sort=newest',
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1400&q=80',
+      title: t('home.hero.becomeSeller'),
+      subtitle: t('home.hero.becomeSellerDesc'),
+      ctaText: t('home.hero.startSelling'),
+      ctaLink: '/register',
+    },
+  ], [t])
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -231,9 +233,9 @@ export default function Home() {
       <section className="py-10 px-4">
         <div className="container mx-auto">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl md:text-2xl font-bold">Catégories</h2>
+            <h2 className="text-xl md:text-2xl font-bold">{t('nav.categories')}</h2>
             <Link to="/products" className="btn btn-ghost btn-sm gap-1">
-              Tout voir <ArrowRight size={16} />
+              {t('home.viewAll')} <ArrowRight size={16} />
             </Link>
           </div>
           {loadingCategories ? (
@@ -247,7 +249,7 @@ export default function Home() {
       <section className="py-6 px-4 bg-base-200/50">
         <div className="container mx-auto">
           <ProductHorizontalRow
-            title="Produits en vedette"
+            title={t('home.featured')}
             icon={Sparkles}
             products={featured}
             loading={loadingFeatured}
@@ -259,7 +261,7 @@ export default function Home() {
       <section className="py-10 px-4">
         <div className="container mx-auto">
           <ProductHorizontalRow
-            title="Tendances du moment"
+            title={t('home.trending')}
             icon={TrendingUp}
             products={trending}
             loading={loadingTrending}
@@ -271,7 +273,7 @@ export default function Home() {
       <section className="py-6 px-4 bg-base-200/50">
         <div className="container mx-auto">
           <ProductHorizontalRow
-            title="Nouveautés"
+            title={t('home.newArrivals')}
             icon={Zap}
             products={newArrivals}
             loading={loadingNew}
@@ -295,7 +297,7 @@ export default function Home() {
       <section className="py-12 px-4 bg-base-200/50">
         <div className="container mx-auto">
           <h2 className="text-xl md:text-2xl font-bold text-center mb-8">
-            Pourquoi nous choisir ?
+            {t('home.whyChooseUs')}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             <div className="card bg-base-100 border border-base-200 shadow-sm">
@@ -303,9 +305,9 @@ export default function Home() {
                 <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-2">
                   <Sparkles size={28} className="text-primary" />
                 </div>
-                <h3 className="font-bold">Large choix</h3>
+                <h3 className="font-bold">{t('home.wideChoice')}</h3>
                 <p className="text-sm opacity-60">
-                  Des milliers de produits disponibles dans toutes les catégories.
+                  {t('home.wideChoiceDesc')}
                 </p>
               </div>
             </div>
@@ -314,9 +316,9 @@ export default function Home() {
                 <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-2">
                   <TrendingUp size={28} className="text-primary" />
                 </div>
-                <h3 className="font-bold">Paiement sécurisé</h3>
+                <h3 className="font-bold">{t('home.securePayment')}</h3>
                 <p className="text-sm opacity-60">
-                  Transactions sécurisées avec les meilleurs prestataires.
+                  {t('home.securePaymentDesc')}
                 </p>
               </div>
             </div>
@@ -325,9 +327,9 @@ export default function Home() {
                 <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-2">
                   <Zap size={28} className="text-primary" />
                 </div>
-                <h3 className="font-bold">Livraison rapide</h3>
+                <h3 className="font-bold">{t('home.fastDelivery')}</h3>
                 <p className="text-sm opacity-60">
-                  Livraison express partout en France et à l'international.
+                  {t('home.fastDeliveryDesc')}
                 </p>
               </div>
             </div>

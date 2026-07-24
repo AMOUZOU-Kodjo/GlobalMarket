@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { MapPin, Plus, Truck, Zap, CheckCircle } from 'lucide-react'
 import AddressCard from '../../components/molecules/AddressCard'
 import AddressForm from '../../components/organisms/AddressForm'
@@ -6,24 +7,25 @@ import Spinner from '../../components/atoms/Spinner'
 import EmptyState from '../../components/atoms/EmptyState'
 import classNames from '../../utils/classNames'
 
-const SHIPPING_METHODS = [
-  {
-    id: 'standard',
-    label: 'Livraison standard',
-    description: 'Livraison en 3-5 jours ouvrés',
-    price: 0,
-    icon: Truck,
-  },
-  {
-    id: 'express',
-    label: 'Livraison express',
-    description: 'Livraison en 1-2 jours ouvrés',
-    price: 2500,
-    icon: Zap,
-  },
-]
-
 export default function ShippingStep({ user, shippingData, onNext }) {
+  const { t } = useTranslation()
+
+  const SHIPPING_METHODS = [
+    {
+      id: 'standard',
+      label: t('checkout.shipping'),
+      description: t('checkout.shippingStandard'),
+      price: 0,
+      icon: Truck,
+    },
+    {
+      id: 'express',
+      label: t('checkout.shippingExpress'),
+      description: t('checkout.shippingExpressDesc'),
+      price: 2500,
+      icon: Zap,
+    },
+  ]
   const [addresses, setAddresses] = useState([])
   const [selectedAddress, setSelectedAddress] = useState(shippingData.address)
   const [selectedMethod, setSelectedMethod] = useState(shippingData.method)
@@ -86,7 +88,7 @@ export default function ShippingStep({ user, shippingData, onNext }) {
   if (loadingAddresses) {
     return (
       <div className="flex justify-center py-16">
-        <Spinner text="Chargement des adresses..." />
+        <Spinner text={t('common.loading')} />
       </div>
     )
   }
@@ -97,7 +99,7 @@ export default function ShippingStep({ user, shippingData, onNext }) {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold flex items-center gap-2">
             <MapPin size={20} />
-            Adresse de livraison
+            {t('checkout.shippingAddress')}
           </h2>
           <button
             type="button"
@@ -108,7 +110,7 @@ export default function ShippingStep({ user, shippingData, onNext }) {
             }}
           >
             <Plus size={16} />
-            Ajouter
+            {t('checkout.addAddress')}
           </button>
         </div>
 
@@ -116,7 +118,7 @@ export default function ShippingStep({ user, shippingData, onNext }) {
           <div className="card bg-base-100 border border-base-200 mb-4">
             <div className="card-body">
               <h3 className="card-title text-sm mb-2">
-                {editingAddress ? 'Modifier l\'adresse' : 'Nouvelle adresse'}
+                {editingAddress ? t('checkout.editAddress') : t('checkout.newAddress')}
               </h3>
               <AddressForm
                 initialData={editingAddress}
@@ -133,8 +135,8 @@ export default function ShippingStep({ user, shippingData, onNext }) {
         {addresses.length === 0 && !showForm ? (
           <EmptyState
             icon={MapPin}
-            title="Aucune adresse enregistrée"
-            description="Ajoutez une adresse pour continuer."
+            title={t('checkout.noAddress')}
+            description={t('checkout.addAddressToContinue')}
             action={
               <button
                 type="button"
@@ -145,7 +147,7 @@ export default function ShippingStep({ user, shippingData, onNext }) {
                 }}
               >
                 <Plus size={16} />
-                Ajouter une adresse
+                {t('profile.addAddress')}
               </button>
             }
           />
@@ -169,7 +171,7 @@ export default function ShippingStep({ user, shippingData, onNext }) {
       <div>
         <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
           <Truck size={20} />
-          Méthode de livraison
+          {t('checkout.shippingMethod')}
         </h2>
         <div className="flex flex-col gap-3">
           {SHIPPING_METHODS.map((method) => {
@@ -216,7 +218,7 @@ export default function ShippingStep({ user, shippingData, onNext }) {
                     </p>
                   </div>
                   <span className="font-bold text-sm shrink-0">
-                    {method.price === 0 ? 'Gratuit' : `${method.price} XOF`}
+                    {method.price === 0 ? t('checkout.free') : `${method.price} XOF`}
                   </span>
                 </div>
               </div>
@@ -232,7 +234,7 @@ export default function ShippingStep({ user, shippingData, onNext }) {
           disabled={!selectedAddress || !selectedMethod}
           onClick={handleSubmit}
         >
-          Continuer vers le paiement
+          {t('checkout.continueToPayment')}
         </button>
       </div>
     </div>

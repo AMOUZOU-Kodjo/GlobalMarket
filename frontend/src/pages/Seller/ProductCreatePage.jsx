@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   Package, ArrowLeft, Save, AlertCircle, Image,
 } from 'lucide-react'
@@ -10,6 +11,7 @@ import FileUpload from '../../components/molecules/FileUpload'
 
 export default function ProductCreatePage() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [files, setFiles] = useState([])
@@ -47,11 +49,11 @@ export default function ProductCreatePage() {
 
   const validate = () => {
     const errs = {}
-    if (!form.name.trim()) errs.name = 'Le nom est requis'
-    if (!form.description.trim()) errs.description = 'La description est requise'
-    if (!form.categoryId) errs.categoryId = 'La catégorie est requise'
-    if (!form.price || isNaN(Number(form.price)) || Number(form.price) <= 0) errs.price = 'Un prix valide est requis'
-    if (form.stock === '' || isNaN(Number(form.stock)) || Number(form.stock) < 0) errs.stock = 'Le stock est requis'
+    if (!form.name.trim()) errs.name = t('validation.nameRequired')
+    if (!form.description.trim()) errs.description = t('validation.descriptionRequired')
+    if (!form.categoryId) errs.categoryId = t('validation.categoryRequired')
+    if (!form.price || isNaN(Number(form.price)) || Number(form.price) <= 0) errs.price = t('validation.priceRequired')
+    if (form.stock === '' || isNaN(Number(form.stock)) || Number(form.stock) < 0) errs.stock = t('validation.stockRequired')
     setErrors(errs)
     return Object.keys(errs).length === 0
   }
@@ -98,7 +100,7 @@ export default function ProductCreatePage() {
 
       navigate('/seller/shop/products')
     } catch (err) {
-      setError(err?.response?.data?.message || err?.message || 'Erreur lors de la création du produit.')
+      setError(err?.response?.data?.message || err?.message || t('errors.productCreate'))
     } finally {
       setLoading(false)
     }
@@ -111,8 +113,8 @@ export default function ProductCreatePage() {
           <ArrowLeft size={18} />
         </button>
         <div>
-          <h1 className="text-2xl font-bold">Créer un produit</h1>
-          <p className="text-base-content/60 text-sm">Ajoutez un nouveau produit à votre catalogue</p>
+          <h1 className="text-2xl font-bold">{t('productCreate.title')}</h1>
+          <p className="text-base-content/60 text-sm">{t('productCreate.subtitle')}</p>
         </div>
       </div>
 
@@ -126,9 +128,9 @@ export default function ProductCreatePage() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="card bg-base-100 shadow-sm">
           <div className="card-body">
-            <h2 className="card-title text-base">Informations générales</h2>
+            <h2 className="card-title text-base">{t('productForm.basicInfo')}</h2>
 
-            <FormField label="Nom du produit" required error={errors.name} htmlFor="name">
+            <FormField label={t('products.name')} required error={errors.name} htmlFor="name">
               <label className="input input-bordered flex items-center gap-2">
                 <Package size={16} className="opacity-50" />
                 <input
@@ -136,25 +138,25 @@ export default function ProductCreatePage() {
                   name="name"
                   type="text"
                   className="grow"
-                  placeholder="Nom du produit"
+                  placeholder={t('products.name')}
                   value={form.name}
                   onChange={handleChange}
                 />
               </label>
             </FormField>
 
-            <FormField label="Description" required error={errors.description} htmlFor="description">
+            <FormField label={t('products.description')} required error={errors.description} htmlFor="description">
               <textarea
                 id="description"
                 name="description"
                 className="textarea textarea-bordered w-full min-h-[120px]"
-                placeholder="Décrivez votre produit en détail..."
+                placeholder={t('productCreate.descriptionPlaceholder')}
                 value={form.description}
                 onChange={handleChange}
               />
             </FormField>
 
-            <FormField label="Catégorie" required error={errors.categoryId} htmlFor="categoryId">
+            <FormField label={t('products.category')} required error={errors.categoryId} htmlFor="categoryId">
               <select
                 id="categoryId"
                 name="categoryId"
@@ -162,7 +164,7 @@ export default function ProductCreatePage() {
                 value={form.categoryId}
                 onChange={handleChange}
               >
-                <option value="">Sélectionner une catégorie</option>
+                <option value="">{t('productCreate.selectCategory')}</option>
                 {categories.map((cat) => (
                   <option key={cat.id || cat.slug} value={cat.id}>{cat.name}</option>
                 ))}
@@ -173,7 +175,7 @@ export default function ProductCreatePage() {
 
         <div className="card bg-base-100 shadow-sm">
           <div className="card-body">
-            <h2 className="card-title text-base">Images</h2>
+            <h2 className="card-title text-base">{t('products.images')}</h2>
             <FileUpload
               accept="image/*"
               multiple
@@ -187,9 +189,9 @@ export default function ProductCreatePage() {
 
         <div className="card bg-base-100 shadow-sm">
           <div className="card-body">
-            <h2 className="card-title text-base">Prix et stock</h2>
+            <h2 className="card-title text-base">{t('productForm.priceAndStock')}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormField label="Prix (XOF)" required error={errors.price} htmlFor="price">
+              <FormField label={t('products.price')} required error={errors.price} htmlFor="price">
                 <input
                   id="price"
                   name="price"
@@ -203,7 +205,7 @@ export default function ProductCreatePage() {
                 />
               </FormField>
 
-              <FormField label="Prix barré (XOF)" hint="Optionnel" htmlFor="compareAtPrice">
+              <FormField label={t('products.originalPrice')} hint={t('common.optional')} htmlFor="compareAtPrice">
                 <input
                   id="compareAtPrice"
                   name="compareAtPrice"
@@ -217,7 +219,7 @@ export default function ProductCreatePage() {
                 />
               </FormField>
 
-              <FormField label="Stock" required error={errors.stock} htmlFor="stock">
+              <FormField label={t('products.stock')} required error={errors.stock} htmlFor="stock">
                 <input
                   id="stock"
                   name="stock"
@@ -230,7 +232,7 @@ export default function ProductCreatePage() {
                 />
               </FormField>
 
-              <FormField label="SKU" htmlFor="sku">
+              <FormField label={t('products.sku')} htmlFor="sku">
                 <input
                   id="sku"
                   name="sku"
@@ -247,9 +249,9 @@ export default function ProductCreatePage() {
 
         <div className="card bg-base-100 shadow-sm">
           <div className="card-body">
-            <h2 className="card-title text-base">Dimensions et expédition</h2>
+            <h2 className="card-title text-base">{t('productForm.dimensions')}</h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <FormField label="Poids (kg)" htmlFor="weight">
+              <FormField label={t('products.weight')} htmlFor="weight">
                 <input
                   id="weight"
                   name="weight"
@@ -262,7 +264,7 @@ export default function ProductCreatePage() {
                   onChange={handleChange}
                 />
               </FormField>
-              <FormField label="Longueur (cm)" htmlFor="length">
+              <FormField label={t('products.length')} htmlFor="length">
                 <input
                   id="length"
                   name="length"
@@ -274,7 +276,7 @@ export default function ProductCreatePage() {
                   onChange={handleChange}
                 />
               </FormField>
-              <FormField label="Largeur (cm)" htmlFor="width">
+              <FormField label={t('products.width')} htmlFor="width">
                 <input
                   id="width"
                   name="width"
@@ -286,7 +288,7 @@ export default function ProductCreatePage() {
                   onChange={handleChange}
                 />
               </FormField>
-              <FormField label="Hauteur (cm)" htmlFor="height">
+              <FormField label={t('products.height')} htmlFor="height">
                 <input
                   id="height"
                   name="height"
@@ -304,7 +306,7 @@ export default function ProductCreatePage() {
 
         <div className="card bg-base-100 shadow-sm">
           <div className="card-body">
-            <h2 className="card-title text-base">Statut</h2>
+            <h2 className="card-title text-base">{t('products.status')}</h2>
             <FormField htmlFor="status">
               <select
                 id="status"
@@ -313,8 +315,8 @@ export default function ProductCreatePage() {
                 value={form.status}
                 onChange={handleChange}
               >
-                <option value="draft">Brouillon</option>
-                <option value="active">Actif</option>
+                <option value="draft">{t('products.draft')}</option>
+                <option value="active">{t('products.active')}</option>
               </select>
             </FormField>
           </div>
@@ -326,7 +328,7 @@ export default function ProductCreatePage() {
             className="btn btn-ghost"
             onClick={() => navigate(-1)}
           >
-            Annuler
+            {t('common.cancel')}
           </button>
           <button
             type="submit"
@@ -336,12 +338,12 @@ export default function ProductCreatePage() {
             {loading ? (
               <>
                 <span className="loading loading-spinner loading-sm" />
-                Création...
+                {t('common.creating')}
               </>
             ) : (
               <>
                 <Save size={16} />
-                Créer le produit
+                {t('productForm.saveProduct')}
               </>
             )}
           </button>
