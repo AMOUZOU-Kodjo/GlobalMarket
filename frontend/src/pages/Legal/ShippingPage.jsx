@@ -14,21 +14,21 @@ import {
 } from 'lucide-react'
 
 const SHIPPING_METHODS = [
-  { name: 'Standard', icon: Truck, price: '4,99 €', time: '3-5 jours ouvrés', carrier: 'Colissimo / Mondial Relay' },
-  { name: 'Express', icon: Package, price: '9,99 €', time: '1-2 jours ouvrés', carrier: 'Chronopost' },
-  { name: 'Point relais', icon: MapPin, price: '2,99 €', time: '4-6 jours ouvrés', carrier: 'Mondial Relay' },
-  { name: 'Livraison le lendemain', icon: Clock, price: '14,99 €', time: 'Le lendemain', carrier: 'Colissimo Priority' },
+  { name: 'Standard', icon: Truck, price: '1 000 FCFA', time: '3-5 jours ouvrés', carrier: 'Togo Express' },
+  { name: 'Express', icon: Package, price: '2 500 FCFA', time: '1-2 jours ouvrés', carrier: 'Togo Express' },
+  { name: 'Point relais', icon: MapPin, price: '500 FCFA', time: '4-6 jours ouvrés', carrier: 'Relais Togo' },
+  { name: 'Livraison le lendemain', icon: Clock, price: '3 500 FCFA', time: 'Le lendemain', carrier: 'Togo Express Priority' },
 ]
 
 const DELIVERY_TIMES = [
-  { region: 'France métropolitaine', standard: '3-5 jours', express: '1-2 jours' },
-  { region: 'Corse', standard: '5-7 jours', express: '2-3 jours' },
-  { region: 'DOM-TOM', standard: '7-15 jours', express: '3-5 jours' },
-  { region: 'Europe (UE)', standard: '5-10 jours', express: '2-4 jours' },
-  { region: 'Europe (hors UE)', standard: '7-15 jours', express: '3-5 jours' },
-  { region: 'Amérique du Nord', standard: '10-20 jours', express: '5-10 jours' },
-  { region: 'Afrique', standard: '15-30 jours', express: '7-15 jours' },
-  { region: 'Asie / Océanie', standard: '15-30 jours', express: '7-15 jours' },
+  { region: 'Lomé', standard: '1-2 jours', express: '1 jour' },
+  { region: 'Grand Lomé', standard: '2-3 jours', express: '1-2 jours' },
+  { region: 'Région maritime', standard: '3-5 jours', express: '2-3 jours' },
+  { region: 'Région des plateaux', standard: '3-5 jours', express: '2-3 jours' },
+  { region: 'Région centrale', standard: '5-7 jours', express: '3-5 jours' },
+  { region: 'Région septentrionale', standard: '5-8 jours', express: '3-5 jours' },
+  { region: 'Afrique (CEDEAO)', standard: '7-15 jours', express: '3-7 jours' },
+  { region: 'International', standard: '15-30 jours', express: '7-15 jours' },
 ]
 
 export default function ShippingPage() {
