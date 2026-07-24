@@ -170,10 +170,16 @@ export default function MessagesPage() {
                     onClick={() => handleSelectConvo(convo)}
                   >
                     <div className="flex items-start gap-3">
-                      <div className="avatar placeholder shrink-0">
-                        <div className="bg-primary/10 text-primary w-10 rounded-full">
-                          <span className="text-sm font-bold">{getInitial(convo.other.name)}</span>
-                        </div>
+                      <div className="avatar shrink-0">
+                        {convo.other.avatar ? (
+                          <div className="w-10 rounded-full">
+                            <img src={convo.other.avatar} alt={convo.other.name} />
+                          </div>
+                        ) : (
+                          <div className="bg-primary/10 text-primary w-10 rounded-full flex items-center justify-center">
+                            <span className="text-sm font-bold">{getInitial(convo.other.name)}</span>
+                          </div>
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
@@ -200,10 +206,16 @@ export default function MessagesPage() {
                   <button className="btn btn-ghost btn-sm md:hidden" onClick={() => { setSelectedConvo(null); setMessages([]) }}>
                     <ArrowLeft size={16} />
                   </button>
-                  <div className="avatar placeholder">
-                    <div className="bg-primary/10 text-primary w-8 rounded-full">
-                      <span className="text-xs font-bold">{getInitial(selectedConvo.other.name)}</span>
-                    </div>
+                  <div className="avatar">
+                    {selectedConvo.other.avatar ? (
+                      <div className="w-8 rounded-full">
+                        <img src={selectedConvo.other.avatar} alt={selectedConvo.other.name} />
+                      </div>
+                    ) : (
+                      <div className="bg-primary/10 text-primary w-8 rounded-full flex items-center justify-center">
+                        <span className="text-xs font-bold">{getInitial(selectedConvo.other.name)}</span>
+                      </div>
+                    )}
                   </div>
                   <div>
                     <p className="font-medium text-sm">{selectedConvo.other.name}</p>

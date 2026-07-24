@@ -35,24 +35,24 @@ router.post('/seed', async (req, res) => {
       const adminHash = await bcrypt.hash('Admin@MarcoStore2026!', 12)
       admin = await prisma.user.upsert({
         where: { email: 'admin@marcostore.com' },
-        update: { passwordHash: adminHash, role: 'admin', status: 'active', emailVerified: true },
-        create: { email: 'admin@marcostore.com', name: 'Administrateur', passwordHash: adminHash, role: 'admin', emailVerified: true, status: 'active' }
+        update: { passwordHash: adminHash, role: 'admin', status: 'active', emailVerified: true, avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&q=80' },
+        create: { email: 'admin@marcostore.com', name: 'Administrateur', passwordHash: adminHash, role: 'admin', emailVerified: true, status: 'active', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&q=80' }
       })
       logs.push('admin ok')
 
       const buyerHash = await bcrypt.hash('Buyer@2026!', 12)
       buyer = await prisma.user.upsert({
         where: { email: 'acheteur@marcostore.com' },
-        update: { passwordHash: buyerHash, role: 'buyer', status: 'active', emailVerified: true },
-        create: { email: 'acheteur@marcostore.com', name: 'Jean Dupont', passwordHash: buyerHash, role: 'buyer', emailVerified: true, status: 'active' }
+        update: { passwordHash: buyerHash, role: 'buyer', status: 'active', emailVerified: true, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80' },
+        create: { email: 'acheteur@marcostore.com', name: 'Jean Dupont', passwordHash: buyerHash, role: 'buyer', emailVerified: true, status: 'active', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80' }
       })
       logs.push('buyer ok')
 
       const sellerHash = await bcrypt.hash('Seller@2026!', 12)
       sellerUser = await prisma.user.upsert({
         where: { email: 'vendeur@marcostore.com' },
-        update: { passwordHash: sellerHash, role: 'seller', status: 'active', emailVerified: true },
-        create: { email: 'vendeur@marcostore.com', name: 'Marie Martin', passwordHash: sellerHash, role: 'seller', emailVerified: true, status: 'active' }
+        update: { passwordHash: sellerHash, role: 'seller', status: 'active', emailVerified: true, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80' },
+        create: { email: 'vendeur@marcostore.com', name: 'Marie Martin', passwordHash: sellerHash, role: 'seller', emailVerified: true, status: 'active', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80' }
       })
       logs.push('seller ok')
     } catch (e) { logs.push('users error: ' + e.message) }
