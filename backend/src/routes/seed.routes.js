@@ -1,7 +1,6 @@
 const express = require('express')
 const { PrismaClient } = require('@prisma/client')
 const bcrypt = require('bcryptjs')
-const crypto = require('crypto')
 
 const router = express.Router()
 const prisma = new PrismaClient()
@@ -28,65 +27,37 @@ router.post('/seed', async (req, res, next) => {
       return res.status(403).json({ message: 'Invalid seed secret' })
     }
 
-    const existingUsers = await prisma.user.count()
-    if (existingUsers > 0) {
-      return res.status(400).json({ message: 'Database already seeded', userCount: existingUsers })
-    }
-
     console.log('Seeding database via API...')
 
     const adminHash = await bcrypt.hash('Admin@GlobalMarket2026!', 12)
-    const admin = await prisma.user.create({
-      data: {
-        email: 'admin@globalmarket.com',
-        name: 'Administrateur',
-        passwordHash: adminHash,
-        role: 'admin',
-        emailVerified: true,
-        status: 'active'
-      }
+    const admin = await prisma.user.upsert({
+      where: { email: 'admin@globalmarket.com' },
+      update: { passwordHash: adminHash, role: 'admin', status: 'active', emailVerified: true },
+      create: { email: 'admin@globalmarket.com', name: 'Administrateur', passwordHash: adminHash, role: 'admin', emailVerified: true, status: 'active' }
     })
 
     const buyerHash = await bcrypt.hash('Buyer@2026!', 12)
-    const buyer = await prisma.user.create({
-      data: {
-        email: 'acheteur@globalmarket.com',
-        name: 'Jean Dupont',
-        passwordHash: buyerHash,
-        role: 'buyer',
-        emailVerified: true,
-        status: 'active'
-      }
+    const buyer = await prisma.user.upsert({
+      where: { email: 'acheteur@globalmarket.com' },
+      update: { passwordHash: buyerHash, role: 'buyer', status: 'active', emailVerified: true },
+      create: { email: 'acheteur@globalmarket.com', name: 'Jean Dupont', passwordHash: buyerHash, role: 'buyer', emailVerified: true, status: 'active' }
     })
 
     const sellerHash = await bcrypt.hash('Seller@2026!', 12)
-    const sellerUser = await prisma.user.create({
-      data: {
-        email: 'vendeur@globalmarket.com',
-        name: 'Marie Martin',
-        passwordHash: sellerHash,
-        role: 'seller',
-        emailVerified: true,
-        status: 'active'
-      }
+    const sellerUser = await prisma.user.upsert({
+      where: { email: 'vendeur@globalmarket.com' },
+      update: { passwordHash: sellerHash, role: 'seller', status: 'active', emailVerified: true },
+      create: { email: 'vendeur@globalmarket.com', name: 'Marie Martin', passwordHash: sellerHash, role: 'seller', emailVerified: true, status: 'active' }
     })
 
-    const seller = await prisma.seller.create({
-      data: {
-        userId: sellerUser.id,
-        shopName: 'TechStore France',
-        slug: 'techstore-france',
-        description: 'Spécialiste en électronique et high-tech',
-        category: 'Électronique',
-        country: 'France',
-        businessType: 'company',
-        plan: 'pro',
-        commissionRate: 0.08,
-        verified: true,
-        active: true,
-        rating: 4.8,
-        totalSales: 350,
-        totalRevenue: 45678.50
+    const seller = await prisma.seller.upsert({
+      where: { userId: sellerUser.id },
+      update: { shopName: 'TechStore France', slug: 'techstore-france', active: true, verified: true },
+      create: {
+        userId: sellerUser.id, shopName: 'TechStore France', slug: 'techstore-france',
+        description: 'Spécialiste en électronique et high-tech', category: 'Électronique',
+        country: 'France', businessType: 'company', plan: 'pro', commissionRate: 0.08,
+        verified: true, active: true, rating: 4.8, totalSales: 350, totalRevenue: 45678.50
       }
     })
 
@@ -98,17 +69,12 @@ router.post('/seed', async (req, res, next) => {
       })
     }
 
-    await prisma.systemSetting.create({
-      data: {
+    await prisma.systemSetting.upsert({
+      where: { key: 'general' },
+      update: {},
+      create: {
         key: 'general',
-        value: {
-          siteName: 'GlobalMarket',
-          siteDescription: 'Marketplace mondiale',
-          commissionRate: 0.12,
-          paymentMethods: ['credit_card', 'paypal', 'mobile_money'],
-          defaultShippingRate: 5.99,
-          shippingFreeThreshold: 50
-        }
+        value: { siteName: 'GlobalMarket', siteDescription: 'Marketplace mondiale', commissionRate: 0.12, paymentMethods: ['credit_card', 'paypal', 'mobile_money'], defaultShippingRate: 5.99, shippingFreeThreshold: 50 }
       }
     })
 
@@ -125,40 +91,37 @@ router.post('/seed', async (req, res, next) => {
       { name: 'Canapé Modulable 3 Places', slug: 'canape-modulable-3-places', description: 'Canapé modulable tissu grisé.', shortDescription: 'Canapé convertible et modulable', price: 649.00, compareAtPrice: 899.00, stock: 8, categorySlug: 'maison-jardin', featured: true, tags: ['canapé', 'salon'], averageRating: 4.5, reviewCount: 67, salesCount: 89 },
       { name: 'Lampe Connectée LED RGB', slug: 'lampe-connectee-led-rgb', description: "Lampe d'ambiance à LED RGB.", shortDescription: 'Lampe smart 16M de couleurs', price: 49.90, compareAtPrice: 69.90, stock: 80, categorySlug: 'maison-jardin', trending: true, tags: ['smart-home', 'led'], averageRating: 4.2, reviewCount: 234, salesCount: 670 },
       { name: 'Raquette Tennis Pro Carbon', slug: 'raquette-tennis-pro-carbon', description: 'Raquette en graphite/carbone.', shortDescription: 'Raquette carbone pro', price: 189.00, compareAtPrice: 229.00, stock: 20, categorySlug: 'sports-loisirs', tags: ['tennis', 'sport'], averageRating: 4.6, reviewCount: 45, salesCount: 120 },
-      { name: 'Parfum Unisexe Bois d\'Ambre', slug: 'parfum-unisexe-bois-ambre', description: 'Eau de parfum 100ml.', shortDescription: 'Eau de parfum artisanale', price: 65.00, compareAtPrice: 85.00, stock: 50, categorySlug: 'beaute-sante', featured: true, tags: ['parfum', 'unisexe'], averageRating: 4.7, reviewCount: 89, salesCount: 210 },
+      { name: "Parfum Unisexe Bois d'Ambre", slug: 'parfum-unisexe-bois-ambre', description: 'Eau de parfum 100ml.', shortDescription: 'Eau de parfum artisanale', price: 65.00, compareAtPrice: 85.00, stock: 50, categorySlug: 'beaute-sante', featured: true, tags: ['parfum', 'unisexe'], averageRating: 4.7, reviewCount: 89, salesCount: 210 },
     ]
 
     for (const p of products) {
       const catId = catMap[p.categorySlug]
       if (!catId) continue
-      await prisma.product.create({
-        data: {
-          sellerId: seller.id,
-          categoryId: catId,
-          name: p.name,
-          slug: p.slug,
-          description: p.description,
-          shortDescription: p.shortDescription,
-          price: p.price,
-          compareAtPrice: p.compareAtPrice || null,
-          stock: p.stock,
-          status: 'active',
-          featured: !!p.featured,
-          trending: !!p.trending,
-          tags: p.tags || [],
-          averageRating: p.averageRating || 0,
-          reviewCount: p.reviewCount || 0,
-          salesCount: p.salesCount || 0,
-          publishedAt: new Date(),
-          images: {
-            create: [{ url: `https://placehold.co/600x600?text=${encodeURIComponent(p.name.slice(0, 20))}`, alt: p.name, isPrimary: true, sortOrder: 0 }]
+      const existing = await prisma.product.findUnique({ where: { slug: p.slug } })
+      if (!existing) {
+        await prisma.product.create({
+          data: {
+            sellerId: seller.id, categoryId: catId, name: p.name, slug: p.slug,
+            description: p.description, shortDescription: p.shortDescription,
+            price: p.price, compareAtPrice: p.compareAtPrice || null, stock: p.stock,
+            status: 'active', featured: !!p.featured, trending: !!p.trending,
+            tags: p.tags || [], averageRating: p.averageRating || 0,
+            reviewCount: p.reviewCount || 0, salesCount: p.salesCount || 0, publishedAt: new Date(),
+            images: { create: [{ url: `https://placehold.co/600x600?text=${encodeURIComponent(p.name.slice(0, 20))}`, alt: p.name, isPrimary: true, sortOrder: 0 }] }
           }
-        }
-      })
+        })
+      }
     }
 
     console.log('Seed complete!')
-    res.json({ message: 'Database seeded successfully', accounts: { admin: 'admin@globalmarket.com', buyer: 'acheteur@globalmarket.com', seller: 'vendeur@globalmarket.com' } })
+    res.json({
+      message: 'Database seeded successfully',
+      accounts: {
+        admin: { email: 'admin@globalmarket.com', password: 'Admin@GlobalMarket2026!' },
+        buyer: { email: 'acheteur@globalmarket.com', password: 'Buyer@2026!' },
+        seller: { email: 'vendeur@globalmarket.com', password: 'Seller@2026!' }
+      }
+    })
   } catch (error) {
     console.error('Seed error:', error)
     next(error)
