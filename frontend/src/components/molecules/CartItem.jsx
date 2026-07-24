@@ -42,7 +42,7 @@ export function CartItem({
           <div className="min-w-0">
             <h3 className="font-semibold text-sm sm:text-base truncate">{name}</h3>
             {seller && (
-              <p className="text-xs text-base-content/50 mt-0.5">Vendeur: {seller}</p>
+              <p className="text-xs text-base-content/50 mt-0.5">Vendeur: {typeof seller === 'string' ? seller : seller.shopName || seller.name}</p>
             )}
           </div>
           <button

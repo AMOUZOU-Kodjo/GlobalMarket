@@ -24,21 +24,54 @@ import {
 } from 'lucide-react'
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useCart } from '../context/CartContext'
 import { LanguageSwitcher } from './LanguageSwitcher'
+import messageService from '../services/message.service'
+
+const WISHLIST_KEY = 'globalmarket_wishlist'
+
+function loadWishlistCount() {
+  try {
+    return JSON.parse(localStorage.getItem(WISHLIST_KEY) || '[]').length
+  } catch { return 0 }
+}
 
 export default function Navbar() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const { totalItems } = useCart()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [categoriesOpen, setCategoriesOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [cartCount] = useState(0)
-  const [notifCount] = useState(0)
+  const [wishlistCount, setWishlistCount] = useState(loadWishlistCount)
+  const [notifCount, setNotifCount] = useState(0)
   const searchInputRef = useRef(null)
   const categoriesRef = useRef(null)
   const { t } = useTranslation()
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWishlistCount(loadWishlistCount())
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    if (!user) return
+    let mounted = true
+    const fetchUnread = () => {
+      messageService.getUnreadCount()
+        .then((data) => {
+          if (mounted) setNotifCount(data.count ?? data ?? 0)
+        })
+        .catch(() => {})
+    }
+    fetchUnread()
+    const interval = setInterval(fetchUnread, 15000)
+    return () => { mounted = false; clearInterval(interval) }
+  }, [user])
 
   const CATEGORIES = useMemo(() => [
     { id: 'electronique', label: t('cat.electronique'), icon: '📱', href: '/products?category=electronique' },
@@ -232,25 +265,32 @@ export default function Navbar() {
 
           {user && (
             <Link to="/wishlist" className="btn btn-ghost btn-circle hidden sm:flex" aria-label="Favoris">
-              <Heart size={20} />
+              <div className="indicator">
+                <Heart size={20} />
+                {wishlistCount > 0 && (
+                  <span className="badge badge-xs badge-success indicator-item">{wishlistCount}</span>
+                )}
+              </div>
             </Link>
           )}
 
           {user && (
-            <button className="btn btn-ghost btn-circle hidden sm:flex relative" aria-label="Notifications">
-              <Bell size={20} />
-              {notifCount > 0 && (
-                <span className="badge badge-xs badge-error indicator-item">{notifCount}</span>
-              )}
+            <button className="btn btn-ghost btn-circle hidden sm:flex" aria-label="Notifications">
+              <div className="indicator">
+                <Bell size={20} />
+                {notifCount > 0 && (
+                  <span className="badge badge-xs badge-error indicator-item">{notifCount}</span>
+                )}
+              </div>
             </button>
           )}
 
           <Link to="/cart" className="btn btn-ghost btn-circle" aria-label="Panier">
             <div className="indicator">
               <ShoppingCart size={20} />
-              {cartCount > 0 && (
+              {totalItems > 0 && (
                 <span className="badge badge-xs badge-primary indicator-item" aria-live="polite">
-                  {cartCount}
+                  {totalItems}
                 </span>
               )}
             </div>
@@ -264,10 +304,14 @@ export default function Navbar() {
                 aria-label={`Menu de ${user.name}`}
                 aria-haspopup="true"
               >
-                <div className="w-9 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                  <div className="bg-primary text-primary-content w-full h-full rounded-full flex items-center justify-center">
-                    <span className="text-sm font-bold">{user.name?.charAt(0)?.toUpperCase()}</span>
-                  </div>
+                <div className="w-9 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden">
+                  {user.avatar ? (
+                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="bg-primary text-primary-content w-full h-full rounded-full flex items-center justify-center">
+                      <span className="text-sm font-bold">{user.name?.charAt(0)?.toUpperCase()}</span>
+                    </div>
+                  )}
                 </div>
               </button>
               <ul
@@ -294,15 +338,25 @@ export default function Navbar() {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/wishlist" className="gap-3">
-                    <Heart size={16} />
-                    {t('profile.wishlist')}
+                  <Link to="/wishlist" className="gap-3 justify-between">
+                    <span className="flex items-center gap-3">
+                      <Heart size={16} />
+                      {t('profile.wishlist')}
+                    </span>
+                    {wishlistCount > 0 && (
+                      <span className="badge badge-xs badge-success">{wishlistCount}</span>
+                    )}
                   </Link>
                 </li>
                 <li>
-                  <Link to="/messages" className="gap-3">
-                    <MessageCircle size={16} />
-                    {t('nav.messages')}
+                  <Link to="/messages" className="gap-3 justify-between">
+                    <span className="flex items-center gap-3">
+                      <MessageCircle size={16} />
+                      {t('nav.messages')}
+                    </span>
+                    {notifCount > 0 && (
+                      <span className="badge badge-xs badge-error">{notifCount}</span>
+                    )}
                   </Link>
                 </li>
                 <li>
@@ -459,9 +513,13 @@ export default function Navbar() {
               {user ? (
                 <>
                   <div className="flex items-center gap-3 px-2 mb-3">
-                    <div className="avatar placeholder">
-                      <div className="bg-primary text-primary-content w-10 rounded-full">
-                        <span className="text-sm">{user.name?.charAt(0)?.toUpperCase()}</span>
+                    <div className="avatar shrink-0">
+                      <div className="bg-primary text-primary-content w-10 rounded-full overflow-hidden">
+                        {user.avatar ? (
+                          <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-sm">{user.name?.charAt(0)?.toUpperCase()}</span>
+                        )}
                       </div>
                     </div>
                     <div>
@@ -483,15 +541,25 @@ export default function Navbar() {
                       </Link>
                     </li>
                     <li>
-                      <Link to="/wishlist" onClick={closeMobile}>
-                        <Heart size={18} />
-                        {t('profile.wishlist')}
+                      <Link to="/wishlist" onClick={closeMobile} className="justify-between">
+                        <span className="flex items-center gap-3">
+                          <Heart size={18} />
+                          {t('profile.wishlist')}
+                        </span>
+                        {wishlistCount > 0 && (
+                          <span className="badge badge-xs badge-success">{wishlistCount}</span>
+                        )}
                       </Link>
                     </li>
                     <li>
-                      <Link to="/messages" onClick={closeMobile}>
-                        <MessageCircle size={18} />
-                        {t('nav.messages')}
+                      <Link to="/messages" onClick={closeMobile} className="justify-between">
+                        <span className="flex items-center gap-3">
+                          <MessageCircle size={18} />
+                          {t('nav.messages')}
+                        </span>
+                        {notifCount > 0 && (
+                          <span className="badge badge-xs badge-error">{notifCount}</span>
+                        )}
                       </Link>
                     </li>
                     <li>

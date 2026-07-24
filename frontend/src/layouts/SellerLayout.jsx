@@ -89,9 +89,13 @@ export default function SellerLayout() {
 
       <div className="border-t border-base-300 p-3">
         <div className={`flex items-center gap-3 px-2 py-2 ${collapsed ? 'justify-center' : ''}`}>
-          <div className="avatar placeholder shrink-0">
-            <div className="bg-secondary text-secondary-content w-9 rounded-full">
-              <span className="text-sm">{user?.name?.charAt(0)?.toUpperCase()}</span>
+          <div className="avatar shrink-0">
+            <div className="bg-secondary text-secondary-content w-9 rounded-full overflow-hidden">
+              {user?.avatar ? (
+                <img src={user.avatar} alt={user?.name} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-sm">{user?.name?.charAt(0)?.toUpperCase()}</span>
+              )}
             </div>
           </div>
           {!collapsed && (
@@ -171,10 +175,14 @@ export default function SellerLayout() {
               </button>
               <div className="dropdown dropdown-end">
                 <button tabIndex={0} className="btn btn-ghost btn-circle avatar">
-                  <div className="w-8 rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2">
-                    <div className="bg-secondary text-secondary-content w-full h-full rounded-full flex items-center justify-center">
-                      <span className="text-xs font-bold">{user?.name?.charAt(0)?.toUpperCase()}</span>
-                    </div>
+                  <div className="w-8 rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2 overflow-hidden">
+                    {user?.avatar ? (
+                      <img src={user.avatar} alt={user?.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="bg-secondary text-secondary-content w-full h-full rounded-full flex items-center justify-center">
+                        <span className="text-xs font-bold">{user?.name?.charAt(0)?.toUpperCase()}</span>
+                      </div>
+                    )}
                   </div>
                 </button>
                 <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow-xl border border-base-300">

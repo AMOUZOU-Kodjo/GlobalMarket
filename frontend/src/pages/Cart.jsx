@@ -53,7 +53,7 @@ function CartItemRow({ item, onUpdateQuantity, onRemove }) {
             </Link>
             {seller && (
               <p className="text-xs text-base-content/50 mt-0.5">
-                {t('cart.sellerLabel')} {seller}
+                {t('cart.sellerLabel')} {typeof seller === 'string' ? seller : seller.shopName || seller.name}
               </p>
             )}
           </div>

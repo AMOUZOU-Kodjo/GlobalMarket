@@ -50,6 +50,8 @@ export default function ProductDetail() {
 
   const { t } = useTranslation()
 
+  const WISHLIST_KEY = 'globalmarket_wishlist'
+
   const fetchProduct = useCallback(async () => {
     setLoading(true)
     setError(null)
@@ -59,8 +61,13 @@ export default function ProductDetail() {
       setQuantity(1)
       setAddedToCart(false)
 
+      const productId = data.product?.id || data.id
       try {
-        const productId = data.product?.id || data.id
+        const stored = JSON.parse(localStorage.getItem(WISHLIST_KEY) || '[]')
+        setWishlist(stored.some((p) => (p._id || p.id) === productId))
+      } catch { /* ignore */ }
+
+      try {
         const relData = await productService.getRelated(productId)
         const relProducts = Array.isArray(relData)
           ? relData
@@ -74,6 +81,10 @@ export default function ProductDetail() {
       if (mockProduct) {
         setProduct(mockProduct)
         setRelated(MOCK_PRODUCTS.all.filter(p => p.id !== mockProduct.id).slice(0, 4))
+        try {
+          const stored = JSON.parse(localStorage.getItem(WISHLIST_KEY) || '[]')
+          setWishlist(stored.some((p) => (p._id || p.id) === mockProduct.id))
+        } catch { /* ignore */ }
       } else {
         setError(err.message || t('common.productNotFound'))
         setProduct(null)
@@ -295,7 +306,32 @@ export default function ProductDetail() {
               className={`btn btn-outline btn-lg btn-circle ${
                 wishlist ? 'btn-error text-error' : ''
               }`}
-              onClick={() => setWishlist(!wishlist)}
+              onClick={() => {
+                const productId = product._id || product.id
+                const slug = product.slug || productId
+                const name = product.name
+                const price = product.price
+                const images = product.images
+                const stock = product.stock
+                const seller = product.seller
+                const image = images && (typeof images[0] === 'string' ? images[0] : images[0]?.url) || product.image
+
+                let stored
+                try {
+                  stored = JSON.parse(localStorage.getItem(WISHLIST_KEY) || '[]')
+                } catch {
+                  stored = []
+                }
+
+                if (wishlist) {
+                  stored = stored.filter((p) => (p._id || p.id) !== productId)
+                  setWishlist(false)
+                } else {
+                  stored.push({ id: productId, _id: productId, slug, name, price, images, image, stock, seller })
+                  setWishlist(true)
+                }
+                localStorage.setItem(WISHLIST_KEY, JSON.stringify(stored))
+              }}
               aria-label={wishlist ? t('profile.removeWishlist') : t('profile.addWishlist')}
             >
               <Heart size={20} fill={wishlist ? 'currentColor' : 'none'} />

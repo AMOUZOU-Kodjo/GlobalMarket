@@ -64,6 +64,14 @@ export default function UserProfilePage() {
   const [showAddressForm, setShowAddressForm] = useState(false)
   const [addressSaving, setAddressSaving] = useState(false)
   const [addressError, setAddressError] = useState(null)
+  const [wishlistCount, setWishlistCount] = useState(0)
+
+  useEffect(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem('globalmarket_wishlist') || '[]')
+      setWishlistCount(stored.length)
+    } catch { /* ignore */ }
+  }, [])
 
   useEffect(() => {
     if (activeTab === 'addresses') {
@@ -270,7 +278,7 @@ export default function UserProfilePage() {
         <div className="grid grid-cols-3 gap-3 md:gap-4 mb-8">
           {[
             { icon: ShoppingBag, label: t('profile.orders'), value: '—', color: 'text-blue-500', bg: 'bg-blue-500/10' },
-            { icon: Heart, label: t('profile.wishlist'), value: '—', color: 'text-pink-500', bg: 'bg-pink-500/10' },
+            { icon: Heart, label: t('profile.wishlist'), value: wishlistCount || '0', color: 'text-pink-500', bg: 'bg-pink-500/10' },
             { icon: Star, label: t('profile.reviews'), value: '—', color: 'text-amber-500', bg: 'bg-amber-500/10' },
           ].map((stat) => (
             <div key={stat.label} className="card bg-base-100 border border-base-200 shadow-sm">
