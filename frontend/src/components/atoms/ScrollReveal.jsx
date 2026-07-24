@@ -19,8 +19,10 @@ export default function ScrollReveal({
       : direction === 'scale' ? 'sr-scale'
       : ''
 
-    el.classList.add('sr', dirClass)
-    if (stagger) el.classList.add('sr-stagger')
+    const classes = ['sr']
+    if (dirClass) classes.push(dirClass)
+    if (stagger) classes.push('sr-stagger')
+    el.classList.add(...classes)
 
     const observer = new IntersectionObserver(
       ([entry]) => {
