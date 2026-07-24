@@ -8,16 +8,16 @@ const prisma = new PrismaClient()
 const SEED_SECRET = process.env.SEED_SECRET || 'marcostore-seed-2026'
 
 const categories = [
-  { name: 'Électronique', slug: 'electronique', icon: '📱' },
-  { name: 'Mode & Vêtements', slug: 'mode-vetements', icon: '👕' },
-  { name: 'Maison & Jardin', slug: 'maison-jardin', icon: '🏠' },
-  { name: 'Sports & Loisirs', slug: 'sports-loisirs', icon: '⚽' },
-  { name: 'Beauté & Santé', slug: 'beaute-sante', icon: '💄' },
-  { name: 'Jouets & Enfants', slug: 'jouets-enfants', icon: '🧸' },
-  { name: 'Automobile', slug: 'automobile', icon: '🚗' },
-  { name: 'Livres & Médias', slug: 'livres-medias', icon: '📚' },
-  { name: 'Alimentation', slug: 'alimentation', icon: '🍎' },
-  { name: 'Art & Artisanat', slug: 'art-artisanat', icon: '🎨' }
+  { name: 'Électronique', slug: 'electronique', icon: '📱', image: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=600&q=80' },
+  { name: 'Mode & Vêtements', slug: 'mode-vetements', icon: '👕', image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&q=80' },
+  { name: 'Maison & Jardin', slug: 'maison-jardin', icon: '🏠', image: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&q=80' },
+  { name: 'Sports & Loisirs', slug: 'sports-loisirs', icon: '⚽', image: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=600&q=80' },
+  { name: 'Beauté & Santé', slug: 'beaute-sante', icon: '💄', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&q=80' },
+  { name: 'Jouets & Enfants', slug: 'jouets-enfants', icon: '🧸', image: 'https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=600&q=80' },
+  { name: 'Automobile', slug: 'automobile', icon: '🚗', image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&q=80' },
+  { name: 'Livres & Médias', slug: 'livres-medias', icon: '📚', image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=600&q=80' },
+  { name: 'Alimentation', slug: 'alimentation', icon: '🍎', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&q=80' },
+  { name: 'Art & Artisanat', slug: 'art-artisanat', icon: '🎨', image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&q=80' }
 ]
 
 router.post('/seed', async (req, res) => {
@@ -95,8 +95,8 @@ router.post('/seed', async (req, res) => {
       for (const cat of categories) {
         await prisma.category.upsert({
           where: { slug: cat.slug },
-          update: {},
-          create: { name: cat.name, slug: cat.slug, icon: cat.icon }
+          update: { image: cat.image },
+          create: { name: cat.name, slug: cat.slug, icon: cat.icon, image: cat.image }
         })
       }
       logs.push(`${categories.length} categories`)
