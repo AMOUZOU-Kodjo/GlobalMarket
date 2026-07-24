@@ -38,6 +38,7 @@ export default function AdminLayout() {
   ], [t])
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' })
     setMobileOpen(false)
   }, [location.pathname])
 

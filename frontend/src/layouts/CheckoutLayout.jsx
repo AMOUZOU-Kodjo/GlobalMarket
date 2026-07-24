@@ -1,9 +1,15 @@
-import { Outlet, Link } from 'react-router-dom'
+import { Outlet, Link, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 import { Store, Lock, ChevronLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 export default function CheckoutLayout() {
   const { t } = useTranslation()
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }, [pathname])
 
   return (
     <div className="min-h-screen flex flex-col bg-base-200">

@@ -36,6 +36,7 @@ export default function SellerLayout() {
   ], [t])
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' })
     setMobileOpen(false)
   }, [location.pathname])
 
