@@ -44,6 +44,7 @@ const ProductEditPage = lazy(() => import('../pages/Seller/ProductEditPage'))
 const SellerOrdersPage = lazy(() => import('../pages/Seller/SellerOrdersPage'))
 const SellerAnalyticsPage = lazy(() => import('../pages/Seller/SellerAnalyticsPage'))
 const SellerPayoutsPage = lazy(() => import('../pages/Seller/SellerPayoutsPage'))
+const SellerShopSettingsPage = lazy(() => import('../pages/Seller/SellerShopSettingsPage'))
 
 const SellerShopPage = lazy(() => import('../pages/Seller/SellerShopPage'))
 
@@ -125,6 +126,7 @@ export const router = createBrowserRouter([
         { path: 'orders', element: <SuspenseWrapper><SellerOrdersPage /></SuspenseWrapper> },
         { path: 'analytics', element: <SuspenseWrapper><SellerAnalyticsPage /></SuspenseWrapper> },
         { path: 'payouts', element: <SuspenseWrapper><SellerPayoutsPage /></SuspenseWrapper> },
+        { path: 'settings', element: <SuspenseWrapper><SellerShopSettingsPage /></SuspenseWrapper> },
       ]},
 
       { path: 'admin', element: <SuspenseWrapper><ProtectedRoute roles={['admin']}><AdminLayout /></ProtectedRoute></SuspenseWrapper>, children: [

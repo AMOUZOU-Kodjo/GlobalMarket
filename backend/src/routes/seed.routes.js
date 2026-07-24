@@ -57,7 +57,9 @@ router.post('/seed', async (req, res, next) => {
         userId: sellerUser.id, shopName: 'TechStore France', slug: 'techstore-france',
         description: 'Spécialiste en électronique et high-tech', category: 'Électronique',
         country: 'France', businessType: 'company', plan: 'pro', commissionRate: 0.08,
-        verified: true, active: true, rating: 4.8, totalSales: 350, totalRevenue: 45678.50
+        verified: true, active: true, rating: 4.8, totalSales: 350, totalRevenue: 45678.50,
+        logo: 'https://placehold.co/200x200/0d6efd/ffffff?text=TS',
+        banner: 'https://placehold.co/1200x300/0d6efd/ffffff?text=TechStore+France'
       }
     })
 

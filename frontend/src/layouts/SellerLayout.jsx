@@ -16,6 +16,7 @@ import {
   X,
   Bell,
   Search,
+  Settings,
 } from 'lucide-react'
 
 export default function SellerLayout() {
@@ -28,6 +29,7 @@ export default function SellerLayout() {
   const NAV_ITEMS = useMemo(() => [
     { to: '/seller/shop', label: t('nav.admin'), icon: LayoutDashboard, end: true },
     { to: '/seller/shop/products', label: t('nav.products'), icon: Package },
+    { to: '/seller/shop/settings', label: t('seller.shopSettings', 'Boutique'), icon: Settings },
     { to: '/seller/shop/orders', label: t('seller.orders'), icon: ShoppingCart },
     { to: '/seller/shop/analytics', label: t('seller.statistics'), icon: BarChart3 },
     { to: '/seller/shop/payouts', label: t('seller.payouts'), icon: Wallet },
