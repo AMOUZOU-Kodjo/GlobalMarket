@@ -19,7 +19,7 @@ const sellerService = {
   uploadImages: (id, files) => {
     const formData = new FormData()
     files.forEach((file) => formData.append('images', file))
-    return fetch(`/api/products/${id}/images`, {
+    return fetch(`${import.meta.env.VITE_API_URL || ''}/api/products/${id}/images`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,

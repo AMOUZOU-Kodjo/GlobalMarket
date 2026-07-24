@@ -15,7 +15,7 @@ const orderService = {
   getTracking: (id) => api.get(`/orders/${id}/tracking`),
 
   downloadInvoice: (id) => {
-    return fetch(`/api/orders/${id}/invoice`, {
+    return fetch(`${import.meta.env.VITE_API_URL || ''}/api/orders/${id}/invoice`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
