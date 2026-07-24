@@ -95,14 +95,8 @@ export default function Category() {
       .then((data) => {
         if (cancelled) return
         const list = Array.isArray(data) ? data : data.products || data.data || []
-        if (list.length > 0) {
-          setProducts(list)
-          setTotalProducts(data.total || data.totalCount || list.length)
-        } else {
-          const filtered = MOCK_PRODUCTS.all.filter(p => p.category?.slug === slug)
-          setProducts(filtered.length > 0 ? filtered : MOCK_PRODUCTS.all)
-          setTotalProducts(filtered.length > 0 ? filtered.length : MOCK_PRODUCTS.all.length)
-        }
+        setProducts(list)
+        setTotalProducts(data.total || data.totalCount || list.length)
       })
       .catch((err) => {
         if (cancelled) return

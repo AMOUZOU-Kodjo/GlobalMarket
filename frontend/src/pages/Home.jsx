@@ -157,7 +157,7 @@ export default function Home() {
       if (featuredRes.status === 'fulfilled') {
         const data = featuredRes.value
         const list = Array.isArray(data) ? data : data.products || data.data || []
-        setFeatured(list.length > 0 ? list : MOCK_PRODUCTS.featured)
+        setFeatured(list)
       } else {
         setFeatured(MOCK_PRODUCTS.featured)
       }
@@ -166,7 +166,7 @@ export default function Home() {
       if (trendingRes.status === 'fulfilled') {
         const data = trendingRes.value
         const list = Array.isArray(data) ? data : data.products || data.data || []
-        setTrending(list.length > 0 ? list : MOCK_PRODUCTS.trending)
+        setTrending(list)
       } else {
         setTrending(MOCK_PRODUCTS.trending)
       }
@@ -175,7 +175,7 @@ export default function Home() {
       if (newRes.status === 'fulfilled') {
         const data = newRes.value
         const list = Array.isArray(data) ? data : data.products || data.data || []
-        setNewArrivals(list.length > 0 ? list : MOCK_PRODUCTS.newArrivals)
+        setNewArrivals(list)
       } else {
         setNewArrivals(MOCK_PRODUCTS.newArrivals)
       }

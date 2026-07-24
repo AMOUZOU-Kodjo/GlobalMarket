@@ -83,13 +83,8 @@ export default function Products() {
         const productsList = Array.isArray(data)
           ? data
           : data.products || data.data || []
-        if (productsList.length > 0) {
-          setProducts(productsList)
-          setTotalProducts(data.meta?.total || data.total || data.totalCount || productsList.length)
-        } else {
-          setProducts(MOCK_PRODUCTS.all)
-          setTotalProducts(MOCK_PRODUCTS.all.length)
-        }
+        setProducts(productsList)
+        setTotalProducts(data.meta?.total || data.total || data.totalCount || productsList.length)
       })
       .catch((err) => {
         if (cancelled) return
