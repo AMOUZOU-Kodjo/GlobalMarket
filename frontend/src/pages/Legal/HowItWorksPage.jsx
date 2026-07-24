@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Header } from '../../components/organisms/Header'
+import ScrollReveal from '../../components/atoms/ScrollReveal'
 import {
   Search,
   ShoppingCart,
@@ -53,7 +54,7 @@ export default function HowItWorksPage() {
       </section>
 
       <section className="py-16 px-4">
-        <div className="container mx-auto max-w-5xl">
+        <ScrollReveal stagger className="container mx-auto max-w-5xl">
           <h2 className="text-3xl font-bold text-center mb-4">Pour les Acheteurs</h2>
           <p className="text-center text-base-content/60 mb-12 max-w-xl mx-auto">
             Acheter sur MarcoStore est simple, rapide et sécurisé en 3 étapes.
@@ -90,11 +91,11 @@ export default function HowItWorksPage() {
               <ArrowRight size={20} />
             </Link>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       <section className="py-16 px-4 bg-base-200">
-        <div className="container mx-auto max-w-5xl">
+        <ScrollReveal stagger className="container mx-auto max-w-5xl">
           <h2 className="text-3xl font-bold text-center mb-4">Pour les Vendeurs</h2>
           <p className="text-center text-base-content/60 mb-12 max-w-xl mx-auto">
             Lancez votre business en ligne et touchez des millions d'acheteurs.
@@ -131,11 +132,11 @@ export default function HowItWorksPage() {
               <ArrowRight size={20} />
             </Link>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       <section className="py-16 px-4">
-        <div className="container mx-auto max-w-3xl">
+        <ScrollReveal stagger className="container mx-auto max-w-3xl">
           <h2 className="text-3xl font-bold text-center mb-4">Questions Fréquentes</h2>
           <p className="text-center text-base-content/60 mb-12">
             Trouvez rapidement les réponses à vos questions.
@@ -153,11 +154,11 @@ export default function HowItWorksPage() {
               </div>
             ))}
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       <section className="py-16 px-4 bg-primary text-primary-content">
-        <div className="container mx-auto text-center max-w-2xl">
+        <ScrollReveal><div className="container mx-auto text-center max-w-2xl">
           <HelpCircle size={48} className="mx-auto mb-4 opacity-80" />
           <h2 className="text-3xl font-bold mb-4">Encore des questions ?</h2>
           <p className="mb-8 opacity-90">Notre équipe support est disponible 7j/7 pour vous accompagner.</p>
@@ -169,7 +170,7 @@ export default function HowItWorksPage() {
               Centre d'aide
             </Link>
           </div>
-        </div>
+        </div></ScrollReveal>
       </section>
     </div>
   )

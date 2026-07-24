@@ -8,6 +8,7 @@ import FilterSidebar from '../components/organisms/FilterSidebar'
 import { Pagination } from '../components/atoms/Pagination'
 import { EmptyState } from '../components/atoms/EmptyState'
 import { useCart } from '../context/CartContext'
+import ScrollReveal from '../components/atoms/ScrollReveal'
 import productService from '../services/product.service'
 import categoryService from '../services/category.service'
 import MOCK_PRODUCTS from '../data/mockProducts'
@@ -260,6 +261,7 @@ export default function Products() {
             </div>
           </div>
 
+          <ScrollReveal>
           <ProductGrid
             products={products}
             loading={loading}
@@ -268,6 +270,7 @@ export default function Products() {
             onAddToCart={handleAddToCart}
             emptyMessage={t('products.noneFound')}
           />
+          </ScrollReveal>
 
           {!loading && products.length === 0 && !error && (
             <EmptyState

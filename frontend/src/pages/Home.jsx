@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ChevronLeft, ChevronRight, Sparkles, TrendingUp, Zap } from 'lucide-react'
+import ScrollReveal from '../components/atoms/ScrollReveal'
 import HeroCarousel from '../components/organisms/HeroCarousel'
 import CategoryGrid from '../components/organisms/CategoryGrid'
 import ProductCard from '../components/organisms/ProductCard'
@@ -232,22 +233,24 @@ export default function Home() {
 
       <section className="py-10 px-4">
         <div className="container mx-auto">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl md:text-2xl font-bold">{t('nav.categories')}</h2>
-            <Link to="/products" className="btn btn-ghost btn-sm gap-1">
-              {t('home.viewAll')} <ArrowRight size={16} />
-            </Link>
-          </div>
+          <ScrollReveal>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl md:text-2xl font-bold">{t('nav.categories')}</h2>
+              <Link to="/products" className="btn btn-ghost btn-sm gap-1">
+                {t('home.viewAll')} <ArrowRight size={16} />
+              </Link>
+            </div>
+          </ScrollReveal>
           {loadingCategories ? (
             <CategorySkeleton />
           ) : (
-            <CategoryGrid categories={categories} />
+            <ScrollReveal stagger><CategoryGrid categories={categories} /></ScrollReveal>
           )}
         </div>
       </section>
 
       <section className="py-6 px-4 bg-base-200/50">
-        <div className="container mx-auto">
+        <ScrollReveal><div className="container mx-auto">
           <ProductHorizontalRow
             title={t('home.featured')}
             icon={Sparkles}
@@ -255,11 +258,11 @@ export default function Home() {
             loading={loadingFeatured}
             onAddToCart={handleAddToCart}
           />
-        </div>
+        </div></ScrollReveal>
       </section>
 
       <section className="py-10 px-4">
-        <div className="container mx-auto">
+        <ScrollReveal><div className="container mx-auto">
           <ProductHorizontalRow
             title={t('home.trending')}
             icon={TrendingUp}
@@ -267,11 +270,11 @@ export default function Home() {
             loading={loadingTrending}
             onAddToCart={handleAddToCart}
           />
-        </div>
+        </div></ScrollReveal>
       </section>
 
       <section className="py-6 px-4 bg-base-200/50">
-        <div className="container mx-auto">
+        <ScrollReveal><div className="container mx-auto">
           <ProductHorizontalRow
             title={t('home.newArrivals')}
             icon={Zap}
@@ -279,27 +282,31 @@ export default function Home() {
             loading={loadingNew}
             onAddToCart={handleAddToCart}
           />
-        </div>
+        </div></ScrollReveal>
       </section>
 
       <section className="py-16 px-4">
         <div className="container mx-auto">
-          <div className="bg-base-100 border border-base-200 rounded-2xl p-8 md:p-12 max-w-3xl mx-auto text-center">
-            <NewsletterForm
-              onSubscribe={handleNewsletterSubscribe}
-              loading={newsletterLoading}
-              success={newsletterSuccess}
-            />
-          </div>
+          <ScrollReveal direction="scale">
+            <div className="bg-base-100 border border-base-200 rounded-2xl p-8 md:p-12 max-w-3xl mx-auto text-center">
+              <NewsletterForm
+                onSubscribe={handleNewsletterSubscribe}
+                loading={newsletterLoading}
+                success={newsletterSuccess}
+              />
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
       <section className="py-12 px-4 bg-base-200/50">
         <div className="container mx-auto">
-          <h2 className="text-xl md:text-2xl font-bold text-center mb-8">
-            {t('home.whyChooseUs')}
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <ScrollReveal>
+            <h2 className="text-xl md:text-2xl font-bold text-center mb-8">
+              {t('home.whyChooseUs')}
+            </h2>
+          </ScrollReveal>
+          <ScrollReveal stagger className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             <div className="card bg-base-100 border border-base-200 shadow-sm">
               <div className="card-body items-center text-center">
                 <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-2">
@@ -333,7 +340,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
     </div>

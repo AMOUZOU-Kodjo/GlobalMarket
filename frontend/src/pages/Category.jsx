@@ -9,6 +9,7 @@ import { Pagination } from '../components/atoms/Pagination'
 import { EmptyState } from '../components/atoms/EmptyState'
 import Spinner from '../components/atoms/Spinner'
 import { useCart } from '../context/CartContext'
+import ScrollReveal from '../components/atoms/ScrollReveal'
 import productService from '../services/product.service'
 import categoryService from '../services/category.service'
 import MOCK_PRODUCTS from '../data/mockProducts'
@@ -309,6 +310,7 @@ export default function Category() {
             </div>
           )}
 
+          <ScrollReveal>
           <ProductGrid
             products={products}
             loading={loadingProducts}
@@ -316,6 +318,7 @@ export default function Category() {
             onAddToCart={handleAddToCart}
             emptyMessage={`Aucun produit dans "${category.name || category.label}"`}
           />
+          </ScrollReveal>
 
           {!loadingProducts && products.length === 0 && !error && (
             <EmptyState

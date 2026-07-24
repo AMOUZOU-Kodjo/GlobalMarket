@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Header } from '../../components/organisms/Header'
+import ScrollReveal from '../../components/atoms/ScrollReveal'
 import {
   Send,
   MapPin,
@@ -67,7 +68,7 @@ export default function ContactPage() {
       </section>
 
       <section className="py-16 px-4">
-        <div className="container mx-auto max-w-6xl">
+        <ScrollReveal><div className="container mx-auto max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
               <div className="card bg-base-100 shadow-md">
@@ -239,7 +240,7 @@ export default function ContactPage() {
               </div>
             </div>
           </div>
-        </div>
+        </div></ScrollReveal>
       </section>
     </div>
   )

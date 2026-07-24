@@ -19,6 +19,7 @@ import Tabs from '../components/atoms/Tabs'
 import ReviewSection from '../components/organisms/ReviewSection'
 import RelatedProducts from '../components/organisms/RelatedProducts'
 import Spinner from '../components/atoms/Spinner'
+import ScrollReveal from '../components/atoms/ScrollReveal'
 import { EmptyState } from '../components/atoms/EmptyState'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
@@ -201,9 +202,9 @@ export default function ProductDetail() {
       <Breadcrumb items={breadcrumbItems} className="mb-4" />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-        <ProductImageGallery images={images} />
+        <ScrollReveal direction="left"><ProductImageGallery images={images} /></ScrollReveal>
 
-        <div className="flex flex-col gap-4">
+        <ScrollReveal direction="right"><div className="flex flex-col gap-4">
           <div>
             {categoryName && (
               <span className="badge badge-secondary mb-2">{categoryName}</span>
@@ -367,7 +368,7 @@ export default function ProductDetail() {
           </div>
 
           <SellerInfoCard seller={product.seller} className="mt-4" />
-        </div>
+        </div></ScrollReveal>
       </div>
 
       <div className="mb-8">
@@ -415,22 +416,24 @@ export default function ProductDetail() {
       </div>
 
       {related.length > 0 && (
-        <RelatedProducts
-          products={related}
-          onAddToCart={(p) =>
-            addItem({
-              productId: p._id || p.id,
-              name: p.name,
-              price: Number(p.price),
-              image: (Array.isArray(p.images) ? p.images[0]?.url || p.images[0] : p.image) || '',
-              stock: p.stock || 99,
-              seller:
-                typeof p.seller === 'string'
-                  ? p.seller
-                  : p.seller?.shopName || p.seller?.name || '',
-            })
-          }
-        />
+        <ScrollReveal>
+          <RelatedProducts
+            products={related}
+            onAddToCart={(p) =>
+              addItem({
+                productId: p._id || p.id,
+                name: p.name,
+                price: Number(p.price),
+                image: (Array.isArray(p.images) ? p.images[0]?.url || p.images[0] : p.image) || '',
+                stock: p.stock || 99,
+                seller:
+                  typeof p.seller === 'string'
+                    ? p.seller
+                    : p.seller?.shopName || p.seller?.name || '',
+              })
+            }
+          />
+        </ScrollReveal>
       )}
     </div>
   )

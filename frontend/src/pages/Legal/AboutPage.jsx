@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Header } from '../../components/organisms/Header'
+import ScrollReveal from '../../components/atoms/ScrollReveal'
 import {
   Target,
   Heart,
@@ -63,7 +64,7 @@ export default function AboutPage() {
       </section>
 
       <section className="py-16 px-4">
-        <div className="container mx-auto max-w-5xl">
+        <ScrollReveal><div className="container mx-auto max-w-5xl">
           <div className="flex flex-col md:flex-row items-center gap-12">
             <div className="flex-1">
               <h2 className="text-3xl font-bold mb-4">Notre Mission</h2>
@@ -80,11 +81,11 @@ export default function AboutPage() {
               <Target size={120} className="text-primary/20" />
             </div>
           </div>
-        </div>
+        </div></ScrollReveal>
       </section>
 
       <section className="py-16 px-4 bg-base-200">
-        <div className="container mx-auto max-w-4xl">
+        <ScrollReveal><div className="container mx-auto max-w-4xl">
           <h2 className="text-3xl font-bold text-center mb-12">Notre Histoire</h2>
           <div className="relative">
             <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-primary/20 -translate-x-1/2" />
@@ -107,11 +108,11 @@ export default function AboutPage() {
               ))}
             </div>
           </div>
-        </div>
+        </div></ScrollReveal>
       </section>
 
       <section className="py-16 px-4">
-        <div className="container mx-auto max-w-5xl">
+        <ScrollReveal stagger className="container mx-auto max-w-5xl">
           <h2 className="text-3xl font-bold text-center mb-12">Nos Valeurs</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {VALUES.map((value) => {
@@ -129,11 +130,11 @@ export default function AboutPage() {
               )
             })}
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       <section className="py-16 px-4 bg-base-200">
-        <div className="container mx-auto max-w-5xl">
+        <ScrollReveal stagger className="container mx-auto max-w-5xl">
           <h2 className="text-3xl font-bold text-center mb-12">Notre Équipe</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {TEAM.map((member) => (
@@ -150,11 +151,11 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       <section className="py-16 px-4">
-        <div className="container mx-auto max-w-5xl">
+        <ScrollReveal stagger className="container mx-auto max-w-5xl">
           <h2 className="text-3xl font-bold text-center mb-12">MarcoStore en chiffres</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {STATS.map((stat) => (
@@ -164,7 +165,7 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       <section className="py-16 px-4 bg-primary text-primary-content">

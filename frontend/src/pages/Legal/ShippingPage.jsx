@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Header } from '../../components/organisms/Header'
+import ScrollReveal from '../../components/atoms/ScrollReveal'
 import {
   Truck,
   Clock,
@@ -47,7 +48,7 @@ export default function ShippingPage() {
       </section>
 
       <section className="py-16 px-4">
-        <div className="container mx-auto max-w-5xl">
+        <ScrollReveal stagger className="container mx-auto max-w-5xl">
           <h2 className="text-3xl font-bold text-center mb-12">Modes de Livraison</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {SHIPPING_METHODS.map((method) => {
@@ -73,11 +74,11 @@ export default function ShippingPage() {
               )
             })}
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       <section className="py-16 px-4 bg-base-200">
-        <div className="container mx-auto max-w-5xl">
+        <ScrollReveal stagger className="container mx-auto max-w-5xl">
           <h2 className="text-3xl font-bold text-center mb-12">Délais par Région</h2>
           <div className="overflow-x-auto">
             <table className="table table-zebra w-full">
@@ -99,11 +100,11 @@ export default function ShippingPage() {
               </tbody>
             </table>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       <section className="py-16 px-4">
-        <div className="container mx-auto max-w-5xl">
+        <ScrollReveal stagger className="container mx-auto max-w-5xl">
           <h2 className="text-3xl font-bold text-center mb-12">Livraison Internationale</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="card bg-base-100 shadow-md">
@@ -151,11 +152,11 @@ export default function ShippingPage() {
               </div>
             </div>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
-      <section className="py-16 px-4 bg-base-200">
-        <div className="container mx-auto max-w-2xl text-center">
+      <section className="py-16 px-4">
+        <ScrollReveal><div className="container mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold mb-6">Suivre ma commande</h2>
           <p className="text-base-content/70 mb-8">
             Vous recevrez un numéro de suivi par email dès l&apos;expédition de votre commande.
@@ -164,7 +165,7 @@ export default function ShippingPage() {
             Suivre ma commande
             <ArrowRight size={20} />
           </Link>
-        </div>
+        </div></ScrollReveal>
       </section>
     </div>
   )
