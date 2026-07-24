@@ -8,7 +8,7 @@ export default function GdprPage() {
       sections={[
         {
           title: 'Préambule',
-          content: `MarcoStore accorde une importance capitale à la protection de vos données personnelles. Conformément au Règlement Général sur la Protection des Données (RGPD) et à la loi Informatique et Libertés, nous mettons en œuvre toutes les mesures techniques et organisationnelles nécessaires pour protéger vos données.`,
+          content: `MarcoStore accorde une importance capitale à la protection de vos données personnelles. Conformément à la loi n°2019-14 du 16 octobre 2019 relative à la protection des données à caractère personnel au Togo, nous mettons en œuvre toutes les mesures techniques et organisationnelles nécessaires pour protéger vos données.`,
         },
         {
           title: 'Responsable du traitement',
