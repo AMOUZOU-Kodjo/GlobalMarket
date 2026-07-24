@@ -21,8 +21,10 @@ const uploadRoutes = require('./routes/upload.routes')
 const couponRoutes = require('./routes/coupon.routes')
 const addressRoutes = require('./routes/address.routes')
 const messageRoutes = require('./routes/message.routes')
+const seedRoutes = require('./routes/seed.routes')
 
 const app = express()
+app.set('trust proxy', 1)
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }))
 const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173').split(',')
@@ -58,6 +60,7 @@ app.use('/api/uploads', uploadRoutes)
 app.use('/api/coupons', couponRoutes)
 app.use('/api/addresses', addressRoutes)
 app.use('/api/messages', messageRoutes)
+app.use('/api/system', seedRoutes)
 
 app.use(errorHandler)
 
