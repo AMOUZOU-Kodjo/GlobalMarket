@@ -1,30 +1,30 @@
 const prisma = require('../config/database')
-const crypto = require('crypto')
-const path = require('path')
-const fs = require('fs')
+const cloudinary = require('../config/cloudinary')
 
-const UPLOAD_DIR = process.env.UPLOAD_DIR || path.join(__dirname, '../../uploads')
-const PORT = process.env.PORT || 5001
-const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024
 const MAX_DOC_SIZE = 10 * 1024 * 1024
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
 const ALLOWED_DOC_TYPES = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain']
 
-function ensureDir(dir) {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true })
-  }
-}
-
-function getUploadDir(subDir) {
-  const dir = path.join(UPLOAD_DIR, subDir)
-  ensureDir(dir)
-  return dir
-}
-
-function buildUrl(subDir, filename) {
-  return `${BASE_URL}/uploads/${subDir}/${filename}`
+function uploadToCloudinary(file, folder) {
+  return new Promise((resolve, reject) => {
+    const isBuffer = Buffer.isBuffer(file.buffer)
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { folder, resource_type: 'auto', transformation: [{ width: 1200, height: 1200, crop: 'limit', quality: 'auto' }] },
+      (error, result) => {
+        if (error) return reject(error)
+        resolve(result)
+      }
+    )
+    if (isBuffer) {
+      uploadStream.end(file.buffer)
+    } else if (file.path) {
+      const fs = require('fs')
+      fs.createReadStream(file.path).pipe(uploadStream)
+    } else {
+      return reject(new Error('Aucune donnée de fichier disponible'))
+    }
+  })
 }
 
 async function uploadImage(file, userId) {
@@ -36,34 +36,22 @@ async function uploadImage(file, userId) {
     throw new Error('Le fichier dépasse la taille maximale de 5 Mo')
   }
 
-  const ext = path.extname(file.originalname)
-  const filename = `${crypto.randomUUID()}${ext}`
-  const subDir = 'images'
-  const uploadPath = getUploadDir(subDir)
-
-  if (file.buffer) {
-    fs.writeFileSync(path.join(uploadPath, filename), file.buffer)
-  } else if (file.path) {
-    const dest = path.join(uploadPath, filename)
-    fs.copyFileSync(file.path, dest)
-  } else {
-    throw new Error('Aucune donnée de fichier disponible')
-  }
+  const result = await uploadToCloudinary(file, 'globalmarket/images')
 
   const record = await prisma.uploadedFile.create({
     data: {
-      filename,
+      filename: result.public_id.split('/').pop(),
       originalName: file.originalname,
       mimetype: file.mimetype,
       size: file.size,
-      path: `${subDir}/${filename}`,
+      path: result.public_id,
       uploaderId: userId || null
     }
   })
 
   return {
     id: record.id,
-    url: buildUrl(subDir, filename),
+    url: result.secure_url,
     filename: record.filename,
     originalName: record.originalName,
     mimetype: record.mimetype,
@@ -73,7 +61,6 @@ async function uploadImage(file, userId) {
 
 async function uploadImages(files, userId) {
   if (!files || files.length === 0) throw new Error('Aucun fichier fourni')
-
   const results = []
   for (const file of files) {
     const result = await uploadImage(file, userId)
@@ -91,34 +78,22 @@ async function uploadDocument(file, userId) {
     throw new Error('Le fichier dépasse la taille maximale de 10 Mo')
   }
 
-  const ext = path.extname(file.originalname)
-  const filename = `${crypto.randomUUID()}${ext}`
-  const subDir = 'documents'
-  const uploadPath = getUploadDir(subDir)
-
-  if (file.buffer) {
-    fs.writeFileSync(path.join(uploadPath, filename), file.buffer)
-  } else if (file.path) {
-    const dest = path.join(uploadPath, filename)
-    fs.copyFileSync(file.path, dest)
-  } else {
-    throw new Error('Aucune donnée de fichier disponible')
-  }
+  const result = await uploadToCloudinary(file, 'globalmarket/documents')
 
   const record = await prisma.uploadedFile.create({
     data: {
-      filename,
+      filename: result.public_id.split('/').pop(),
       originalName: file.originalname,
       mimetype: file.mimetype,
       size: file.size,
-      path: `${subDir}/${filename}`,
+      path: result.public_id,
       uploaderId: userId || null
     }
   })
 
   return {
     id: record.id,
-    url: buildUrl(subDir, filename),
+    url: result.secure_url,
     filename: record.filename,
     originalName: record.originalName,
     mimetype: record.mimetype,
@@ -131,13 +106,11 @@ async function deleteFile(fileId, userId) {
   if (!file) throw new Error('Fichier non trouvé')
   if (file.uploaderId && file.uploaderId !== userId) throw new Error('Non autorisé à supprimer ce fichier')
 
-  const fullPath = path.join(UPLOAD_DIR, file.path)
-  if (fs.existsSync(fullPath)) {
-    fs.unlinkSync(fullPath)
-  }
+  try {
+    await cloudinary.uploader.destroy(file.path)
+  } catch (e) { /* ignore */ }
 
   await prisma.uploadedFile.delete({ where: { id: fileId } })
-
   return { message: 'Fichier supprimé avec succès' }
 }
 

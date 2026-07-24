@@ -288,17 +288,22 @@ async function uploadImages(id, userId, files) {
   const seller = await prisma.seller.findUnique({ where: { userId } })
   if (!seller || product.sellerId !== seller.id) throw new Error('Non autorisé')
 
+  const uploadService = require('./upload.service')
   const count = await prisma.productImage.count({ where: { productId: id } })
-  const images = await prisma.productImage.createMany({
-    data: files.map((f, i) => ({
+
+  const imageData = []
+  for (let i = 0; i < files.length; i++) {
+    const uploaded = await uploadService.uploadImage(files[i], userId)
+    imageData.push({
       productId: id,
-      url: f.url || `/uploads/products/${f.filename}`,
-      alt: f.alt || product.name,
+      url: uploaded.url,
+      alt: files[i].originalname || product.name,
       sortOrder: count + i,
       isPrimary: count === 0 && i === 0
-    }))
-  })
+    })
+  }
 
+  await prisma.productImage.createMany({ data: imageData })
   return prisma.productImage.findMany({ where: { productId: id }, orderBy: { sortOrder: 'asc' } })
 }
 

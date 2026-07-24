@@ -1,20 +1,19 @@
 const multer = require('multer')
-const crypto = require('crypto')
-const path = require('path')
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, process.env.UPLOAD_DIR || './uploads'),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase()
-    cb(null, `${crypto.randomUUID()}${ext}`)
-  }
-})
+const storage = multer.memoryStorage()
 
 const fileFilter = (req, file, cb) => {
-  const allowed = /jpeg|jpg|png|webp|gif|pdf|doc|docx/
-  const ext = allowed.test(path.extname(file.originalname).toLowerCase())
-  const mime = allowed.test(file.mimetype.split('/')[1]) || file.mimetype === 'application/pdf'
-  cb(null, ext && mime)
+  const allowedMimes = [
+    'image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif',
+    'application/pdf', 'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'text/plain'
+  ]
+  if (allowedMimes.includes(file.mimetype)) {
+    cb(null, true)
+  } else {
+    cb(new Error('Type de fichier non autorisé'), false)
+  }
 }
 
 const upload = multer({
