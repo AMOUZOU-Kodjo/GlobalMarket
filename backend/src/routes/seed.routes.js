@@ -20,21 +20,23 @@ const categories = [
   { name: 'Art & Artisanat', slug: 'art-artisanat', icon: '🎨' }
 ]
 
-router.post('/seed', async (req, res, next) => {
+router.post('/seed', async (req, res) => {
   try {
     const { secret } = req.body
     if (secret !== SEED_SECRET) {
       return res.status(403).json({ message: 'Invalid seed secret' })
     }
 
-    console.log('Seeding database via API...')
+    const logs = []
 
+    // Users
     const adminHash = await bcrypt.hash('Admin@MarcoStore2026!', 12)
     const admin = await prisma.user.upsert({
       where: { email: 'admin@marcostore.com' },
       update: { passwordHash: adminHash, role: 'admin', status: 'active', emailVerified: true },
       create: { email: 'admin@marcostore.com', name: 'Administrateur', passwordHash: adminHash, role: 'admin', emailVerified: true, status: 'active' }
     })
+    logs.push('admin created')
 
     const buyerHash = await bcrypt.hash('Buyer@2026!', 12)
     const buyer = await prisma.user.upsert({
@@ -42,6 +44,7 @@ router.post('/seed', async (req, res, next) => {
       update: { passwordHash: buyerHash, role: 'buyer', status: 'active', emailVerified: true },
       create: { email: 'acheteur@marcostore.com', name: 'Jean Dupont', passwordHash: buyerHash, role: 'buyer', emailVerified: true, status: 'active' }
     })
+    logs.push('buyer created')
 
     const sellerHash = await bcrypt.hash('Seller@2026!', 12)
     const sellerUser = await prisma.user.upsert({
@@ -49,20 +52,38 @@ router.post('/seed', async (req, res, next) => {
       update: { passwordHash: sellerHash, role: 'seller', status: 'active', emailVerified: true },
       create: { email: 'vendeur@marcostore.com', name: 'Marie Martin', passwordHash: sellerHash, role: 'seller', emailVerified: true, status: 'active' }
     })
+    logs.push('seller user created')
 
-    const seller = await prisma.seller.upsert({
-      where: { userId: sellerUser.id },
-      update: { shopName: 'TechStore France', slug: 'techstore-france', active: true, verified: true },
-      create: {
-        userId: sellerUser.id, shopName: 'TechStore France', slug: 'techstore-france',
-        description: 'Spécialiste en électronique et high-tech', category: 'Électronique',
-        country: 'France', businessType: 'company', plan: 'pro', commissionRate: 0.08,
-        verified: true, active: true, rating: 4.8, totalSales: 350, totalRevenue: 45678.50,
-        logo: 'https://placehold.co/200x200/0d6efd/ffffff?text=TS',
-        banner: 'https://placehold.co/1200x300/0d6efd/ffffff?text=TechStore+France'
-      }
-    })
+    // Seller profile - check if already exists for this user
+    let seller
+    const existingSeller = await prisma.seller.findUnique({ where: { userId: sellerUser.id } })
+    if (existingSeller) {
+      seller = await prisma.seller.update({
+        where: { userId: sellerUser.id },
+        data: {
+          shopName: 'TechStore France', slug: 'techstore-france',
+          description: 'Spécialiste en électronique et high-tech', category: 'Électronique',
+          country: 'France', verified: true, active: true,
+          logo: 'https://placehold.co/200x200/0d6efd/ffffff?text=TS',
+          banner: 'https://placehold.co/1200x300/0d6efd/ffffff?text=TechStore+France'
+        }
+      })
+      logs.push('seller profile updated')
+    } else {
+      seller = await prisma.seller.create({
+        data: {
+          userId: sellerUser.id, shopName: 'TechStore France', slug: 'techstore-france',
+          description: 'Spécialiste en électronique et high-tech', category: 'Électronique',
+          country: 'France', businessType: 'company', plan: 'pro', commissionRate: 0.08,
+          verified: true, active: true, rating: 4.8, totalSales: 350, totalRevenue: 45678.50,
+          logo: 'https://placehold.co/200x200/0d6efd/ffffff?text=TS',
+          banner: 'https://placehold.co/1200x300/0d6efd/ffffff?text=TechStore+France'
+        }
+      })
+      logs.push('seller profile created')
+    }
 
+    // Categories
     for (const cat of categories) {
       await prisma.category.upsert({
         where: { slug: cat.slug },
@@ -70,16 +91,21 @@ router.post('/seed', async (req, res, next) => {
         create: { name: cat.name, slug: cat.slug, icon: cat.icon }
       })
     }
+    logs.push(`${categories.length} categories`)
 
-    await prisma.systemSetting.upsert({
-      where: { key: 'general' },
-      update: {},
-      create: {
-        key: 'general',
-        value: { siteName: 'MarcoStore', siteDescription: 'Marketplace mondiale', commissionRate: 0.12, paymentMethods: ['credit_card', 'paypal', 'mobile_money'], defaultShippingRate: 5.99, shippingFreeThreshold: 50 }
-      }
-    })
+    // System settings
+    const existingSetting = await prisma.systemSetting.findUnique({ where: { key: 'general' } })
+    if (!existingSetting) {
+      await prisma.systemSetting.create({
+        data: {
+          key: 'general',
+          value: JSON.stringify({ siteName: 'MarcoStore', commissionRate: 0.12 })
+        }
+      })
+    }
+    logs.push('settings')
 
+    // Products
     const cats = await prisma.category.findMany()
     const catMap = Object.fromEntries(cats.map(c => [c.slug, c.id]))
 
@@ -96,37 +122,34 @@ router.post('/seed', async (req, res, next) => {
       { name: "Parfum Unisexe Bois d'Ambre", slug: 'parfum-unisexe-bois-ambre', description: 'Eau de parfum 100ml.', shortDescription: 'Eau de parfum artisanale', price: 65.00, compareAtPrice: 85.00, stock: 50, categorySlug: 'beaute-sante', featured: true, tags: ['parfum', 'unisexe'], averageRating: 4.7, reviewCount: 89, salesCount: 210 },
     ]
 
+    let productCount = 0
     for (const p of products) {
       const catId = catMap[p.categorySlug]
       if (!catId) continue
-      const existing = await prisma.product.findUnique({ where: { slug: p.slug } })
-      if (!existing) {
-        await prisma.product.create({
-          data: {
-            sellerId: seller.id, categoryId: catId, name: p.name, slug: p.slug,
-            description: p.description, shortDescription: p.shortDescription,
-            price: p.price, compareAtPrice: p.compareAtPrice || null, stock: p.stock,
-            status: 'active', featured: !!p.featured, trending: !!p.trending,
-            tags: p.tags || [], averageRating: p.averageRating || 0,
-            reviewCount: p.reviewCount || 0, salesCount: p.salesCount || 0, publishedAt: new Date(),
-            images: { create: [{ url: `https://placehold.co/600x600?text=${encodeURIComponent(p.name.slice(0, 20))}`, alt: p.name, isPrimary: true, sortOrder: 0 }] }
-          }
-        })
-      }
+      try {
+        const existing = await prisma.product.findUnique({ where: { slug: p.slug } })
+        if (!existing) {
+          await prisma.product.create({
+            data: {
+              sellerId: seller.id, categoryId: catId, name: p.name, slug: p.slug,
+              description: p.description, shortDescription: p.shortDescription,
+              price: p.price, compareAtPrice: p.compareAtPrice || null, stock: p.stock,
+              status: 'active', featured: !!p.featured, trending: !!p.trending,
+              tags: p.tags || [], averageRating: p.averageRating || 0,
+              reviewCount: p.reviewCount || 0, salesCount: p.salesCount || 0, publishedAt: new Date(),
+              images: { create: [{ url: `https://placehold.co/600x600?text=${encodeURIComponent(p.name.slice(0, 20))}`, alt: p.name, isPrimary: true, sortOrder: 0 }] }
+            }
+          })
+          productCount++
+        }
+      } catch (e) { /* skip */ }
     }
+    logs.push(`${productCount} products`)
 
-    console.log('Seed complete!')
-    res.json({
-      message: 'Database seeded successfully',
-      accounts: {
-        admin: { email: 'admin@marcostore.com', password: 'Admin@MarcoStore2026!' },
-        buyer: { email: 'acheteur@marcostore.com', password: 'Buyer@2026!' },
-        seller: { email: 'vendeur@marcostore.com', password: 'Seller@2026!' }
-      }
-    })
+    res.json({ message: 'Seed complete', logs })
   } catch (error) {
     console.error('Seed error:', error)
-    next(error)
+    res.status(500).json({ message: error.message, stack: error.stack })
   }
 })
 
