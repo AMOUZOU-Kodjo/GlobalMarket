@@ -73,7 +73,7 @@ export default function OrderConfirmationPage() {
                     <div key={index} className="flex gap-3 items-center">
                       <div className="w-10 h-10 rounded bg-base-200 overflow-hidden flex-shrink-0">
                         <img
-                          src={item.productImage || item.image || '/placeholder.png'}
+                          src={item.productImage || item.image || '/placeholder.svg'}
                           alt={item.productName || item.name}
                           className="w-full h-full object-cover"
                         />

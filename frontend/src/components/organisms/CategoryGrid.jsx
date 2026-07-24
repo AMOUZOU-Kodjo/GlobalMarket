@@ -15,7 +15,8 @@ export function CategoryGrid({
       {categories.map((category) => {
         const slug = category.slug || category.id || category._id;
         const name = category.name || category.label;
-        const image = category.image || category.icon;
+        const imageUrl = category.image;
+        const emojiIcon = !imageUrl ? category.icon : null;
         const productCount = category.productCount ?? category.count;
 
         return (
@@ -25,13 +26,17 @@ export function CategoryGrid({
             className="group card bg-base-100 border border-base-200 hover:shadow-md transition-all overflow-hidden"
           >
             <div className="aspect-square overflow-hidden bg-base-200">
-              {image ? (
+              {imageUrl ? (
                 <img
-                  src={image}
+                  src={imageUrl}
                   alt={name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   loading="lazy"
                 />
+              ) : emojiIcon ? (
+                <div className="w-full h-full flex items-center justify-center text-5xl group-hover:scale-110 transition-transform duration-300">
+                  {emojiIcon}
+                </div>
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
                   <Package

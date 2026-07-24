@@ -91,7 +91,7 @@ export default function ConfirmationStep({
               <div key={item._id || index} className="flex gap-3">
                 <div className="w-12 h-12 rounded-lg bg-base-200 overflow-hidden flex-shrink-0">
                   <img
-                    src={item.image || '/placeholder.png'}
+                    src={item.image || '/placeholder.svg'}
                     alt={item.name}
                     className="w-full h-full object-cover"
                   />

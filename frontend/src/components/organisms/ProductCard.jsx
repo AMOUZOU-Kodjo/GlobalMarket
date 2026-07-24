@@ -27,7 +27,7 @@ export function ProductCard({ product, onAddToCart, className = "" }) {
 
   const productId = _id || id;
   const productRating = averageRating || ratingProp;
-  const imageUrl = image || (images && (typeof images[0] === 'string' ? images[0] : images[0]?.url)) || "/placeholder.png";
+  const imageUrl = image || (images && (typeof images[0] === 'string' ? images[0] : images[0]?.url)) || "/placeholder.svg";
   const numCompare = Number(compareAtPrice || originalPrice || 0);
   const numPrice = Number(price || 0);
   const discount =

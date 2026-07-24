@@ -169,6 +169,7 @@
   "common.popular": "Beliebteste",
   "common.rating": "Bestbewertet",
   "common.productsFound": "Produkte gefunden ({{count}})",
+  "common.resultsFor": "Ergebnisse für",
   "common.buyer": "Käufer",
   "common.seller": "Verkäufer",
   "common.admin": "Admin",

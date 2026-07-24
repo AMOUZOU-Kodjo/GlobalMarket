@@ -15,7 +15,7 @@ export function ProductImageGallery({
 
   const activeIndex =
     controlledIndex !== undefined ? controlledIndex : internalIndex;
-  const currentImage = images[activeIndex] || images[0] || "/placeholder.png";
+  const currentImage = images[activeIndex] || images[0] || "/placeholder.svg";
 
   const setActiveIndex = (index) => {
     if (onImageChange) {

@@ -86,8 +86,8 @@ export default function Search() {
       sort: currentSort,
     }
     if (filterCategories.length) params.category = filterCategories.join(',')
-    if (priceMin) params.priceMin = priceMin
-    if (priceMax) params.priceMax = priceMax
+    if (priceMin) params.minPrice = priceMin
+    if (priceMax) params.maxPrice = priceMax
     if (rating) params.rating = rating
 
     productService

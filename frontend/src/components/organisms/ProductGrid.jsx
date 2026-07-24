@@ -55,7 +55,7 @@ function ProductListItem({ product, onAddToCart }) {
   } = product || {};
 
   const productId = _id || id;
-  const imageUrl = image || (images && images[0]?.url) || "/placeholder.png";
+  const imageUrl = image || (images && images[0]?.url) || "/placeholder.svg";
   const discount =
     (compareAtPrice || originalPrice) && (compareAtPrice || originalPrice) > price
       ? Math.round((((compareAtPrice || originalPrice) - price) / (compareAtPrice || originalPrice)) * 100)

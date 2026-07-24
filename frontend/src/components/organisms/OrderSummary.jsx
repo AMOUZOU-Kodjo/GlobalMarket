@@ -43,7 +43,7 @@ export function OrderSummary({
             <div key={item._id || index} className="flex gap-3">
               <div className="w-14 h-14 rounded-lg bg-base-200 overflow-hidden flex-shrink-0">
                 <img
-                  src={item.image || (item.images && item.images[0]) || "/placeholder.png"}
+                  src={item.image || (item.images && item.images[0]) || "/placeholder.svg"}
                   alt={item.name}
                   className="w-full h-full object-cover"
                 />

@@ -38,6 +38,7 @@ export default function Products() {
 
   const currentPage = parseInt(searchParams.get('page') || '1', 10)
   const currentSort = searchParams.get('sort') || 'newest'
+  const searchQuery = searchParams.get('search') || ''
   const filterCategories = searchParams.getAll('category').join(',')
   const priceMin = searchParams.get('priceMin')
   const priceMax = searchParams.get('priceMax')
@@ -51,12 +52,13 @@ export default function Products() {
       limit: ITEMS_PER_PAGE,
       sort: currentSort,
     }
+    if (searchQuery) params.search = searchQuery
     if (filterCategories) params.category = filterCategories
-    if (priceMin) params.priceMin = priceMin
-    if (priceMax) params.priceMax = priceMax
+    if (priceMin) params.minPrice = priceMin
+    if (priceMax) params.maxPrice = priceMax
     if (rating) params.rating = rating
     return params
-  }, [currentPage, currentSort, filterCategories, priceMin, priceMax, rating])
+  }, [currentPage, currentSort, searchQuery, filterCategories, priceMin, priceMax, rating])
 
   useEffect(() => {
     categoryService
@@ -180,7 +182,9 @@ export default function Products() {
       />
 
       <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold">{t('nav.products')}</h1>
+        <h1 className="text-2xl md:text-3xl font-bold">
+          {searchQuery ? `${t('common.resultsFor')} "${searchQuery}"` : t('nav.products')}
+        </h1>
         {!loading && (
           <p className="text-sm text-base-content/50 mt-1">
             {t('common.productsFound', { count: totalProducts })}
